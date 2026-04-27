@@ -1,177 +1,192 @@
 <!DOCTYPE html>
 <html lang="uk">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Вивчення Біблійних Віршів</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-</head>
-<body>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+		<title>Bible Game</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+		<style>
+			:root {
+				--bg: #fdfdfb;
+			}
+			@media (prefers-color-scheme: dark) {
+				:root {
+					--bg: #0f0f0f;
+				}
+			}
+			body {
+				background-color: var(--bg);
+				color: transparent;
+			}
+		</style>
+	</head>
 
-<div class="app">
-  <!-- ===== HEADER ===== -->
-  <div class="header">
-    <h1>📖 Вивчення Віршів</h1>
-    <p id="headerSubtitle">Обери режим і почни</p>
-  </div>
+	<body>
+		<!-- ===== APP ===== -->
+		<div class="app">
+			<!-- ===== HEADER ===== -->
+			<div class="header">
+				<h1>📖 Вивчення Віршів</h1>
+				<p id="headerSubtitle">Обери режим і почни</p>
+			</div>
 
-  <!-- ===== SCREEN: HOME ===== -->
-  <div class="screen active" id="screenHome">
-    <div class="card">
-      <div class="card-title">Режим гри</div>
-      <div class="mode-grid">
-        <div class="mode-card selected" data-mode="word-order" onclick="UI.selectMode(this)">
-          <div class="mode-icon">🔀</div>
-          <div class="mode-info"><h3>Складання слів</h3><p>Відновити правильний порядок слів</p></div>
-        </div>
-        <div class="mode-card" data-mode="fill-gaps" onclick="UI.selectMode(this)">
-          <div class="mode-icon">✏️</div>
-          <div class="mode-info"><h3>Заповни пропуски</h3><p>Вписати приховані слова</p></div>
-        </div>
-        <div class="mode-card" data-mode="continue" onclick="UI.selectMode(this)">
-          <div class="mode-icon">💬</div>
-          <div class="mode-info"><h3>Продовж вірш</h3><p>Показано початок — напиши решту</p></div>
-        </div>
-      </div>
-    </div>
+			<!-- ===== SCREEN: HOME ===== -->
+			<div class="screen active" id="screenHome">
+				<div class="card">
+					<div class="card-title">Режим гри</div>
+					<div class="mode-grid">
+						<div class="mode-card selected" data-mode="word-order" onclick="UI.selectMode(this)">
+							<div class="mode-icon">🔀</div>
+							<div class="mode-info"><h3>Складання слів</h3><p>Відновити правильний порядок слів</p></div>
+						</div>
+						<div class="mode-card" data-mode="fill-gaps" onclick="UI.selectMode(this)">
+							<div class="mode-icon">✏️</div>
+							<div class="mode-info"><h3>Заповни пропуски</h3><p>Вписати приховані слова</p></div>
+						</div>
+						<div class="mode-card" data-mode="continue" onclick="UI.selectMode(this)">
+							<div class="mode-icon">💬</div>
+							<div class="mode-info"><h3>Продовж вірш</h3><p>Показано початок — напиши решту</p></div>
+						</div>
+					</div>
+				</div>
 
-    <div class="card">
-      <div class="card-title">Налаштування</div>
-      <div class="filter-row">
-        <div class="filter-label">Переклад</div>
-        <select id="filterTranslation" onchange="UI.updateVerseFilter()"></select>
-      </div>
-      <div class="filter-row">
-        <div class="filter-label">Вірш</div>
-        <select id="filterVerse">
-          <option value="all">Всі вірші (випадковий)</option>
-        </select>
-      </div>
-      <button class="btn btn-primary btn-block" onclick="Game.start()" style="margin-top: 8px;">
-        Почати гру
-      </button>
-    </div>
-  </div>
+				<div class="card">
+					<div class="card-title">Налаштування</div>
+					<div class="filter-row">
+						<div class="filter-label">Переклад</div>
+						<select id="filterTranslation" onchange="UI.updateVerseFilter()"></select>
+					</div>
+					<div class="filter-row">
+						<div class="filter-label">Вірш</div>
+						<select id="filterVerse">
+							<option value="all">Всі вірші (випадковий)</option>
+						</select>
+					</div>
+					<button class="btn btn-primary btn-block" onclick="Game.start()" style="margin-top: 8px;">
+						Почати гру
+					</button>
+				</div>
+			</div>
 
-  <!-- ===== SCREEN: GAME ===== -->
-  <div class="screen" id="screenGame">
-    <div class="card">
-      <div class="game-header">
-        <div>
-          <div class="game-ref" id="gameRef"></div>
-          <div class="game-translation" id="gameTransName"></div>
-        </div>
-        <button class="btn btn-sm" onclick="UI.showScreen('screenHome')">✕ Вийти</button>
-      </div>
-      <div class="game-instruction" id="gameInstruction"></div>
-      <div id="gameArea"></div>
-      <div id="gameResult"></div>
-      <div id="gameActions" style="margin-top:12px; display:flex; gap:8px; justify-content:center;"></div>
-    </div>
-  </div>
+			<!-- ===== SCREEN: GAME ===== -->
+			<div class="screen" id="screenGame">
+				<div class="card">
+					<div class="game-header">
+						<div>
+							<div class="game-ref" id="gameRef"></div>
+							<div class="game-translation" id="gameTransName"></div>
+						</div>
+						<button class="btn btn-sm" onclick="UI.showScreen('screenHome')">✕ Вийти</button>
+					</div>
+					<div class="game-instruction" id="gameInstruction"></div>
+					<div id="gameArea"></div>
+					<div id="gameResult"></div>
+					<div id="gameActions" style="margin-top:12px; display:flex; gap:8px; justify-content:center;"></div>
+				</div>
+			</div>
 
-  <!-- ===== SCREEN: STATS ===== -->
-  <div class="screen" id="screenStats">
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-value" id="statTotal">0</div>
-        <div class="stat-label">Всього спроб</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value" id="statAccuracy">0%</div>
-        <div class="stat-label">Точність</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value" id="statStreak">0</div>
-        <div class="stat-label">Серія підряд</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value" id="statLearned">0</div>
-        <div class="stat-label">Вивчено (≥80%)</div>
-      </div>
-    </div>
+			<!-- ===== SCREEN: STATS ===== -->
+			<div class="screen" id="screenStats">
+				<div class="stats-grid">
+					<div class="stat-card">
+						<div class="stat-value" id="statTotal">0</div>
+						<div class="stat-label">Всього спроб</div>
+					</div>
+					<div class="stat-card">
+						<div class="stat-value" id="statAccuracy">0%</div>
+						<div class="stat-label">Точність</div>
+					</div>
+					<div class="stat-card">
+						<div class="stat-value" id="statStreak">0</div>
+						<div class="stat-label">Серія підряд</div>
+					</div>
+					<div class="stat-card">
+						<div class="stat-value" id="statLearned">0</div>
+						<div class="stat-label">Вивчено (≥80%)</div>
+					</div>
+				</div>
 
-    <div class="card">
-      <div class="card-title">Прогрес по віршах</div>
-      <div id="verseStats"></div>
-    </div>
+				<div class="card">
+					<div class="card-title">Прогрес по віршах</div>
+					<div id="verseStats"></div>
+				</div>
 
-    <div class="card">
-      <div class="card-title">Найслабші місця</div>
-      <div id="weakSpots"><p style="color:var(--text-muted);font-size:0.85rem;">Поки що недостатньо даних</p></div>
-    </div>
+				<div class="card">
+					<div class="card-title">Найслабші місця</div>
+					<div id="weakSpots"><p style="color:var(--text-muted);font-size:0.85rem;">Поки що недостатньо даних</p></div>
+				</div>
 
-    <button class="btn btn-sm btn-danger" onclick="Stats.reset()" style="margin-top:12px;">
-      Скинути статистику
-    </button>
-  </div>
+				<button class="btn btn-sm btn-danger" onclick="Stats.reset()" style="margin-top:12px;">
+					Скинути статистику
+				</button>
+			</div>
 
-  <!-- ===== SCREEN: MANAGE ===== -->
-  <div class="screen" id="screenManage">
-    <div class="card">
-      <div class="card-title">Додати вірш</div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Книга</label>
-          <input id="addBook" placeholder="Від Івана">
-        </div>
-        <div class="form-group">
-          <label>Розділ</label>
-          <input id="addChapter" type="number" placeholder="3">
-        </div>
-        <div class="form-group">
-          <label>Вірш</label>
-          <input id="addVerse" type="number" placeholder="16">
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Теги (через кому)</label>
-        <input id="addTags" placeholder="любов, спасіння">
-      </div>
-      <div id="addTranslations"></div>
-      <button class="btn btn-primary btn-block" onclick="Manage.saveVerse()" style="margin-top:8px;">
-        Зберегти вірш
-      </button>
-    </div>
+			<!-- ===== SCREEN: MANAGE ===== -->
+			<div class="screen" id="screenManage">
+				<div class="card">
+					<div class="card-title">Додати вірш</div>
+					<div class="form-row">
+						<div class="form-group">
+							<label>Книга</label>
+							<input id="addBook" placeholder="Від Івана">
+						</div>
+						<div class="form-group">
+							<label>Розділ</label>
+							<input id="addChapter" type="number" placeholder="3">
+						</div>
+						<div class="form-group">
+							<label>Вірш</label>
+							<input id="addVerse" type="number" placeholder="16">
+						</div>
+					</div>
+					<div class="form-group">
+						<label>Теги (через кому)</label>
+						<input id="addTags" placeholder="любов, спасіння">
+					</div>
+					<div id="addTranslations"></div>
+					<button class="btn btn-primary btn-block" onclick="Manage.saveVerse()" style="margin-top:8px;">
+						Зберегти вірш
+					</button>
+				</div>
 
-    <div class="card">
-      <div class="card-title">Мої вірші (<span id="verseCount">0</span>)</div>
-      <div id="verseList"></div>
-    </div>
+				<div class="card">
+					<div class="card-title">Мої вірші (<span id="verseCount">0</span>)</div>
+					<div id="verseList"></div>
+				</div>
 
-    <div class="card">
-      <div class="card-title">Імпорт / Експорт</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <button class="btn btn-sm" onclick="Manage.exportData()">📤 Експорт JSON</button>
-        <button class="btn btn-sm" onclick="document.getElementById('importFile').click()">📥 Імпорт JSON</button>
-        <input type="file" id="importFile" accept=".json" style="display:none" onchange="Manage.importData(event)">
-      </div>
-    </div>
-  </div>
-</div>
+				<div class="card">
+					<div class="card-title">Імпорт / Експорт</div>
+					<div style="display:flex;gap:8px;flex-wrap:wrap;">
+						<button class="btn btn-sm" onclick="Manage.exportData()">📤 Експорт JSON</button>
+						<button class="btn btn-sm" onclick="document.getElementById('importFile').click()">📥 Імпорт JSON</button>
+						<input type="file" id="importFile" accept=".json" style="display:none" onchange="Manage.importData(event)">
+					</div>
+				</div>
+			</div>
+		</div>
 
-<!-- ===== BOTTOM NAV ===== -->
-<div class="bottom-nav">
-  <button class="nav-btn active" onclick="UI.navigate('screenHome', this)" data-screen="screenHome">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9"/><path d="M5 10v10a1 1 0 001 1h3v-6h6v6h3a1 1 0 001-1V10"/></svg>
-    Гра
-  </button>
-  <button class="nav-btn" onclick="UI.navigate('screenStats', this)" data-screen="screenStats">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="12" width="4" height="9" rx="1"/><rect x="10" y="7" width="4" height="14" rx="1"/><rect x="17" y="3" width="4" height="18" rx="1"/></svg>
-    Статистика
-  </button>
-  <button class="nav-btn" onclick="UI.navigate('screenManage', this)" data-screen="screenManage">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14m-7-7h14"/></svg>
-    Вірші
-  </button>
-</div>
+		<!-- ===== BOTTOM NAV ===== -->
+		<div class="bottom-nav">
+			<button class="nav-btn active" onclick="UI.navigate('screenHome', this)" data-screen="screenHome">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9"/><path d="M5 10v10a1 1 0 001 1h3v-6h6v6h3a1 1 0 001-1V10"/></svg>
+				Гра
+			</button>
+			<button class="nav-btn" onclick="UI.navigate('screenStats', this)" data-screen="screenStats">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="12" width="4" height="9" rx="1"/><rect x="10" y="7" width="4" height="14" rx="1"/><rect x="17" y="3" width="4" height="18" rx="1"/></svg>
+				Статистика
+			</button>
+			<button class="nav-btn" onclick="UI.navigate('screenManage', this)" data-screen="screenManage">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14m-7-7h14"/></svg>
+				Вірші
+			</button>
+		</div>
 
-<div class="toast" id="toast"></div>
+		<!-- ===== TOAST ===== -->
+		<div class="toast" id="toast"></div>
 
-<!-- VITE ENTRY POINT -->
-<script type="module" src="/src/main.ts"></script>
-
-</body>
+		<!-- ===== VITE ENTRY POINT ===== -->
+		<script type="module" src="/src/main.ts"></script>
+	</body>
 </html>
