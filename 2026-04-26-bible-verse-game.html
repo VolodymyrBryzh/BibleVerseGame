@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Вивчення Біблійних Віршів</title>
+<style>
+/* ===== CSS VARIABLES ===== */
+:root {
+  --bg: #f8f6f0;
+  --bg-card: #ffffff;
+  --bg-selected: #e8f4e8;
+  --bg-hover: #f0ede6;
+  --text: #2c2c2c;
+  --text-light: #6b6b6b;
+  --text-muted: #999;
+  --accent: #4a7c59;
+  --accent-light: #6ba37a;
+  --accent-bg: #e8f4e8;
+  --danger: #c0392b;
+  --danger-bg: #fde8e8;
+  --warning: #e67e22;
+  --warning-bg: #fef3e2;
+  --success: #27ae60;
+  --success-bg: #e8f8ef;
+  --border: #e0ddd6;
+  --shadow: 0 2px 8px rgba(0,0,0,0.08);
+  --radius: 10px;
+  --radius-sm: 6px;
+  --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --transition: 0.2s ease;
+}
+
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100dvh;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+/* ===== LAYOUT ===== */
+.app { max-width: 640px; margin: 0 auto; padding: 0 16px 100px; }
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* ===== HEADER ===== */
+.header {
+  text-align: center;
+  padding: 20px 0 12px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+.header h1 { font-size: 1.3rem; font-weight: 700; color: var(--accent); }
+.header p { font-size: 0.85rem; color: var(--text-light); margin-top: 2px; }
+
+/* ===== BOTTOM NAV ===== */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  display: flex; justify-content: center;
+  padding: 8px 0 calc(8px + env(safe-area-inset-bottom, 0px));
+  z-index: 100;
+}
+.nav-btn {
+  background: none; border: none; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 6px 20px; color: var(--text-light);
+  font-size: 0.7rem; gap: 3px; transition: color var(--transition);
+}
+.nav-btn.active { color: var(--accent); }
+.nav-btn svg { width: 22px; height: 22px; }
+
+/* ===== CARDS ===== */
+.card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+.card-title { font-size: 1rem; font-weight: 600; margin-bottom: 8px; }
+
+/* ===== MODE SELECTOR ===== */
+.mode-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 16px; }
+.mode-card {
+  background: var(--bg-card); border: 2px solid var(--border);
+  border-radius: var(--radius); padding: 14px 16px; cursor: pointer;
+  transition: all var(--transition); display: flex; align-items: center; gap: 12px;
+}
+.mode-card:hover { border-color: var(--accent-light); background: var(--bg-hover); }
+.mode-card.selected { border-color: var(--accent); background: var(--accent-bg); }
+.mode-icon { font-size: 1.6rem; flex-shrink: 0; }
+.mode-info h3 { font-size: 0.95rem; font-weight: 600; }
+.mode-info p { font-size: 0.8rem; color: var(--text-light); }
+
+/* ===== FILTER SECTION ===== */
+.filter-row {
+  display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;
+}
+.filter-label { font-size: 0.8rem; color: var(--text-light); width: 100%; margin-bottom: -4px; }
+select, .btn {
+  font-family: var(--font); font-size: 0.85rem;
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 8px 12px; background: var(--bg-card); color: var(--text);
+  cursor: pointer; transition: all var(--transition);
+}
+select { flex: 1; min-width: 0; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 5l3 3 3-3' fill='none' stroke='%236b6b6b' stroke-width='1.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 10px center;
+  padding-right: 28px;
+}
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  font-weight: 600; white-space: nowrap;
+}
+.btn-primary { background: var(--accent); color: white; border-color: var(--accent); }
+.btn-primary:hover { background: var(--accent-light); }
+.btn-sm { padding: 6px 10px; font-size: 0.8rem; }
+.btn-danger { background: var(--danger); color: white; border-color: var(--danger); }
+.btn-block { width: 100%; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ===== GAME AREA ===== */
+.game-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border);
+}
+.game-ref { font-weight: 700; font-size: 1rem; color: var(--accent); }
+.game-translation { font-size: 0.75rem; color: var(--text-light); }
+.game-instruction {
+  font-size: 0.85rem; color: var(--text-light);
+  text-align: center; margin-bottom: 14px; font-style: italic;
+}
+
+/* Word Order Mode */
+.word-bank {
+  display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+  min-height: 44px; margin-bottom: 16px;
+}
+.word-chip {
+  padding: 8px 14px; background: var(--accent-bg); border: 1px solid var(--accent);
+  border-radius: 20px; cursor: pointer; font-size: 0.9rem;
+  transition: all var(--transition); user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.word-chip:active { transform: scale(0.95); }
+.word-chip.used { opacity: 0.3; pointer-events: none; }
+.answer-zone {
+  min-height: 60px; border: 2px dashed var(--border);
+  border-radius: var(--radius); padding: 10px;
+  display: flex; flex-wrap: wrap; gap: 6px; align-items: flex-start;
+  margin-bottom: 14px; transition: border-color var(--transition);
+}
+.answer-zone.drag-over { border-color: var(--accent); background: var(--accent-bg); }
+.answer-chip {
+  padding: 6px 12px; background: var(--accent); color: white;
+  border-radius: 16px; font-size: 0.85rem; cursor: pointer;
+  transition: all var(--transition);
+}
+.answer-chip:hover { background: var(--danger); }
+
+/* Fill Gaps Mode */
+.gap-text { font-size: 1.05rem; line-height: 2; }
+.gap-input {
+  display: inline-block; border: none; border-bottom: 2px solid var(--accent);
+  background: var(--accent-bg); padding: 2px 6px; margin: 0 2px;
+  font-family: var(--font); font-size: 1rem; color: var(--accent);
+  min-width: 80px; max-width: 160px; text-align: center;
+  border-radius: 4px 4px 0 0; outline: none;
+  transition: border-color var(--transition);
+}
+.gap-input:focus { border-color: var(--accent-light); }
+.gap-input.correct { border-color: var(--success); background: var(--success-bg); color: var(--success); }
+.gap-input.wrong { border-color: var(--danger); background: var(--danger-bg); color: var(--danger); }
+
+/* Continue Verse Mode */
+.verse-prompt {
+  font-size: 1.1rem; font-style: italic; color: var(--accent);
+  padding: 14px; background: var(--accent-bg);
+  border-radius: var(--radius); margin-bottom: 14px;
+  border-left: 4px solid var(--accent);
+}
+.continue-area {
+  width: 100%; min-height: 100px; border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 12px; font-family: var(--font);
+  font-size: 1rem; resize: vertical; outline: none;
+  transition: border-color var(--transition);
+}
+.continue-area:focus { border-color: var(--accent); }
+
+/* Result Feedback */
+.result-banner {
+  padding: 12px 16px; border-radius: var(--radius); margin: 12px 0;
+  font-weight: 600; text-align: center; font-size: 0.95rem;
+}
+.result-banner.success { background: var(--success-bg); color: var(--success); }
+.result-banner.partial { background: var(--warning-bg); color: var(--warning); }
+.result-banner.error { background: var(--danger-bg); color: var(--danger); }
+.correct-answer {
+  margin-top: 10px; padding: 12px; background: var(--bg-hover);
+  border-radius: var(--radius-sm); font-size: 0.9rem; color: var(--text-light);
+}
+.correct-answer strong { color: var(--text); }
+
+/* ===== STATS ===== */
+.stats-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;
+}
+.stat-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 14px; text-align: center;
+}
+.stat-value { font-size: 1.6rem; font-weight: 700; color: var(--accent); }
+.stat-label { font-size: 0.75rem; color: var(--text-light); margin-top: 2px; }
+.progress-bar-bg {
+  width: 100%; height: 8px; background: var(--border);
+  border-radius: 4px; overflow: hidden; margin-top: 6px;
+}
+.progress-bar-fill {
+  height: 100%; background: var(--accent); border-radius: 4px;
+  transition: width 0.5s ease;
+}
+.verse-stat-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 0; border-bottom: 1px solid var(--border);
+  font-size: 0.85rem;
+}
+.verse-stat-row:last-child { border-bottom: none; }
+.verse-stat-ref { font-weight: 600; }
+.verse-stat-pct { color: var(--accent); font-weight: 700; }
+.weak-badge {
+  display: inline-block; padding: 2px 8px; border-radius: 10px;
+  font-size: 0.7rem; font-weight: 600;
+}
+.weak-badge.strong { background: var(--success-bg); color: var(--success); }
+.weak-badge.medium { background: var(--warning-bg); color: var(--warning); }
+.weak-badge.weak { background: var(--danger-bg); color: var(--danger); }
+
+/* ===== ADD VERSE FORM ===== */
+.form-group { margin-bottom: 12px; }
+.form-group label {
+  display: block; font-size: 0.8rem; font-weight: 600;
+  color: var(--text-light); margin-bottom: 4px;
+}
+.form-group input, .form-group textarea {
+  width: 100%; padding: 10px 12px; border: 1px solid var(--border);
+  border-radius: var(--radius-sm); font-family: var(--font); font-size: 0.9rem;
+  outline: none; transition: border-color var(--transition);
+}
+.form-group input:focus, .form-group textarea:focus { border-color: var(--accent); }
+.form-group textarea { min-height: 70px; resize: vertical; }
+.form-row { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 8px; }
+.translation-block {
+  padding: 12px; background: var(--bg-hover); border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+}
+.translation-block h4 { font-size: 0.85rem; margin-bottom: 6px; color: var(--accent); }
+.verse-list-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 12px; border: 1px solid var(--border);
+  border-radius: var(--radius-sm); margin-bottom: 6px;
+  background: var(--bg-card);
+}
+.verse-list-ref { font-weight: 600; font-size: 0.9rem; }
+.verse-list-tags { font-size: 0.75rem; color: var(--text-muted); }
+.verse-list-actions { display: flex; gap: 6px; }
+
+/* ===== TOAST ===== */
+.toast {
+  position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
+  background: var(--text); color: white; padding: 10px 20px;
+  border-radius: 20px; font-size: 0.85rem; z-index: 200;
+  opacity: 0; transition: opacity 0.3s; pointer-events: none;
+}
+.toast.show { opacity: 1; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 400px) {
+  .app { padding: 0 10px 90px; }
+  .stats-grid { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+  .word-chip { padding: 6px 10px; font-size: 0.85rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- ===== HEADER ===== -->
+  <div class="header">
+    <h1>📖 Вивчення Віршів</h1>
+    <p id="headerSubtitle">Обери режим і почни</p>
+  </div>
+
+  <!-- ===== SCREEN: HOME ===== -->
+  <div class="screen active" id="screenHome">
+    <div class="card">
+      <div class="card-title">Режим гри</div>
+      <div class="mode-grid">
+        <div class="mode-card selected" data-mode="word-order" onclick="UI.selectMode(this)">
+          <div class="mode-icon">🔀</div>
+          <div class="mode-info"><h3>Складання слів</h3><p>Відновити правильний порядок слів</p></div>
+        </div>
+        <div class="mode-card" data-mode="fill-gaps" onclick="UI.selectMode(this)">
+          <div class="mode-icon">✏️</div>
+          <div class="mode-info"><h3>Заповни пропуски</h3><p>Вписати приховані слова</p></div>
+        </div>
+        <div class="mode-card" data-mode="continue" onclick="UI.selectMode(this)">
+          <div class="mode-icon">💬</div>
+          <div class="mode-info"><h3>Продовж вірш</h3><p>Показано початок — напиши решту</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Налаштування</div>
+      <div class="filter-row">
+        <div class="filter-label">Переклад</div>
+        <select id="filterTranslation" onchange="UI.updateVerseFilter()"></select>
+      </div>
+      <div class="filter-row">
+        <div class="filter-label">Вірш</div>
+        <select id="filterVerse">
+          <option value="all">Всі вірші (випадковий)</option>
+        </select>
+      </div>
+      <button class="btn btn-primary btn-block" onclick="Game.start()" style="margin-top: 8px;">
+        Почати гру
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: GAME ===== -->
+  <div class="screen" id="screenGame">
+    <div class="card">
+      <div class="game-header">
+        <div>
+          <div class="game-ref" id="gameRef"></div>
+          <div class="game-translation" id="gameTransName"></div>
+        </div>
+        <button class="btn btn-sm" onclick="UI.showScreen('screenHome')">✕ Вийти</button>
+      </div>
+      <div class="game-instruction" id="gameInstruction"></div>
+      <div id="gameArea"></div>
+      <div id="gameResult"></div>
+      <div id="gameActions" style="margin-top:12px; display:flex; gap:8px; justify-content:center;"></div>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: STATS ===== -->
+  <div class="screen" id="screenStats">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value" id="statTotal">0</div>
+        <div class="stat-label">Всього спроб</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statAccuracy">0%</div>
+        <div class="stat-label">Точність</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statStreak">0</div>
+        <div class="stat-label">Серія підряд</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statLearned">0</div>
+        <div class="stat-label">Вивчено (≥80%)</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Прогрес по віршах</div>
+      <div id="verseStats"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Найслабші місця</div>
+      <div id="weakSpots"><p style="color:var(--text-muted);font-size:0.85rem;">Поки що недостатньо даних</p></div>
+    </div>
+
+    <button class="btn btn-sm btn-danger" onclick="Stats.reset()" style="margin-top:12px;">
+      Скинути статистику
+    </button>
+  </div>
+
+  <!-- ===== SCREEN: MANAGE ===== -->
+  <div class="screen" id="screenManage">
+    <div class="card">
+      <div class="card-title">Додати вірш</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Книга</label>
+          <input id="addBook" placeholder="Від Івана">
+        </div>
+        <div class="form-group">
+          <label>Розділ</label>
+          <input id="addChapter" type="number" placeholder="3">
+        </div>
+        <div class="form-group">
+          <label>Вірш</label>
+          <input id="addVerse" type="number" placeholder="16">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Теги (через кому)</label>
+        <input id="addTags" placeholder="любов, спасіння">
+      </div>
+      <div id="addTranslations"></div>
+      <button class="btn btn-primary btn-block" onclick="Manage.saveVerse()" style="margin-top:8px;">
+        Зберегти вірш
+      </button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Мої вірші (<span id="verseCount">0</span>)</div>
+      <div id="verseList"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Імпорт / Експорт</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn btn-sm" onclick="Manage.exportData()">📤 Експорт JSON</button>
+        <button class="btn btn-sm" onclick="document.getElementById('importFile').click()">📥 Імпорт JSON</button>
+        <input type="file" id="importFile" accept=".json" style="display:none" onchange="Manage.importData(event)">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== BOTTOM NAV ===== -->
+<div class="bottom-nav">
+  <button class="nav-btn active" onclick="UI.navigate('screenHome', this)" data-screen="screenHome">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9"/><path d="M5 10v10a1 1 0 001 1h3v-6h6v6h3a1 1 0 001-1V10"/></svg>
+    Гра
+  </button>
+  <button class="nav-btn" onclick="UI.navigate('screenStats', this)" data-screen="screenStats">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="12" width="4" height="9" rx="1"/><rect x="10" y="7" width="4" height="14" rx="1"/><rect x="17" y="3" width="4" height="18" rx="1"/></svg>
+    Статистика
+  </button>
+  <button class="nav-btn" onclick="UI.navigate('screenManage', this)" data-screen="screenManage">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14m-7-7h14"/></svg>
+    Вірші
+  </button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ==========================================================
+   DATA LAYER — VersesDB
+   ========================================================== */
+const TRANSLATIONS_META = [
+  { key: 'popchenko', name: 'Юрій Попченко' },
+  { key: 'ohienko',   name: 'Іван Огієнко' },
+  { key: 'cuv',       name: 'Contemporary Ukrainian' },
+  { key: 'umt',       name: 'UMT Easy-to-Read' }
+];
+
+// ---- Стартовий набір віршів ----
+const BUILT_IN_VERSES = [
+  {
+    id: 'john-3-16', book: 'Від Івана', chapter: 3, verse: 16,
+    tags: ['любов', 'спасіння'],
+    translations: {
+      ohienko: 'Бо так Бог полюбив світ, що дав Сина Свого Єдинородного, щоб кожен, хто вірує в Нього, не загинув, але мав життя вічне.',
+      popchenko: 'Бо так Бог полюбив світ, що віддав Свого Єдинородного Сина, щоб кожен, хто вірить у Нього, не загинув, а мав вічне життя.',
+      cuv: 'Бо Бог так полюбив світ, що віддав Свого єдиного Сина, щоб кожен, хто вірить у Нього, не загинув, а мав вічне життя.',
+      umt: 'Бог настільки полюбив людей у цьому світі, що віддав Свого єдиного Сина, щоб кожен, хто в Нього вірить, не загинув, а здобув вічне життя.'
+    }
+  },
+  {
+    id: 'phil-4-13', book: 'До Филипʼян', chapter: 4, verse: 13,
+    tags: ['сила', 'віра'],
+    translations: {
+      ohienko: 'Усе можу в Тім, Хто мене зміцнює.',
+      popchenko: 'Усе можу завдяки Тому, Хто мене підкріплює.',
+      cuv: 'Я все можу завдяки Тому, Хто дає мені сили.',
+      umt: 'Я здатен на все завдяки Христу, Який дає мені силу.'
+    }
+  },
+  {
+    id: 'jer-29-11', book: 'Єремія', chapter: 29, verse: 11,
+    tags: ['надія', 'плани'],
+    translations: {
+      ohienko: 'Бо Я знаю ті думки, що думаю про вас, говорить Господь, думки про мир, а не про зло, щоб дати вам майбутність і надію.',
+      popchenko: 'Бо Я знаю плани, які маю щодо вас, говорить Господь, плани миру, а не лиха, щоб дати вам майбутнє і надію.',
+      cuv: 'Бо Я знаю плани, які маю для вас, — каже Господь, — плани миру, а не біди, плани, щоб дати вам майбутнє і надію.',
+      umt: 'Я знаю, що планую для вас, каже Господь. Я планую добробут для вас, а не біду. Я планую дати вам надію та добре майбутнє.'
+    }
+  },
+  {
+    id: 'ps-23-1', book: 'Псалом', chapter: 23, verse: 1,
+    tags: ['довіра', 'турбота'],
+    translations: {
+      ohienko: 'Господь — Пастир мій, — я не буду мати недостатку.',
+      popchenko: 'Господь — мій Пастир, мені нічого не бракуватиме.',
+      cuv: 'Господь — мій Пастир; мені нічого не бракує.',
+      umt: 'Господь — мій Пастир. Він дає мені все, що мені потрібно.'
+    }
+  },
+  {
+    id: 'rom-8-28', book: 'До Римлян', chapter: 8, verse: 28,
+    tags: ['промисел', 'довіра'],
+    translations: {
+      ohienko: 'Знаємо також, що тим, хто любить Бога, усе допомагає на добре, тим, хто за постановою покликаний.',
+      popchenko: 'А ми знаємо, що Бог усе звертає на добро тим, хто любить Його, тим, кого Він покликав за Своїм задумом.',
+      cuv: 'Ми знаємо, що Бог робить усе на добро тим, хто любить Його, хто покликаний за Його задумом.',
+      umt: 'Ми знаємо, що все, що відбувається, Бог обертає на добро тим, хто любить Його, тим, хто покликаний за Його планом.'
+    }
+  },
+  {
+    id: 'prov-3-5', book: 'Приповісті', chapter: 3, verse: 5,
+    tags: ['довіра', 'мудрість'],
+    translations: {
+      ohienko: 'Надійся на Господа всім своїм серцем, і не покладайся на свій розум.',
+      popchenko: 'Покладайся на Господа всім серцем своїм і не спирайся на свій розум.',
+      cuv: 'Довіряй Господу всім серцем своїм і не покладайся на власний розум.',
+      umt: 'Покладайся на Господа всім своїм серцем і не намагайся все зрозуміти самостійно.'
+    }
+  },
+  {
+    id: 'isa-41-10', book: 'Ісая', chapter: 41, verse: 10,
+    tags: ['сила', 'страх'],
+    translations: {
+      ohienko: 'Не бійся, бо Я з тобою, не озирайся, бо Бог твій Я! Я зміцню тебе, поможу тобі і підтримаю тебе правицею правди Своєї.',
+      popchenko: 'Не бійся, бо Я з тобою! Не лякайся, бо Я — твій Бог! Я зміцню тебе, допоможу тобі і підтримаю тебе Своєю праведною правицею.',
+      cuv: 'Не бійся, бо Я з тобою! Не лякайся, бо Я — твій Бог! Я зміцню тебе і допоможу тобі. Я підтримаю тебе Своєю праведною правицею.',
+      umt: 'Не бійся — Я з тобою! Не хвилюйся — Я твій Бог! Я зроблю тебе сильним і допоможу тобі. Я підтримаю тебе Своєю могутньою рукою.'
+    }
+  },
+  {
+    id: 'matt-28-19', book: 'Від Матвія', chapter: 28, verse: 19,
+    tags: ['місія', 'учнівство'],
+    translations: {
+      ohienko: 'Тож ідіть, навчіть всі народи, христячи їх в імʼя Отця, і Сина, і Святого Духа.',
+      popchenko: 'Тож ідіть і зробіть учнями всі народи, хрестячи їх в імʼя Отця, і Сина, і Святого Духа.',
+      cuv: 'Тому йдіть і робіть учнями всі народи, хрестячи їх в імʼя Отця, і Сина, і Святого Духа.',
+      umt: 'Тому ідіть до людей усіх народів і зробіть їх Моїми учнями. Хрестіть їх в імʼя Отця, Сина і Святого Духа.'
+    }
+  },
+  {
+    id: 'gal-5-22', book: 'До Галатів', chapter: 5, verse: 22,
+    tags: ['плід духу', 'характер'],
+    translations: {
+      ohienko: 'Плід же духу: любов, радість, мир, довготерпіння, лагідність, доброта, вірність.',
+      popchenko: 'А плід Духа — це любов, радість, мир, терпіння, доброта, милосердя, вірність.',
+      cuv: 'А плід Духа — це любов, радість, мир, терпеливість, доброта, милість, вірність.',
+      umt: 'Але Дух Святий дає любов, радість, мир, терпіння, доброту, щедрість, вірність.'
+    }
+  },
+  {
+    id: 'josh-1-9', book: 'Ісус Навин', chapter: 1, verse: 9,
+    tags: ['сміливість', 'сила'],
+    translations: {
+      ohienko: 'Ось Я наказав тобі: Будь відважний та міцний! Не лякайся й не страшись, бо з тобою Господь, Бог твій, скрізь, куди ти підеш.',
+      popchenko: 'Ось Я наказав тобі: будь мужній і сильний! Не бійся і не жахайся, бо Господь, Бог твій, з тобою всюди, куди ти підеш.',
+      cuv: 'Я наказав тобі: будь мужній і сильний! Не бійся і не лякайся, бо Господь, твій Бог, з тобою, куди б ти не пішов.',
+      umt: 'Памʼятай, Я наказав тобі бути хоробрим і сильним. Не бійся, не падай духом, бо Господь, твій Бог, буде з тобою всюди, куди ти підеш.'
+    }
+  }
+];
+
+const VersesDB = {
+  _userVerses: [],
+
+  init() {
+    const saved = localStorage.getItem('bvg_user_verses');
+    if (saved) {
+      try { this._userVerses = JSON.parse(saved); } catch(e) { this._userVerses = []; }
+    }
+  },
+
+  getAll() {
+    return [...BUILT_IN_VERSES, ...this._userVerses];
+  },
+
+  getById(id) {
+    return this.getAll().find(v => v.id === id);
+  },
+
+  getReference(v) {
+    return `${v.book} ${v.chapter}:${v.verse}`;
+  },
+
+  getTranslationText(verse, translationKey) {
+    return verse.translations[translationKey] || '';
+  },
+
+  getAvailableTranslations(verse) {
+    return TRANSLATIONS_META.filter(t => verse.translations[t.key]);
+  },
+
+  addVerse(verseObj) {
+    verseObj.id = `user-${Date.now()}`;
+    this._userVerses.push(verseObj);
+    this._save();
+    return verseObj;
+  },
+
+  removeVerse(id) {
+    // Only allow removing user-added verses
+    this._userVerses = this._userVerses.filter(v => v.id !== id);
+    this._save();
+  },
+
+  isBuiltIn(id) {
+    return BUILT_IN_VERSES.some(v => v.id === id);
+  },
+
+  _save() {
+    localStorage.setItem('bvg_user_verses', JSON.stringify(this._userVerses));
+  },
+
+  exportAll() {
+    return JSON.stringify(this.getAll(), null, 2);
+  },
+
+  importVerses(json) {
+    const data = JSON.parse(json);
+    if (!Array.isArray(data)) throw new Error('Очікується масив');
+    let count = 0;
+    for (const v of data) {
+      if (!v.book || !v.chapter || !v.verse || !v.translations) continue;
+      v.id = `user-${Date.now()}-${count}`;
+      this._userVerses.push(v);
+      count++;
+    }
+    this._save();
+    return count;
+  }
+};
+
+/* ==========================================================
+   STATS MANAGER
+   ========================================================== */
+const Stats = {
+  _data: null,
+
+  _default() {
+    return { attempts: [], streak: 0, bestStreak: 0 };
+  },
+
+  init() {
+    const saved = localStorage.getItem('bvg_stats');
+    if (saved) {
+      try { this._data = JSON.parse(saved); } catch(e) { this._data = this._default(); }
+    } else {
+      this._data = this._default();
+    }
+  },
+
+  record(verseId, mode, translationKey, success, accuracy) {
+    this._data.attempts.push({
+      verseId, mode, translationKey, success, accuracy,
+      ts: Date.now()
+    });
+    if (success) {
+      this._data.streak++;
+      this._data.bestStreak = Math.max(this._data.bestStreak, this._data.streak);
+    } else {
+      this._data.streak = 0;
+    }
+    this._save();
+  },
+
+  getOverview() {
+    const a = this._data.attempts;
+    const total = a.length;
+    const correct = a.filter(x => x.success).length;
+    const accuracy = total ? Math.round(correct / total * 100) : 0;
+    const learned = this._getLearnedCount();
+    return { total, correct, accuracy, streak: this._data.streak, bestStreak: this._data.bestStreak, learned };
+  },
+
+  _getLearnedCount() {
+    const byVerse = {};
+    for (const a of this._data.attempts) {
+      if (!byVerse[a.verseId]) byVerse[a.verseId] = [];
+      byVerse[a.verseId].push(a);
+    }
+    let count = 0;
+    for (const vid in byVerse) {
+      const arr = byVerse[vid];
+      if (arr.length >= 3) {
+        const last5 = arr.slice(-5);
+        const pct = last5.filter(x => x.success).length / last5.length;
+        if (pct >= 0.8) count++;
+      }
+    }
+    return count;
+  },
+
+  getPerVerse() {
+    const byVerse = {};
+    for (const a of this._data.attempts) {
+      if (!byVerse[a.verseId]) byVerse[a.verseId] = { total: 0, correct: 0, errors: {} };
+      byVerse[a.verseId].total++;
+      if (a.success) byVerse[a.verseId].correct++;
+      if (!a.success) {
+        byVerse[a.verseId].errors[a.mode] = (byVerse[a.verseId].errors[a.mode] || 0) + 1;
+      }
+    }
+    const result = [];
+    for (const vid in byVerse) {
+      const v = VersesDB.getById(vid);
+      const d = byVerse[vid];
+      const pct = Math.round(d.correct / d.total * 100);
+      result.push({
+        id: vid,
+        ref: v ? VersesDB.getReference(v) : vid,
+        total: d.total, correct: d.correct, pct,
+        errors: d.errors
+      });
+    }
+    result.sort((a, b) => a.pct - b.pct);
+    return result;
+  },
+
+  getWeakSpots() {
+    const perVerse = this.getPerVerse();
+    return perVerse.filter(v => v.pct < 70 && v.total >= 2).slice(0, 5);
+  },
+
+  reset() {
+    if (!confirm('Точно скинути всю статистику?')) return;
+    this._data = this._default();
+    this._save();
+    UI.renderStats();
+    toast('Статистику скинуто');
+  },
+
+  _save() {
+    localStorage.setItem('bvg_stats', JSON.stringify(this._data));
+  }
+};
+
+/* ==========================================================
+   GAME ENGINE
+   ========================================================== */
+const Game = {
+  currentVerse: null,
+  currentTranslation: null,
+  currentMode: null,
+  _correctWords: [],
+  _gapData: [],
+
+  start() {
+    const mode = document.querySelector('.mode-card.selected')?.dataset.mode;
+    if (!mode) return toast('Обери режим');
+
+    const transKey = document.getElementById('filterTranslation').value;
+    const verseFilter = document.getElementById('filterVerse').value;
+
+    let verses = VersesDB.getAll().filter(v => v.translations[transKey]);
+    if (!verses.length) return toast('Немає віршів для цього перекладу');
+
+    let verse;
+    if (verseFilter === 'all') {
+      verse = verses[Math.floor(Math.random() * verses.length)];
+    } else {
+      verse = VersesDB.getById(verseFilter);
+      if (!verse || !verse.translations[transKey]) return toast('Вірш не знайдено');
+    }
+
+    this.currentVerse = verse;
+    this.currentTranslation = transKey;
+    this.currentMode = mode;
+
+    const text = VersesDB.getTranslationText(verse, transKey);
+    const transName = TRANSLATIONS_META.find(t => t.key === transKey)?.name || transKey;
+
+    document.getElementById('gameRef').textContent = VersesDB.getReference(verse);
+    document.getElementById('gameTransName').textContent = transName;
+    document.getElementById('gameResult').innerHTML = '';
+    document.getElementById('gameActions').innerHTML = '';
+
+    if (mode === 'word-order') this._startWordOrder(text);
+    else if (mode === 'fill-gaps') this._startFillGaps(text);
+    else if (mode === 'continue') this._startContinue(text);
+
+    UI.showScreen('screenGame');
+  },
+
+  // --- WORD ORDER ---
+  _startWordOrder(text) {
+    document.getElementById('gameInstruction').textContent = 'Натисни слова у правильному порядку';
+    this._correctWords = this._tokenize(text);
+    const shuffled = [...this._correctWords].sort(() => Math.random() - 0.5);
+    // Ensure shuffled is actually different
+    if (shuffled.join(' ') === this._correctWords.join(' ')) {
+      shuffled.reverse();
+    }
+
+    let html = '<div class="answer-zone" id="answerZone"></div>';
+    html += '<div class="word-bank" id="wordBank">';
+    shuffled.forEach((w, i) => {
+      html += `<span class="word-chip" data-idx="${i}" onclick="Game._pickWord(this)">${w}</span>`;
+    });
+    html += '</div>';
+    document.getElementById('gameArea').innerHTML = html;
+    this._showCheckBtn();
+  },
+
+  _pickWord(el) {
+    if (el.classList.contains('used')) return;
+    el.classList.add('used');
+    const zone = document.getElementById('answerZone');
+    const chip = document.createElement('span');
+    chip.className = 'answer-chip';
+    chip.textContent = el.textContent;
+    chip.dataset.srcIdx = el.dataset.idx;
+    chip.onclick = () => {
+      el.classList.remove('used');
+      chip.remove();
+    };
+    zone.appendChild(chip);
+  },
+
+  _checkWordOrder() {
+    const chips = document.querySelectorAll('#answerZone .answer-chip');
+    const userWords = Array.from(chips).map(c => c.textContent);
+
+    if (userWords.length !== this._correctWords.length) {
+      return toast('Розмісти всі слова');
+    }
+
+    let correct = 0;
+    for (let i = 0; i < this._correctWords.length; i++) {
+      if (userWords[i] === this._correctWords[i]) correct++;
+    }
+    const accuracy = correct / this._correctWords.length;
+    const success = accuracy === 1;
+
+    Stats.record(this.currentVerse.id, 'word-order', this.currentTranslation, success, accuracy);
+    this._showResult(success, accuracy, this._correctWords.join(' '));
+  },
+
+  // --- FILL GAPS ---
+  _startFillGaps(text) {
+    document.getElementById('gameInstruction').textContent = 'Впиши пропущені слова';
+    const words = this._tokenize(text);
+    const gapCount = Math.max(2, Math.floor(words.length * 0.3));
+    const indices = new Set();
+    while (indices.size < gapCount) {
+      indices.add(Math.floor(Math.random() * words.length));
+    }
+
+    this._gapData = [];
+    let html = '<div class="gap-text">';
+    words.forEach((w, i) => {
+      if (indices.has(i)) {
+        const gapIdx = this._gapData.length;
+        this._gapData.push(w);
+        const width = Math.max(60, w.length * 12);
+        html += `<input class="gap-input" data-gap="${gapIdx}" style="width:${width}px" autocomplete="off" autocapitalize="off" spellcheck="false"> `;
+      } else {
+        html += w + ' ';
+      }
+    });
+    html += '</div>';
+    document.getElementById('gameArea').innerHTML = html;
+    this._showCheckBtn();
+
+    // Focus first gap
+    const firstInput = document.querySelector('.gap-input');
+    if (firstInput) setTimeout(() => firstInput.focus(), 100);
+  },
+
+  _checkFillGaps() {
+    const inputs = document.querySelectorAll('.gap-input');
+    let correct = 0;
+    inputs.forEach(inp => {
+      const expected = this._gapData[parseInt(inp.dataset.gap)];
+      const userVal = inp.value.trim();
+      const isCorrect = this._normalize(userVal) === this._normalize(expected);
+      inp.classList.remove('correct', 'wrong');
+      inp.classList.add(isCorrect ? 'correct' : 'wrong');
+      if (!isCorrect) inp.value = expected;
+      if (isCorrect) correct++;
+    });
+    const accuracy = correct / this._gapData.length;
+    const success = accuracy >= 0.8;
+    Stats.record(this.currentVerse.id, 'fill-gaps', this.currentTranslation, success, accuracy);
+    this._showResult(success, accuracy);
+  },
+
+  // --- CONTINUE ---
+  _startContinue(text) {
+    document.getElementById('gameInstruction').textContent = 'Допиши продовження вірша';
+    const words = this._tokenize(text);
+    const showCount = Math.max(3, Math.floor(words.length * 0.25));
+    const prompt = words.slice(0, showCount).join(' ') + '...';
+    this._continueExpected = words.slice(showCount).join(' ');
+    this._fullText = text;
+
+    let html = `<div class="verse-prompt">${prompt}</div>`;
+    html += `<textarea class="continue-area" id="continueInput" placeholder="Продовжуй тут..."></textarea>`;
+    document.getElementById('gameArea').innerHTML = html;
+    this._showCheckBtn();
+  },
+
+  _checkContinue() {
+    const userText = document.getElementById('continueInput').value.trim();
+    if (!userText) return toast('Напиши продовження');
+
+    const expectedWords = this._tokenize(this._continueExpected);
+    const userWords = this._tokenize(userText);
+    let correct = 0;
+    const len = Math.max(expectedWords.length, userWords.length);
+    for (let i = 0; i < expectedWords.length; i++) {
+      if (userWords[i] && this._normalize(userWords[i]) === this._normalize(expectedWords[i])) correct++;
+    }
+    const accuracy = len > 0 ? correct / expectedWords.length : 0;
+    const success = accuracy >= 0.7;
+
+    Stats.record(this.currentVerse.id, 'continue', this.currentTranslation, success, accuracy);
+    this._showResult(success, accuracy, this._fullText);
+  },
+
+  // --- HELPERS ---
+  _tokenize(text) {
+    return text.split(/\s+/).filter(w => w.length > 0);
+  },
+
+  _normalize(s) {
+    return s.toLowerCase().replace(/[.,;:!?«»"""''ʼ'()—–\-]/g, '').trim();
+  },
+
+  _showCheckBtn() {
+    document.getElementById('gameActions').innerHTML =
+      `<button class="btn btn-primary" onclick="Game.check()">Перевірити</button>`;
+  },
+
+  check() {
+    if (this.currentMode === 'word-order') this._checkWordOrder();
+    else if (this.currentMode === 'fill-gaps') this._checkFillGaps();
+    else if (this.currentMode === 'continue') this._checkContinue();
+  },
+
+  _showResult(success, accuracy, correctText) {
+    const pct = Math.round(accuracy * 100);
+    let cls, msg;
+    if (success && accuracy === 1) { cls = 'success'; msg = `Чудово! 100% правильно!`; }
+    else if (success) { cls = 'success'; msg = `Добре! ${pct}% правильно`; }
+    else if (accuracy >= 0.5) { cls = 'partial'; msg = `Майже! ${pct}% правильно`; }
+    else { cls = 'error'; msg = `${pct}% — спробуй ще раз`; }
+
+    let resultHtml = `<div class="result-banner ${cls}">${msg}</div>`;
+    if (correctText && !success) {
+      resultHtml += `<div class="correct-answer"><strong>Правильна відповідь:</strong><br>${correctText}</div>`;
+    }
+    document.getElementById('gameResult').innerHTML = resultHtml;
+    document.getElementById('gameActions').innerHTML = `
+      <button class="btn btn-primary" onclick="Game.start()">Наступний</button>
+      <button class="btn" onclick="Game._retry()">Повторити</button>
+      <button class="btn" onclick="UI.showScreen('screenHome')">Меню</button>
+    `;
+  },
+
+  _retry() {
+    const text = VersesDB.getTranslationText(this.currentVerse, this.currentTranslation);
+    document.getElementById('gameResult').innerHTML = '';
+    document.getElementById('gameActions').innerHTML = '';
+    if (this.currentMode === 'word-order') this._startWordOrder(text);
+    else if (this.currentMode === 'fill-gaps') this._startFillGaps(text);
+    else if (this.currentMode === 'continue') this._startContinue(text);
+    this._showCheckBtn();
+  }
+};
+
+/* ==========================================================
+   MANAGE — add/remove/import/export
+   ========================================================== */
+const Manage = {
+  editingId: null,
+
+  init() {
+    this.renderTranslationFields();
+    this.renderVerseList();
+  },
+
+  renderTranslationFields() {
+    const container = document.getElementById('addTranslations');
+    container.innerHTML = TRANSLATIONS_META.map(t => `
+      <div class="translation-block">
+        <h4>${t.name}</h4>
+        <div class="form-group" style="margin:0">
+          <textarea id="addTrans_${t.key}" placeholder="Текст перекладу (необовʼязково)"></textarea>
+        </div>
+      </div>
+    `).join('');
+  },
+
+  saveVerse() {
+    const book = document.getElementById('addBook').value.trim();
+    const chapter = parseInt(document.getElementById('addChapter').value);
+    const verse = parseInt(document.getElementById('addVerse').value);
+    const tags = document.getElementById('addTags').value.split(',').map(s => s.trim()).filter(Boolean);
+
+    if (!book || !chapter || !verse) return toast('Заповни книгу, розділ і вірш');
+
+    const translations = {};
+    let hasAny = false;
+    for (const t of TRANSLATIONS_META) {
+      const text = document.getElementById(`addTrans_${t.key}`).value.trim();
+      if (text) { translations[t.key] = text; hasAny = true; }
+    }
+    if (!hasAny) return toast('Додай хоча б один переклад');
+
+    VersesDB.addVerse({ book, chapter, verse, tags, translations });
+    toast('Вірш додано!');
+
+    // Clear form
+    document.getElementById('addBook').value = '';
+    document.getElementById('addChapter').value = '';
+    document.getElementById('addVerse').value = '';
+    document.getElementById('addTags').value = '';
+    for (const t of TRANSLATIONS_META) {
+      document.getElementById(`addTrans_${t.key}`).value = '';
+    }
+
+    this.renderVerseList();
+    UI.updateVerseFilter();
+  },
+
+  renderVerseList() {
+    const all = VersesDB.getAll();
+    document.getElementById('verseCount').textContent = all.length;
+    const container = document.getElementById('verseList');
+    if (!all.length) {
+      container.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;">Немає віршів</p>';
+      return;
+    }
+    container.innerHTML = all.map(v => {
+      const ref = VersesDB.getReference(v);
+      const transKeys = Object.keys(v.translations).length;
+      const isBuiltIn = VersesDB.isBuiltIn(v.id);
+      return `
+        <div class="verse-list-item">
+          <div>
+            <div class="verse-list-ref">${ref}</div>
+            <div class="verse-list-tags">${transKeys} переклад(ів) · ${v.tags?.join(', ') || ''}</div>
+          </div>
+          <div class="verse-list-actions">
+            ${isBuiltIn ? '' : `<button class="btn btn-sm btn-danger" onclick="Manage.removeVerse('${v.id}')">✕</button>`}
+          </div>
+        </div>
+      `;
+    }).join('');
+  },
+
+  removeVerse(id) {
+    if (!confirm('Видалити цей вірш?')) return;
+    VersesDB.removeVerse(id);
+    this.renderVerseList();
+    UI.updateVerseFilter();
+    toast('Вірш видалено');
+  },
+
+  exportData() {
+    const json = VersesDB.exportAll();
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `bible-verses-${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast('Експортовано!');
+  },
+
+  importData(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const count = VersesDB.importVerses(e.target.result);
+        toast(`Імпортовано ${count} віршів`);
+        this.renderVerseList();
+        UI.updateVerseFilter();
+      } catch(err) {
+        toast('Помилка імпорту: ' + err.message);
+      }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+  }
+};
+
+/* ==========================================================
+   UI
+   ========================================================== */
+const UI = {
+  init() {
+    this.populateTranslationFilter();
+    this.updateVerseFilter();
+  },
+
+  showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    // Update nav
+    document.querySelectorAll('.nav-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.screen === id);
+    });
+    if (id === 'screenStats') this.renderStats();
+    if (id === 'screenManage') Manage.renderVerseList();
+  },
+
+  navigate(screenId, btn) {
+    this.showScreen(screenId);
+  },
+
+  selectMode(el) {
+    document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+  },
+
+  populateTranslationFilter() {
+    const sel = document.getElementById('filterTranslation');
+    sel.innerHTML = TRANSLATIONS_META.map(t =>
+      `<option value="${t.key}">${t.name}</option>`
+    ).join('');
+  },
+
+  updateVerseFilter() {
+    const transKey = document.getElementById('filterTranslation').value;
+    const sel = document.getElementById('filterVerse');
+    const prev = sel.value;
+    sel.innerHTML = '<option value="all">Всі вірші (випадковий)</option>';
+    VersesDB.getAll()
+      .filter(v => v.translations[transKey])
+      .forEach(v => {
+        sel.innerHTML += `<option value="${v.id}">${VersesDB.getReference(v)}</option>`;
+      });
+    if (sel.querySelector(`option[value="${prev}"]`)) sel.value = prev;
+  },
+
+  renderStats() {
+    const o = Stats.getOverview();
+    document.getElementById('statTotal').textContent = o.total;
+    document.getElementById('statAccuracy').textContent = o.accuracy + '%';
+    document.getElementById('statStreak').textContent = o.streak;
+    document.getElementById('statLearned').textContent = o.learned;
+
+    // Per verse
+    const perVerse = Stats.getPerVerse();
+    const container = document.getElementById('verseStats');
+    if (!perVerse.length) {
+      container.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;">Зіграй хоча б раз</p>';
+    } else {
+      container.innerHTML = perVerse.map(v => {
+        let badge = 'strong', badgeText = 'Вивчено';
+        if (v.pct < 50) { badge = 'weak'; badgeText = 'Потребує роботи'; }
+        else if (v.pct < 80) { badge = 'medium'; badgeText = 'В процесі'; }
+        return `
+          <div class="verse-stat-row">
+            <div>
+              <span class="verse-stat-ref">${v.ref}</span>
+              <span class="weak-badge ${badge}">${badgeText}</span>
+            </div>
+            <span class="verse-stat-pct">${v.pct}% (${v.total})</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Weak spots
+    const weak = Stats.getWeakSpots();
+    const weakContainer = document.getElementById('weakSpots');
+    if (!weak.length) {
+      weakContainer.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;">Поки що недостатньо даних</p>';
+    } else {
+      const modeNames = { 'word-order': 'Складання', 'fill-gaps': 'Пропуски', 'continue': 'Продовження' };
+      weakContainer.innerHTML = weak.map(v => {
+        const worstMode = Object.entries(v.errors).sort((a,b) => b[1] - a[1])[0];
+        const modeHint = worstMode ? ` · найбільше помилок: ${modeNames[worstMode[0]] || worstMode[0]}` : '';
+        return `
+          <div class="verse-stat-row">
+            <span class="verse-stat-ref">${v.ref}</span>
+            <span style="font-size:0.8rem;color:var(--danger)">${v.pct}%${modeHint}</span>
+          </div>
+        `;
+      }).join('');
+    }
+  }
+};
+
+/* ===== TOAST ===== */
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(el._timer);
+  el._timer = setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+/* ===== INIT ===== */
+VersesDB.init();
+Stats.init();
+UI.init();
+Manage.init();
+</script>
+</body>
+</html>
