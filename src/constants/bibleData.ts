@@ -2,14 +2,32 @@
  * Bible data constants — translation metadata and built-in verses.
  */
 
-export const TRANSLATIONS_META = [
+export interface TranslationMeta {
+  key: string;
+  name: string;
+}
+
+export interface VerseTranslations {
+  [key: string]: string;
+}
+
+export interface BibleVerse {
+  id: string;
+  book: string;
+  chapter: number;
+  verse: number;
+  tags: string[];
+  translations: VerseTranslations;
+}
+
+export const TRANSLATIONS_META: TranslationMeta[] = [
   { key: 'popchenko', name: 'Юрій Попченко' },
   { key: 'ohienko',   name: 'Іван Огієнко' },
   { key: 'cuv',       name: 'Contemporary Ukrainian' },
   { key: 'umt',       name: 'UMT Easy-to-Read' }
 ];
 
-export const BUILT_IN_VERSES = [
+export const BUILT_IN_VERSES: BibleVerse[] = [
   {
     id: 'john-3-16', book: 'Від Івана', chapter: 3, verse: 16,
     tags: ['любов', 'спасіння'],
