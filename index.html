@@ -49,7 +49,7 @@
 							<span class="streak-icon">🔥</span>
 							<span id="streakCount">0</span> дн.
 						</div>
-						<button class="nav-btn" onclick="AuthUI.logout()" style="padding:4px; opacity:0.6; min-width:auto; flex:none;"><span class="nav-icon" style="-webkit-mask-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsPSJjdXJyZW50Q29sb3IiIGQ9Ik01IDIxYTIgMiAwIDAgMS0yLTJWNWEyIDIgMCAwIDEgMi0yaDR2MmI1djE0SDV6bTcgMmwxLjQxLTEuNDFMMTQuMTcgMTNIMTFWMTFoMy4xN2wtMS43Ni0xLjc2TDE0IDhMMTkgMTNsLTUgNXoiLz48L3N2Zz4='); mask-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsPSJjdXJyZW50Q29sb3IiIGQ9Ik01IDIxYTIgMiAwIDAgMS0yLTJWNWEyIDIgMCAwIDEgMi0yaDR2MmI1djE0SDV6bTcgMmwxLjQxLTEuNDFMMTQuMTcgMTNIMTFWMTFoMy4xN2wtMS43Ni0xLjc2TDE0IDhMMTkgMTNsLTUgNXoiLz48L3N2Zz4='); width:20px; height:20px;"></span></button>
+						<button class="logout" onclick="AuthUI.logout()" style="padding:4px; opacity:0.6; min-width:auto; flex:none;"><span class="nav-icon" style="-webkit-mask-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsPSJjdXJyZW50Q29sb3IiIGQ9Ik01IDIxYTIgMiAwIDAgMS0yLTJWNWEyIDIgMCAwIDEgMi0yaDR2MmI1djE0SDV6bTcgMmwxLjQxLTEuNDFMMTQuMTcgMTNIMTFWMTFoMy4xN2wtMS43Ni0xLjc2TDE0IDhMMTkgMTNsLTUgNXoiLz48L3N2Zz4='); mask-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsPSJjdXJyZW50Q29sb3IiIGQ9Ik01IDIxYTIgMiAwIDAgMS0yLTJWNWEyIDIgMCAwIDEgMi0yaDR2MmI1djE0SDV6bTcgMmwxLjQxLTEuNDFMMTQuMTcgMTNIMTFWMTFoMy4xN2wtMS43Ni0xLjc2TDE0IDhMMTkgMTNsLTUgNXoiLz48L3N2Zz4='); width:20px; height:20px;"></span></button>
 					</div>
 				</div>
 				<h1 class="dashboard-title">Слово<br>на кожен день</h1>
@@ -236,6 +236,7 @@
 
 		<!-- ===== BOTTOM NAV ===== -->
 		<div id="mainNav" class="bottom-nav" style="display:none">
+			<div id="navIndicator" class="nav-indicator"></div>
 			<button class="nav-btn active" onclick="UI.navigate('screenDashboard', this)" data-screen="screenDashboard">
 				<span class="nav-icon icon-home"></span>
 				Головна

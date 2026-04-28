@@ -216,6 +216,20 @@ body {
   padding: 10px 0 calc(10px + env(safe-area-inset-bottom, 0px));
   z-index: 100;
 }
+.nav-indicator {
+  position: absolute;
+  top: 0;
+  left: 6.25%; 
+  width: 12.5%;
+  height: 4px;
+  background: #3a4a2e; /* Exact brand green */
+  border-radius: 0 0 6px 6px;
+  transition: transform 0.4s cubic-bezier(0.2, 1, 0.3, 1);
+  box-shadow: 0 2px 8px rgba(58, 74, 46, 0.2);
+  z-index: 10;
+  pointer-events: none;
+}
+
 .nav-btn {
   flex: 1;
   background: none; border: none; cursor: pointer;
@@ -223,22 +237,7 @@ body {
   padding: 8px 0; color: var(--text-muted);
   font-size: 0.75rem; gap: 4px; transition: all var(--transition);
   font-weight: 600;
-  position: relative; /* needed for ::before */
-}
-
-.nav-btn::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  background: transparent;
-  border-radius: 0 0 6px 6px;
-  transition: background 0.25s ease;
-}
-
-.nav-btn.active::before {
-  background: #3a4a2e;
-  box-shadow: 0 2px 6px rgba(58, 74, 46, 0.3);
+  position: relative;
 }
 
 .nav-btn.active { color: var(--accent); }

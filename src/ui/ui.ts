@@ -80,12 +80,20 @@ const UI = {
     
     // Update nav
     const navBtns = document.querySelectorAll('.nav-btn');
-    navBtns.forEach((b) => {
+    let activeIndex = 0;
+    navBtns.forEach((b, index) => {
       const btn = b as HTMLElement;
       const isActive = btn.dataset.screen === id;
       btn.classList.toggle('active', isActive);
+      if (isActive) activeIndex = index;
     });
 
+    // Move indicator
+    const indicator = $('navIndicator');
+    if (indicator) {
+      // 200% = 2 * 12.5% (indicator width) = 25% (button width)
+      indicator.style.transform = `translateX(${activeIndex * 200}%)`;
+    }
 
     
     // Specific screen logic
