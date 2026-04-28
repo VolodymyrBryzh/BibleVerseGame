@@ -1,34 +1,487 @@
 {
-  "metadata": {
-    "book": "Буття",
-    "translation": "ubio",
-    "language": "uk"
-  },
-  "chapters": [
-    {
-      "chapter": 1,
-      "verses": [
-        {
-          "verse": 1,
-          "text": "На початку Бог створив Небо та землю."
-        },
-        {
-          "verse": 2,
-          "text": "А земля була пуста та порожня, і темрява була над безоднею, і Дух Божий ширяв над поверхнею води."
-        },
-        {
-          "verse": 3,
-          "text": "І сказав Бог: Хай станеться світло! І сталося світло."
-        },
-        {
-          "verse": 4,
-          "text": "І побачив Бог світло, що добре воно, і Бог відділив світло від темряви."
-        },
-        {
-          "verse": 5,
-          "text": "І Бог назвав світло: День, а темряву назвав: Ніч. І був вечір, і був ранок, день перший."
-        }
-      ]
-    }
-  ]
+	"metadata": {
+		"book": "Буття",
+		"translation": "ubio",
+		"language": "uk"
+	},
+	"chapters": [
+		{
+			"chapter": 1,
+			"verses": [
+				{
+					"verse": 1,
+					"text": "На початку Бог створив Небо та землю."
+				},
+				{
+					"verse": 2,
+					"text": "А земля була пуста та порожня, і темрява була над безоднею, і Дух Божий ширяв над поверхнею води."
+				},
+				{
+					"verse": 3,
+					"text": "І сказав Бог: „Хай станеться світло!“ І сталося світло."
+				},
+				{
+					"verse": 4,
+					"text": "І побачив Бог світло, що добре воно, – і Бог відділив світло від темряви."
+				},
+				{
+					"verse": 5,
+					"text": "І Бог назвав світло: „День“, а темряву назвав: „Ніч“. І був вечір, і був ранок, – день перший."
+				},
+				{
+					"verse": 6,
+					"text": "І сказав Бог: „Нехай станеться твердь посеред води, і нехай відділяє вона між водою й водою“."
+				},
+				{
+					"verse": 7,
+					"text": "І Бог твердь учинив, і відділив воду, що під твердю вона, і воду, що над твердю вона. І сталося так."
+				},
+				{
+					"verse": 8,
+					"text": "І назвав Бог твердь: „Небо“. І був вечір, і був ранок – день другий."
+				}
+			]
+		},
+		{
+			"chapter": 2,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 3,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 4,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 5,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 6,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 7,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 8,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 9,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 10,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 11,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 12,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 13,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 14,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 15,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 16,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 17,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 18,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 19,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 20,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 21,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 22,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 23,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 24,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 25,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 26,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 27,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 28,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 29,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 30,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 31,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 32,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 33,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 34,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 35,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 36,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 37,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 38,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 39,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 40,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 41,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 42,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 43,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 44,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 45,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 46,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 47,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 48,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 49,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		},
+		{
+			"chapter": 50,
+			"verses": [
+				{
+					"verse": 1,
+					"text": ""
+				}
+			]
+		}
+	]
 }
