@@ -213,21 +213,23 @@ body {
   -webkit-backdrop-filter: blur(12px);
   border-top: 1px solid var(--border);
   display: grid; 
-  grid-template-columns: repeat(4, 1fr); /* Perfect 25% slots */
+  grid-template-columns: repeat(4, 1fr);
   padding: 10px 0 calc(10px + env(safe-area-inset-bottom, 0px));
   z-index: 100;
+  position: fixed; /* override for stacking context */
 }
 .nav-indicator {
   position: absolute;
   top: 0;
-  left: 6.25%; 
-  width: 12.5%;
-  height: 4px;
-  background: #3a4a2e; /* Exact brand green */
+  left: 0;
+  width: 25%;
+  height: 3px;
+  background: #3a4a2e;
   border-radius: 0 0 6px 6px;
-  transition: left 0.4s cubic-bezier(0.2, 1, 0.3, 1); /* Faster, snappier feel */
-  box-shadow: 0 2px 8px rgba(58, 74, 46, 0.2);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 6px rgba(58, 74, 46, 0.25);
   z-index: 10;
+  pointer-events: none;
 }
 .nav-btn {
   flex: 1;
