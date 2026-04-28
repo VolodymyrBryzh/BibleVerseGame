@@ -30,17 +30,33 @@ const Manage = {
     
     select.innerHTML = '<option value="">Оберіть книгу...</option>';
     
-    for (const [name, slug] of Object.entries(this.bookSlugs)) {
+    // Create a list of promises to fetch books in parallel for speed
+    const checks = Object.entries(this.bookSlugs).map(async ([name, slug]) => {
       try {
-        const resp = await fetch(`/bible/ubio/${slug}.json`, { method: 'HEAD' });
-        if (resp.ok) {
-          const opt = document.createElement('option');
-          opt.value = name;
-          opt.textContent = name;
-          select.appendChild(opt);
-        }
-      } catch (e) {}
-    }
+        const resp = await fetch(`/bible/ubio/${slug}.json`);
+        if (!resp.ok) return null;
+        
+        const data = await resp.json();
+        // Check if any verse in any chapter has content
+        const hasAnyContent = data.chapters?.some((ch: any) => 
+          ch.verses?.some((v: any) => v.text && v.text.trim() !== '')
+        );
+        
+        return hasAnyContent ? name : null;
+      } catch (e) {
+        return null;
+      }
+    });
+
+    const results = await Promise.all(checks);
+    results.forEach(name => {
+      if (name) {
+        const opt = document.createElement('option');
+        opt.value = name;
+        opt.textContent = name;
+        select.appendChild(opt);
+      }
+    });
   },
 
   async onBookChange(): Promise<void> {
