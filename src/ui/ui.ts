@@ -80,12 +80,10 @@ const UI = {
     
     // Update nav
     const navBtns = document.querySelectorAll('.nav-btn');
-    let activeIndex = 0;
-    navBtns.forEach((b, index) => {
+    navBtns.forEach((b) => {
       const btn = b as HTMLElement;
       const isActive = btn.dataset.screen === id;
       btn.classList.toggle('active', isActive);
-      if (isActive) activeIndex = index;
     });
 
 
