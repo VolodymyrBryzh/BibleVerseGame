@@ -130,20 +130,23 @@
 					<div class="form-row">
 						<div class="form-group">
 							<label>Книга</label>
-							<input id="addBook" placeholder="Від Івана">
+							<select id="addBook" onchange="Manage.onBookChange()">
+								<option value="">Оберіть книгу...</option>
+							</select>
 						</div>
 						<div class="form-group">
 							<label>Розділ</label>
-							<input id="addChapter" type="number" placeholder="3">
+							<select id="addChapter" onchange="Manage.onChapterChange()">
+								<option value="">--</option>
+							</select>
 						</div>
 						<div class="form-group">
 							<label>Вірш</label>
-							<input id="addVerse" type="number" placeholder="16">
+							<select id="addVerse" onchange="Manage.onVerseChange()">
+								<option value="">--</option>
+							</select>
 						</div>
 					</div>
-					<button class="btn btn-sm btn-secondary btn-block" onclick="Manage.fetchVerse()" style="margin-bottom:12px; background:var(--accent-bg); color:var(--accent)">
-						✨ Знайти текст автоматично
-					</button>
 					<div class="form-group">
 						<label>Теги (через кому)</label>
 						<input id="addTags" placeholder="любов, спасіння">
