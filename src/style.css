@@ -108,8 +108,28 @@ body {
   font-weight: 600;
 }
 .nav-btn.active { color: var(--accent); }
-.nav-btn.active svg { transform: translateY(-2px); }
-.nav-btn svg { width: 24px; height: 24px; transition: transform var(--transition); }
+
+.nav-icon {
+  display: block;
+  width: 24px;
+  height: 24px;
+  background-color: var(--text-muted);
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  transition: background-color var(--transition), transform var(--transition);
+}
+
+.nav-btn.active .nav-icon {
+  background-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.icon-home { -webkit-mask-image: url('./ui/img/navbar/iconHome.svg'); mask-image: url('./ui/img/navbar/iconHome.svg'); }
+.icon-game { -webkit-mask-image: url('./ui/img/navbar/iconGame.svg'); mask-image: url('./ui/img/navbar/iconGame.svg'); }
+.icon-stats { -webkit-mask-image: url('./ui/img/navbar/iconStats.svg'); mask-image: url('./ui/img/navbar/iconStats.svg'); }
+.icon-manage { -webkit-mask-image: url('./ui/img/navbar/iconManage.svg'); mask-image: url('./ui/img/navbar/iconManage.svg'); }
 
 /* ===== CARDS ===== */
 .card {
