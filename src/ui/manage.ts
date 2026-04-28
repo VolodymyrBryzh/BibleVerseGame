@@ -21,23 +21,38 @@ const Manage = {
   init(): void {
     this.renderTranslationFields();
     this.renderVerseList();
+    this.initTranslationDropdown();
+  },
+
+  initTranslationDropdown(): void {
+    const select = $<HTMLSelectElement>('addSearchTranslation');
+    if (!select) return;
+    
+    select.innerHTML = TRANSLATIONS_META.map(t => 
+      `<option value="${t.key}">${t.name}</option>`
+    ).join('');
+    
+    // Trigger initial book load for first translation
+    this.initBookDropdown();
+  },
+
+  onTranslationChange(): void {
     this.initBookDropdown();
   },
 
   async initBookDropdown(): Promise<void> {
+    const transKey = $<HTMLSelectElement>('addSearchTranslation')?.value || 'ubio';
     const select = $<HTMLSelectElement>('addBook');
     if (!select) return;
     
-    select.innerHTML = '<option value="">Оберіть книгу...</option>';
+    select.innerHTML = '<option value="">Завантаження...</option>';
     
-    // Create a list of promises to fetch books in parallel for speed
     const checks = Object.entries(this.bookSlugs).map(async ([name, slug]) => {
       try {
-        const resp = await fetch(`/bible/ubio/${slug}.json`);
+        const resp = await fetch(`/bible/${transKey}/${slug}.json`);
         if (!resp.ok) return null;
         
         const data = await resp.json();
-        // Check if any verse in any chapter has content
         const hasAnyContent = data.chapters?.some((ch: any) => 
           ch.verses?.some((v: any) => v.text && v.text.trim() !== '')
         );
@@ -49,6 +64,8 @@ const Manage = {
     });
 
     const results = await Promise.all(checks);
+    select.innerHTML = '<option value="">Оберіть книгу...</option>';
+    
     results.forEach(name => {
       if (name) {
         const opt = document.createElement('option');
@@ -60,6 +77,7 @@ const Manage = {
   },
 
   async onBookChange(): Promise<void> {
+    const transKey = $<HTMLSelectElement>('addSearchTranslation')?.value || 'ubio';
     const book = $<HTMLSelectElement>('addBook')?.value;
     const chSelect = $<HTMLSelectElement>('addChapter');
     const vSelect = $<HTMLSelectElement>('addVerse');
@@ -73,7 +91,7 @@ const Manage = {
 
     const slug = this.bookSlugs[book];
     try {
-      const resp = await fetch(`/bible/ubio/${slug}.json`);
+      const resp = await fetch(`/bible/${transKey}/${slug}.json`);
       if (!resp.ok) throw new Error();
       this.currentBookData = await resp.json();
       
