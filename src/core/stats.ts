@@ -9,6 +9,7 @@ export interface StatsOverview {
   streak: number;
   bestStreak: number;
   learned: number;
+  todayDone: number;
 }
 
 const Stats = {
