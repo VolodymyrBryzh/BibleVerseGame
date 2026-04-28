@@ -49,24 +49,22 @@ const AuthUI = {
   },
 
   showLoading() {
-    document.querySelectorAll('.screen').forEach(s => (s as HTMLElement).style.display = 'none');
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     const screen = $('screenLoading');
-    if (screen) screen.style.display = 'flex';
+    if (screen) screen.classList.add('active');
   },
 
   showLogin() {
-    document.querySelectorAll('.screen').forEach(s => (s as HTMLElement).style.display = 'none');
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     const authScreen = $('screenAuth');
-    if (authScreen) {
-        authScreen.style.display = 'flex';
-        authScreen.classList.add('active');
-    }
+    if (authScreen) authScreen.classList.add('active');
+    
     const nav = $('mainNav');
     if (nav) nav.style.display = 'none';
   },
 
   showApp() {
-    document.querySelectorAll('.screen').forEach(s => (s as HTMLElement).style.display = 'none');
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     const nav = $('mainNav');
     if (nav) nav.style.display = 'flex';
     

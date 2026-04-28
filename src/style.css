@@ -155,17 +155,20 @@ body {
 }
 
 /* ===== SCREEN MANAGEMENT ===== */
-.screen { display: none; padding-bottom: 80px; animation: fadeIn 0.3s ease-out; }
-.screen.active { display: block; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-
-/* ===== LAYOUT ===== */
-.app { max-width: 500px; margin: 0 auto; padding: 20px 20px 100px; position: relative; }
 .screen { 
   display: none; 
+  padding-bottom: 80px;
+}
+
+.screen.active { 
+  display: block; 
   animation: fadeIn 0.3s ease-out;
 }
-.screen.active { display: block; }
+
+#screenAuth.active, 
+#screenLoading.active {
+  display: flex !important;
+}
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
