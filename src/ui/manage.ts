@@ -1,4 +1,5 @@
 import VersesDB from '../core/database';
+import BibleLoader from '../core/loader';
 import UI from './ui';
 import { TRANSLATIONS_META, BibleVerse } from '../constants/bibleData';
 import { toast, $ } from '../utils/helpers';
@@ -189,6 +190,27 @@ const Manage = {
         UI.updateVerseFilter();
       } catch(err: any) {
         toast('Помилка імпорту: ' + err.message);
+      }
+    };
+    reader.readAsText(file);
+    input.value = '';
+  },
+
+  async importBookJSON(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      try {
+        const content = JSON.parse(e.target?.result as string);
+        const count = await BibleLoader.loadBook(content);
+        toast(`Завантажено книгу: ${content.metadata.book} (${count} віршів)`);
+        this.renderVerseList();
+        UI.updateVerseFilter();
+      } catch (err: any) {
+        toast('Помилка завантаження книги: ' + err.message);
       }
     };
     reader.readAsText(file);

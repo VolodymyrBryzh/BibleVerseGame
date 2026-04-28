@@ -165,9 +165,12 @@
 				<div class="card">
 					<div class="card-title">Імпорт / Експорт</div>
 					<div style="display:flex;gap:8px;flex-wrap:wrap;">
-						<button class="btn btn-sm" onclick="Manage.exportData()">📤 Експорт JSON</button>
-						<button class="btn btn-sm" onclick="document.getElementById('importFile').click()">📥 Імпорт JSON</button>
+						<button class="btn btn-sm" onclick="Manage.exportData()">📤 Експорт</button>
+						<button class="btn btn-sm" onclick="$('importFile').click()">📥 Імпорт</button>
+						<button class="btn btn-sm" onclick="$('importBookFile').click()" style="background:var(--accent-bg); color:var(--accent)">📖 Завантажити книгу</button>
+						
 						<input type="file" id="importFile" accept=".json" style="display:none" onchange="Manage.importData(event)">
+						<input type="file" id="importBookFile" accept=".json" style="display:none" onchange="Manage.importBookJSON(event)">
 					</div>
 				</div>
 			</div>
