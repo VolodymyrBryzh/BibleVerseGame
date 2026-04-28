@@ -32,8 +32,30 @@
 				<p id="headerSubtitle">Обери режим і почни</p>
 			</div>
 
-			<!-- ===== SCREEN: HOME ===== -->
-			<div class="screen active" id="screenHome">
+		<!-- ===== SCREEN: DASHBOARD ===== -->
+		<div id="screenDashboard" class="screen" style="display:block">
+			<div class="header">
+				<div class="logo">📖 BibleVerse</div>
+			</div>
+			<div class="container">
+				<div class="card" style="text-align:center; padding: 30px 20px; background: linear-gradient(135deg, var(--accent-bg), transparent);">
+					<h2 style="margin-bottom:10px;">Вітаємо!</h2>
+					<p style="color:var(--text-muted); line-height:1.6;">Досліджуй Боже Слово через гру та запам'ятовуй улюблені вірші.</p>
+				</div>
+				
+				<div id="dailyVerseContainer"></div>
+
+				<div class="card">
+					<div class="card-title">Швидкий старт</div>
+					<button class="btn btn-primary btn-block" onclick="UI.navigate('screenHome', $('navBtnGame'))" style="padding:16px;">
+						Почати гру
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- ===== SCREEN: HOME (GAME) ===== -->
+		<div id="screenHome" class="screen">
 				<div class="card">
 					<div class="card-title">Режим гри</div>
 					<div class="mode-grid">
@@ -181,8 +203,12 @@
 
 		<!-- ===== BOTTOM NAV ===== -->
 		<div class="bottom-nav">
-			<button class="nav-btn active" onclick="UI.navigate('screenHome', this)" data-screen="screenHome">
+			<button class="nav-btn active" onclick="UI.navigate('screenDashboard', this)" data-screen="screenDashboard">
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9"/><path d="M5 10v10a1 1 0 001 1h3v-6h6v6h3a1 1 0 001-1V10"/></svg>
+				Головна
+			</button>
+			<button id="navBtnGame" class="nav-btn" onclick="UI.navigate('screenHome', this)" data-screen="screenHome">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3l14 9-14 9V3z"/></svg>
 				Гра
 			</button>
 			<button class="nav-btn" onclick="UI.navigate('screenStats', this)" data-screen="screenStats">

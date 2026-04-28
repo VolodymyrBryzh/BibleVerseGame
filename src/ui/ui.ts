@@ -6,8 +6,33 @@ import { $ } from '../utils/helpers';
 
 const UI = {
   init(): void {
-    this.populateTranslationFilter();
+    this.renderTranslationFilter();
     this.updateVerseFilter();
+    this.renderStats();
+    this.renderDashboard();
+  },
+
+  renderDashboard(): void {
+    const container = $('dailyVerseContainer');
+    if (!container) return;
+
+    const allVerses = VersesDB.getAll();
+    if (!allVerses.length) return;
+
+    // Pick a verse based on the day (consistent for 24h)
+    const daySeed = Math.floor(Date.now() / (1000 * 60 * 60 * 24));
+    const dailyVerse = allVerses[daySeed % allVerses.length];
+    
+    const transKeys = Object.keys(dailyVerse.translations);
+    const trans = dailyVerse.translations[transKeys[0]] || '';
+
+    container.innerHTML = `
+      <div class="card" style="border-left: 4px solid var(--accent);">
+        <div class="card-title" style="font-size:0.8rem; text-transform:uppercase; letter-spacing:1px; color:var(--accent);">Вірш дня</div>
+        <p style="font-style: italic; margin-bottom:12px; font-size:1.1rem; line-height:1.5;">"${trans}"</p>
+        <div style="text-align:right; font-weight:600; color:var(--text-muted);">${VersesDB.getReference(dailyVerse)}</div>
+      </div>
+    `;
   },
 
   showScreen(id: string): void {
@@ -39,7 +64,7 @@ const UI = {
     el.classList.add('selected');
   },
 
-  populateTranslationFilter(): void {
+  renderTranslationFilter(): void {
     const sel = $<HTMLSelectElement>('filterTranslation');
     if (!sel) return;
     sel.innerHTML = TRANSLATIONS_META.map(t =>
