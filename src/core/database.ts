@@ -33,17 +33,24 @@ const VersesDB = {
 
   async init(): Promise<void> {
     console.log('VersesDB: Initializing...');
-    if (auth.currentUser) {
-      await this.syncFromFirestore();
-    } else {
-      const count = await db.verses.count();
-      if (count === 0) {
-        console.log('VersesDB: Seeding local DB with built-ins');
-        await db.verses.bulkAdd(BUILT_IN_VERSES);
-      }
+    
+    // Load local data first for instant UI
+    const count = await db.verses.count();
+    if (count === 0 && !auth.currentUser) {
+      console.log('VersesDB: Seeding local DB with built-ins');
+      await db.verses.bulkAdd(BUILT_IN_VERSES);
     }
+    
     await this.refreshCache();
-    console.log(`VersesDB: Ready. Cache has ${this._cache.length} verses.`);
+    console.log(`VersesDB: Local Ready. Cache has ${this._cache.length} verses.`);
+
+    // Start background sync if logged in
+    if (auth.currentUser) {
+      this.syncFromFirestore().then(() => {
+        console.log('VersesDB: Background sync complete.');
+        this.refreshCache().then(() => UI.renderDashboard());
+      }).catch(e => console.error('VersesDB: Background sync failed', e));
+    }
   },
 
   async syncFromFirestore(): Promise<void> {

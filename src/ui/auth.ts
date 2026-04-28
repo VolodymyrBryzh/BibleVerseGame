@@ -8,22 +8,15 @@ import { $ } from '../utils/helpers';
 
 const AuthUI = {
   init() {
-    this.showLoading();
     onAuth(async (user) => {
       if (user) {
         console.log('User logged in:', user.email);
-        try {
-          // Initialize data BEFORE showing app
-          await VersesDB.init();
-          await Stats.init();
-          UI.init();
-          Manage.init();
-          this.showApp();
-        } catch (error) {
-          console.error('Data sync failed', error);
-          alert('Помилка синхронізації даних.');
-          this.showLogin();
-        }
+        // Initialize data in background
+        VersesDB.init();
+        Stats.init();
+        UI.init();
+        Manage.init();
+        this.showApp();
       } else {
         console.log('User logged out');
         this.showLogin();
@@ -46,12 +39,6 @@ const AuthUI = {
     } catch (error) {
       console.error('Logout failed', error);
     }
-  },
-
-  showLoading() {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    const screen = $('screenLoading');
-    if (screen) screen.classList.add('active');
   },
 
   showLogin() {

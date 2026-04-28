@@ -21,14 +21,21 @@ const Stats = {
 
   async init(): Promise<void> {
     console.log('Stats: Initializing...');
-    if (auth.currentUser) {
-      await this.syncFromFirestore();
-    } else {
-      this._streak = parseInt(localStorage.getItem('bvg_streak') || '0');
-      this._bestStreak = parseInt(localStorage.getItem('bvg_best_streak') || '0');
-    }
+    
+    // Load simple streak from localStorage for instant display
+    this._streak = parseInt(localStorage.getItem('bvg_streak') || '0');
+    this._bestStreak = parseInt(localStorage.getItem('bvg_best_streak') || '0');
+    
     await this.refreshCache();
-    console.log('Stats: Ready.');
+    console.log('Stats: Local Ready.');
+
+    // Background sync
+    if (auth.currentUser) {
+      this.syncFromFirestore().then(() => {
+        console.log('Stats: Background sync complete.');
+        this.refreshCache().then(() => UI.renderDashboard());
+      }).catch(e => console.error('Stats: Background sync failed', e));
+    }
   },
 
   async syncFromFirestore(): Promise<void> {
