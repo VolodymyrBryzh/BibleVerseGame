@@ -5,10 +5,22 @@ import { $ } from '../utils/helpers';
 
 const AuthUI = {
   init() {
-    onAuth((user) => {
+    this.showLoading();
+    onAuth(async (user) => {
       if (user) {
         console.log('User logged in:', user.email);
-        this.showApp();
+        try {
+          // Initialize data BEFORE showing app
+          await VersesDB.init();
+          await Stats.init();
+          UI.init();
+          Manage.init();
+          this.showApp();
+        } catch (error) {
+          console.error('Data sync failed', error);
+          alert('Помилка синхронізації даних.');
+          this.showLogin();
+        }
       } else {
         console.log('User logged out');
         this.showLogin();
@@ -33,32 +45,28 @@ const AuthUI = {
     }
   },
 
-  showLogin() {
-    // Hide all screens
+  showLoading() {
     document.querySelectorAll('.screen').forEach(s => (s as HTMLElement).style.display = 'none');
-    // Show auth screen
+    const screen = $('screenLoading');
+    if (screen) screen.style.display = 'flex';
+  },
+
+  showLogin() {
+    document.querySelectorAll('.screen').forEach(s => (s as HTMLElement).style.display = 'none');
     const authScreen = $('screenAuth');
     if (authScreen) {
         authScreen.style.display = 'flex';
         authScreen.classList.add('active');
     }
-    // Hide nav
     const nav = $('mainNav');
     if (nav) nav.style.display = 'none';
   },
 
   showApp() {
-    // Hide auth screen
-    const authScreen = $('screenAuth');
-    if (authScreen) {
-        authScreen.style.display = 'none';
-        authScreen.classList.remove('active');
-    }
-    // Show nav
+    document.querySelectorAll('.screen').forEach(s => (s as HTMLElement).style.display = 'none');
     const nav = $('mainNav');
     if (nav) nav.style.display = 'flex';
     
-    // Default to dashboard
     UI.navigate('screenDashboard');
   }
 };

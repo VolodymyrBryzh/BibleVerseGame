@@ -26,6 +26,14 @@
 	<body>
 		<!-- ===== APP ===== -->
 		<div class="app">
+			<!-- ===== SCREEN: LOADING ===== -->
+			<div id="screenLoading" class="screen" style="display:flex; justify-content:center; align-items:center; min-height:80vh;">
+				<div style="text-align:center;">
+					<div class="loader-spinner"></div>
+					<p style="margin-top:20px; color:var(--text-light); font-weight:600;">Завантаження даних...</p>
+				</div>
+			</div>
+
 			<!-- ===== SCREEN: AUTH ===== -->
 			<div id="screenAuth" class="screen" style="display:none; justify-content:center; align-items:center; min-height:80vh;">
 				<div class="card" style="text-align:center; padding: 40px 20px; width: 100%;">
@@ -34,8 +42,7 @@
 					<p style="color:var(--text-light); margin-bottom: 30px;">Вивчайте Біблію разом із нами. Ваші дані будуть синхронізовані між усіма пристроями.</p>
 					
 					<button class="btn btn-primary btn-block" onclick="AuthUI.login()" style="display:flex; align-items:center; justify-content:center; gap:12px; padding:16px;">
-						<svg width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M21.35 11.1h-9.17v2.73h6.51c-.33 1.56-1.56 2.73-3.21 2.73a4.5 4.5 0 0 1-4.5-4.5a4.5 4.5 0 0 1 4.5-4.5c1.23 0 2.25.48 3.03 1.23l2.25-2.25A7.95 7.95 0 0 0 12.18 3c-4.42 0-8 3.58-8 8s3.58 8 8 8c4.42 0 8-3.58 8-8c0-.3-.03-.6-.08-.9z"/></svg>
-						Увійти через Google
+						<img src="/src/ui/img/googleLogo.svg" width="20" height="20" alt="Google"> Увійти через Google
 					</button>
 				</div>
 			</div>
