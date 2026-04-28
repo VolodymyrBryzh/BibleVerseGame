@@ -24,15 +24,47 @@ const Manage = {
     this.initTranslationDropdown();
   },
 
-  initTranslationDropdown(): void {
+  async initTranslationDropdown(): Promise<void> {
     const select = $<HTMLSelectElement>('addSearchTranslation');
     if (!select) return;
     
-    select.innerHTML = TRANSLATIONS_META.map(t => 
+    select.innerHTML = '<option value="">Перевірка...</option>';
+    
+    // Check which translations have at least one valid book
+    const validTranslations = await Promise.all(TRANSLATIONS_META.map(async (t) => {
+      // We only need to find ONE book with content to consider the translation valid
+      // To speed up, we check Genesis first, then others if needed
+      const slugs = Object.values(this.bookSlugs);
+      
+      // Check first 5 books to be sure (Genesis, Matthew, etc.)
+      const testSlugs = [slugs[0], slugs[9], slugs[15]]; // Genesis, Psalms, Matthew (approx)
+      
+      for (const slug of testSlugs) {
+        try {
+          const resp = await fetch(`/bible/${t.key}/${slug}.json`);
+          if (resp.ok) {
+            const data = await resp.json();
+            const hasContent = data.chapters?.some((ch: any) => 
+              ch.verses?.some((v: any) => v.text && v.text.trim() !== '')
+            );
+            if (hasContent) return t;
+          }
+        } catch (e) {}
+      }
+      return null;
+    }));
+
+    const filtered = validTranslations.filter(Boolean) as typeof TRANSLATIONS_META;
+    
+    if (filtered.length === 0) {
+      select.innerHTML = '<option value="">Немає доступних перекладів</option>';
+      return;
+    }
+
+    select.innerHTML = filtered.map(t => 
       `<option value="${t.key}">${t.name}</option>`
     ).join('');
     
-    // Trigger initial book load for first translation
     this.initBookDropdown();
   },
 
