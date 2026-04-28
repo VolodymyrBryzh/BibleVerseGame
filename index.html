@@ -27,21 +27,33 @@
 		<!-- ===== APP ===== -->
 		<div class="app">
 			<!-- ===== HEADER ===== -->
-			<div class="header">
-				<h1>📖 Вивчення Віршів</h1>
-				<p id="headerSubtitle">Обери режим і почни</p>
-			</div>
-
 		<!-- ===== SCREEN: DASHBOARD ===== -->
 		<div id="screenDashboard" class="screen active">
-			<div class="header">
-				<div class="logo">📖 BibleVerse</div>
-			</div>
-			<div class="container">
-				<div class="card" style="text-align:center; padding: 30px 20px; background: linear-gradient(135deg, var(--accent-bg), transparent);">
-					<h2 style="margin-bottom:10px;">Вітаємо!</h2>
-					<p style="color:var(--text-muted); line-height:1.6;">Досліджуй Боже Слово через гру та запам'ятовуй улюблені вірші.</p>
+			<div class="dashboard-top">
+				<div class="date-row">
+					<span id="currentDate" class="dashboard-date">ВІВТОРОК · 12 ЛЮТОГО</span>
+					<div class="streak-badge">
+						<span class="streak-icon">🔥</span>
+						<span id="streakCount">0</span> дн.
+					</div>
 				</div>
+				<h1 class="dashboard-title">Слово<br>на кожен день</h1>
+				
+				<div class="progress-card">
+					<div class="progress-header">
+						<div class="progress-info">
+							<div class="progress-label">СЬОГОДНІ</div>
+							<div class="progress-stats"><span id="dailyDone">0</span> з <span id="dailyGoal">5</span> віршів</div>
+						</div>
+						<div class="progress-percentage"><span id="dailyPercent">0</span>%</div>
+					</div>
+					<div class="progress-bar-container">
+						<div id="dailyProgressBar" class="progress-bar-fill" style="width: 0%;"></div>
+					</div>
+				</div>
+			</div>
+
+			<div class="container">
 				
 				<div id="dailyVerseContainer"></div>
 

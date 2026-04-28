@@ -50,19 +50,101 @@ body {
   overflow-x: hidden;
 }
 
+/* ===== DASHBOARD NEW DESIGN ===== */
+.dashboard-top {
+  padding: 40px 20px 30px;
+  background-color: #f5f1e9;
+  margin: -20px -20px 20px;
+  border-radius: 0 0 30px 30px;
+}
+.date-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.dashboard-date {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #9e9a91;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.streak-badge {
+  background: white;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+.dashboard-title {
+  font-size: 2.2rem;
+  line-height: 1.1;
+  font-weight: 800;
+  color: #2c2e35;
+  margin-bottom: 25px;
+  letter-spacing: -0.02em;
+}
+.progress-card {
+  background: white;
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 12px;
+}
+.progress-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #9e9a91;
+  margin-bottom: 4px;
+  letter-spacing: 0.03em;
+}
+.progress-stats {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #2c2e35;
+}
+.progress-percentage {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #2c2e35;
+  letter-spacing: -0.04em;
+}
+.progress-bar-container {
+  height: 8px;
+  background: #f0eee8;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ===== HEADER ===== */
+.header {
+  text-align: center;
+  padding: 20px 20px 20px;
+  margin-bottom: 20px;
+}
+
 /* ===== SCREEN MANAGEMENT ===== */
 .screen { display: none; padding-bottom: 80px; animation: fadeIn 0.3s ease-out; }
 .screen.active { display: block; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-
-.header {
-  padding: 30px 20px 20px; text-align: center;
-  background: linear-gradient(to bottom, var(--accent-bg), transparent);
-  border-bottom: 1px solid var(--border); margin-bottom: 20px;
-}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
 /* ===== LAYOUT ===== */
-.app { max-width: 500px; margin: 0 auto; padding: 0 20px 100px; }
+.app { max-width: 500px; margin: 0 auto; padding: 20px 20px 100px; position: relative; }
 .screen { 
   display: none; 
   animation: fadeIn 0.3s ease-out;

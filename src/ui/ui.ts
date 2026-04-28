@@ -13,13 +13,39 @@ const UI = {
   },
 
   renderDashboard(): void {
+    // 1. Update Date
+    const dateEl = $('currentDate');
+    if (dateEl) {
+      const now = new Date();
+      const days = ['НЕДІЛЯ', 'ПОНЕДІЛОК', 'ВІВТОРОК', 'СЕРЕДА', 'ЧЕТВЕР', 'П’ЯТНИЦЯ', 'СУБОТА'];
+      const months = ['СІЧНЯ', 'ЛЮТОГО', 'БЕРЕЗНЯ', 'КВІТНЯ', 'ТРАВНЯ', 'ЧЕРВНЯ', 'ЛИПНЯ', 'СЕРПНЯ', 'ВЕРЕСНЯ', 'ЖОВТНЯ', 'ЛИСТОПАДА', 'ГРУДНЯ'];
+      dateEl.textContent = `${days[now.getDay()]} · ${now.getDate()} ${months[now.getMonth()]}`;
+    }
+
+    // 2. Update Stats (Streak & Progress)
+    const o = Stats.getOverview();
+    if ($('streakCount')) $('streakCount').textContent = o.streak.toString();
+    
+    // For "Daily Progress", we'll simulate or use session stats
+    // Let's assume a goal of 5 and get today's count from Stats if available
+    const todayDone = o.todayDone || 0;
+    const dailyGoal = 5;
+    const percent = Math.min(Math.round((todayDone / dailyGoal) * 100), 100);
+
+    if ($('dailyDone')) $('dailyDone').textContent = todayDone.toString();
+    if ($('dailyPercent')) $('dailyPercent').textContent = percent.toString();
+    if ($('dailyProgressBar')) $('dailyProgressBar').style.width = `${percent}%`;
+
+    // 3. Render Daily Verse
     const container = $('dailyVerseContainer');
     if (!container) return;
 
     const allVerses = VersesDB.getAll();
-    if (!allVerses.length) return;
+    if (!allVerses.length) {
+      container.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:20px;">Додайте вірші у вкладці "Вірші", щоб побачити їх тут.</p>';
+      return;
+    }
 
-    // Pick a verse based on the day (consistent for 24h)
     const daySeed = Math.floor(Date.now() / (1000 * 60 * 60 * 24));
     const dailyVerse = allVerses[daySeed % allVerses.length];
     
@@ -27,10 +53,10 @@ const UI = {
     const trans = dailyVerse.translations[transKeys[0]] || '';
 
     container.innerHTML = `
-      <div class="card" style="border-left: 4px solid var(--accent);">
-        <div class="card-title" style="font-size:0.8rem; text-transform:uppercase; letter-spacing:1px; color:var(--accent);">Вірш дня</div>
-        <p style="font-style: italic; margin-bottom:12px; font-size:1.1rem; line-height:1.5;">"${trans}"</p>
-        <div style="text-align:right; font-weight:600; color:var(--text-muted);">${VersesDB.getReference(dailyVerse)}</div>
+      <div class="card" style="border-left: 4px solid var(--accent); margin-top: 10px;">
+        <div class="card-title" style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:var(--accent); margin-bottom:8px;">Вірш дня</div>
+        <p style="font-style: italic; margin-bottom:12px; font-size:1.1rem; line-height:1.5; color:#2c2e35;">"${trans}"</p>
+        <div style="text-align:right; font-weight:700; color:var(--text-muted); font-size:0.9rem;">${VersesDB.getReference(dailyVerse)}</div>
       </div>
     `;
   },
