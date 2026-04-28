@@ -13,56 +13,64 @@ const UI = {
   },
 
   renderDashboard(): void {
-    // 1. Update Date
-    const dateEl = $('currentDate');
-    if (dateEl) {
-      const now = new Date();
-      const days = ['НЕДІЛЯ', 'ПОНЕДІЛОК', 'ВІВТОРОК', 'СЕРЕДА', 'ЧЕТВЕР', 'П’ЯТНИЦЯ', 'СУБОТА'];
-      const months = ['СІЧНЯ', 'ЛЮТОГО', 'БЕРЕЗНЯ', 'КВІТНЯ', 'ТРАВНЯ', 'ЧЕРВНЯ', 'ЛИПНЯ', 'СЕРПНЯ', 'ВЕРЕСНЯ', 'ЖОВТНЯ', 'ЛИСТОПАДА', 'ГРУДНЯ'];
-      dateEl.textContent = `${days[now.getDay()]} · ${now.getDate()} ${months[now.getMonth()]}`;
+    console.log('UI: Rendering Dashboard...');
+    try {
+      // 1. Update Date
+      const dateEl = $('currentDate');
+      if (dateEl) {
+        const now = new Date();
+        const days = ['НЕДІЛЯ', 'ПОНЕДІЛОК', 'ВІВТОРОК', 'СЕРЕДА', 'ЧЕТВЕР', 'П’ЯТНИЦЯ', 'СУБОТА'];
+        const months = ['СІЧНЯ', 'ЛЮТОГО', 'БЕРЕЗНЯ', 'КВІТНЯ', 'ТРАВНЯ', 'ЧЕРВНЯ', 'ЛИПНЯ', 'СЕРПНЯ', 'ВЕРЕСНЯ', 'ЖОВТНЯ', 'ЛИСТОПАДА', 'ГРУДНЯ'];
+        dateEl.textContent = `${days[now.getDay()]} · ${now.getDate()} ${months[now.getMonth()]}`;
+      }
+
+      // 2. Update Stats (Streak & Progress)
+      const o = Stats.getOverview();
+      const streakEl = $('streakCount');
+      if (streakEl) streakEl.textContent = (o.streak || 0).toString();
+      
+      const todayDone = o.todayDone || 0;
+      const dailyGoal = 5;
+      const percent = Math.min(Math.round((todayDone / dailyGoal) * 100), 100);
+
+      const doneEl = $('dailyDone');
+      if (doneEl) doneEl.textContent = todayDone.toString();
+      
+      const percentEl = $('dailyPercent');
+      if (percentEl) percentEl.textContent = percent.toString();
+      
+      const barEl = $('dailyProgressBar');
+      if (barEl) barEl.style.width = `${percent}%`;
+
+      // 3. Render Daily Verse
+      const container = $('dailyVerseContainer');
+      if (!container) return;
+
+      const allVerses = VersesDB.getAll();
+      console.log(`UI: Found ${allVerses.length} verses for dashboard.`);
+      
+      if (!allVerses.length) {
+        container.innerHTML = '<p class="text-light">Додайте вірші у налаштуваннях, щоб почати вчити.</p>';
+        return;
+      }
+      
+      // Random daily verse logic
+      const daySeed = Math.floor(Date.now() / (1000 * 60 * 60 * 24));
+      const dailyVerse = allVerses[daySeed % allVerses.length];
+      
+      const transKeys = Object.keys(dailyVerse.translations);
+      const trans = dailyVerse.translations[transKeys[0]] || '';
+
+      container.innerHTML = `
+        <div class="card" style="border-left: 4px solid var(--accent); margin-top: 10px;">
+          <div class="card-title" style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:var(--accent); margin-bottom:8px;">Вірш дня</div>
+          <p style="font-style: italic; margin-bottom:12px; font-size:1.1rem; line-height:1.5; color:#2c2e35;">"${trans}"</p>
+          <div style="text-align:right; font-weight:700; color:var(--text-muted); font-size:0.9rem;">${VersesDB.getReference(dailyVerse)}</div>
+        </div>
+      `;
+    } catch (e) {
+      console.error('UI: Render Dashboard error', e);
     }
-
-    // 2. Update Stats (Streak & Progress)
-    const o = Stats.getOverview();
-    const streakEl = $('streakCount');
-    if (streakEl) streakEl.textContent = o.streak.toString();
-    
-    const todayDone = o.todayDone || 0;
-    const dailyGoal = 5;
-    const percent = Math.min(Math.round((todayDone / dailyGoal) * 100), 100);
-
-    const doneEl = $('dailyDone');
-    if (doneEl) doneEl.textContent = todayDone.toString();
-    
-    const percentEl = $('dailyPercent');
-    if (percentEl) percentEl.textContent = percent.toString();
-    
-    const barEl = $('dailyProgressBar');
-    if (barEl) barEl.style.width = `${percent}%`;
-
-    // 3. Render Daily Verse
-    const container = $('dailyVerseContainer');
-    if (!container) return;
-
-    const allVerses = VersesDB.getAll();
-    if (!allVerses.length) {
-      container.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:20px;">Додайте вірші у вкладці "Вірші", щоб побачити їх тут.</p>';
-      return;
-    }
-
-    const daySeed = Math.floor(Date.now() / (1000 * 60 * 60 * 24));
-    const dailyVerse = allVerses[daySeed % allVerses.length];
-    
-    const transKeys = Object.keys(dailyVerse.translations);
-    const trans = dailyVerse.translations[transKeys[0]] || '';
-
-    container.innerHTML = `
-      <div class="card" style="border-left: 4px solid var(--accent); margin-top: 10px;">
-        <div class="card-title" style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:var(--accent); margin-bottom:8px;">Вірш дня</div>
-        <p style="font-style: italic; margin-bottom:12px; font-size:1.1rem; line-height:1.5; color:#2c2e35;">"${trans}"</p>
-        <div style="text-align:right; font-weight:700; color:var(--text-muted); font-size:0.9rem;">${VersesDB.getReference(dailyVerse)}</div>
-      </div>
-    `;
   },
 
   showScreen(id: string): void {

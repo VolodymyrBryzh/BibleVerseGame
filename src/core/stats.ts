@@ -20,43 +20,54 @@ const Stats = {
   _bestStreak: 0,
 
   async init(): Promise<void> {
+    console.log('Stats: Initializing...');
     if (auth.currentUser) {
       await this.syncFromFirestore();
     } else {
-      // Legacy local loading
       this._streak = parseInt(localStorage.getItem('bvg_streak') || '0');
       this._bestStreak = parseInt(localStorage.getItem('bvg_best_streak') || '0');
     }
-
     await this.refreshCache();
+    console.log('Stats: Ready.');
   },
 
   async syncFromFirestore(): Promise<void> {
     if (!auth.currentUser) return;
     const uid = auth.currentUser.uid;
+    console.log('Stats: Syncing from Firestore for UID:', uid);
     
-    // 1. Load Metadata (Streaks)
-    const metaRef = doc(fdb, `users/${uid}/metadata`, 'stats');
-    const metaSnap = await getDoc(metaRef);
-    if (metaSnap.exists()) {
-      const data = metaSnap.data();
-      this._streak = data.streak || 0;
-      this._bestStreak = data.bestStreak || 0;
+    try {
+      // 1. Load Metadata (Streaks)
+      const metaRef = doc(fdb, `users/${uid}/metadata`, 'stats');
+      const metaSnap = await getDoc(metaRef);
+      if (metaSnap.exists()) {
+        const data = metaSnap.data();
+        this._streak = data.streak || 0;
+        this._bestStreak = data.bestStreak || 0;
+        console.log('Stats: Metadata loaded', { streak: this._streak });
+      }
+
+      // 2. Load Recent Attempts
+      const colRef = collection(fdb, `users/${uid}/stats`);
+      // Simple query first to avoid potential index issues on new projects
+      const snapshot = await getDocs(colRef);
+      
+      const attempts: Attempt[] = [];
+      snapshot.forEach(doc => {
+        attempts.push({ id: doc.id, ...doc.data() } as Attempt);
+      });
+      
+      console.log(`Stats: Loaded ${attempts.length} attempts from cloud.`);
+
+      // Update local cache
+      await db.stats.clear();
+      if (attempts.length > 0) {
+        await db.stats.bulkAdd(attempts);
+      }
+    } catch (e) {
+      console.error('Stats: Sync error', e);
+      throw e;
     }
-
-    // 2. Load Recent Attempts (limit to avoid huge pulls)
-    const colRef = collection(fdb, `users/${uid}/stats`);
-    const q = query(colRef, orderBy('ts', 'desc'), limit(500));
-    const snapshot = await getDocs(q);
-    
-    const attempts: Attempt[] = [];
-    snapshot.forEach(doc => {
-      attempts.push({ id: doc.id, ...doc.data() } as Attempt);
-    });
-
-    // Update local cache
-    await db.stats.clear();
-    await db.stats.bulkAdd(attempts);
   },
 
   async refreshCache(): Promise<void> {

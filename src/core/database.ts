@@ -32,43 +32,57 @@ const VersesDB = {
   _cache: [] as BibleVerse[],
 
   async init(): Promise<void> {
+    console.log('VersesDB: Initializing...');
     if (auth.currentUser) {
       await this.syncFromFirestore();
     } else {
       const count = await db.verses.count();
       if (count === 0) {
+        console.log('VersesDB: Seeding local DB with built-ins');
         await db.verses.bulkAdd(BUILT_IN_VERSES);
       }
     }
     await this.refreshCache();
+    console.log(`VersesDB: Ready. Cache has ${this._cache.length} verses.`);
   },
 
   async syncFromFirestore(): Promise<void> {
     if (!auth.currentUser) return;
     const uid = auth.currentUser.uid;
-    const colRef = collection(fdb, `users/${uid}/verses`);
-    const snapshot = await getDocs(colRef);
+    console.log('VersesDB: Syncing from Firestore for UID:', uid);
     
-    const verses: BibleVerse[] = [];
-    snapshot.forEach(doc => {
-      verses.push({ id: doc.id, ...doc.data() } as BibleVerse);
-    });
+    try {
+      const colRef = collection(fdb, `users/${uid}/verses`);
+      const snapshot = await getDocs(colRef);
+      
+      const verses: BibleVerse[] = [];
+      snapshot.forEach(doc => {
+        verses.push({ id: doc.id, ...doc.data() } as BibleVerse);
+      });
 
-    if (verses.length === 0) {
-      // First time user? Seed with built-ins
-      const batch = writeBatch(fdb);
-      for (const v of BUILT_IN_VERSES) {
-        const { id, ...data } = v;
-        const newDocRef = doc(collection(fdb, `users/${uid}/verses`));
-        batch.set(newDocRef, data);
-        verses.push({ id: newDocRef.id, ...data } as BibleVerse);
+      console.log(`VersesDB: Found ${verses.length} verses in cloud.`);
+
+      if (verses.length === 0) {
+        console.log('VersesDB: New user detected. Seeding cloud DB...');
+        const batch = writeBatch(fdb);
+        for (const v of BUILT_IN_VERSES) {
+          const { id, ...data } = v;
+          const newDocRef = doc(collection(fdb, `users/${uid}/verses`));
+          batch.set(newDocRef, data);
+          verses.push({ id: newDocRef.id, ...data } as BibleVerse);
+        }
+        await batch.commit();
+        console.log('VersesDB: Cloud seed complete.');
       }
-      await batch.commit();
-    }
 
-    // Update local cache for offline/performance
-    await db.verses.clear();
-    await db.verses.bulkAdd(verses);
+      await db.verses.clear();
+      if (verses.length > 0) {
+        await db.verses.bulkAdd(verses);
+      }
+    } catch (e) {
+      console.error('VersesDB: Sync error', e);
+      throw e;
+    }
   },
 
   async refreshCache(): Promise<void> {
