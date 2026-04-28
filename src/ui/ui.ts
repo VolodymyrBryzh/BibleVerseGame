@@ -88,11 +88,7 @@ const UI = {
       if (isActive) activeIndex = index;
     });
 
-    // Move indicator — each button = 25% of nav width
-    const indicator = $('navIndicator');
-    if (indicator) {
-      indicator.style.left = `${activeIndex * 25}%`;
-    }
+
     
     // Specific screen logic
     if (id === 'screenStats') this.renderStats();
