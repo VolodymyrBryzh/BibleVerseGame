@@ -28,37 +28,67 @@ const Manage = {
 
   async fetchVerse(): Promise<void> {
     const book = $<HTMLInputElement>('addBook')?.value.trim();
-    const chapter = $<HTMLInputElement>('addChapter')?.value;
-    const verse = $<HTMLInputElement>('addVerse')?.value;
+    const chapter = parseInt($<HTMLInputElement>('addChapter')?.value || '0');
+    const verse = parseInt($<HTMLInputElement>('addVerse')?.value || '0');
 
     if (!book || !chapter || !verse) return toast('Введіть книгу, розділ та вірш');
 
-    toast('Шукаю...');
+    toast('Шукаю в базі...');
 
-    try {
-      // Map Ukrainian book name to getbible format (approximate)
-      // For a "normal" DB, we'd have a full map, but here's a shortcut
-      const bookMap: Record<string, string> = {
-        'Від Івана': 'John', 'Від Матвія': 'Matthew', 'Від Марка': 'Mark', 'Від Луки': 'Luke',
-        'До Римлян': 'Romans', 'Псалом': 'Psalms', 'Приповісті': 'Proverbs', 'Буття': 'Genesis'
-      };
-      
-      const searchBook = bookMap[book] || book;
-      const url = `https://bible-api.com/${searchBook}+${chapter}:${verse}?translation=ukr`;
-      
-      const resp = await fetch(url);
-      const data = await resp.json();
-      
-      if (data.text) {
-        // Automatically fill in the first translation available
-        const el = $<HTMLTextAreaElement>(`addTrans_ohienko`);
-        if (el) el.value = data.text.trim();
-        toast('Знайдено (Огієнко)');
-      } else {
-        toast('Не знайдено в базі API');
+    const bookSlugs: Record<string, string> = {
+      'Буття': 'genesis', 'Вихід': 'exodus', 'Левит': 'leviticus', 'Числа': 'numbers', 'Повторення Закону': 'deuteronomy',
+      'Псалом': 'psalms', 'Приповісті': 'proverbs', 'Єремія': 'jeremiah', 'Ісая': 'isaiah',
+      'Від Матвія': 'matthew', 'Від Марка': 'mark', 'Від Луки': 'luke', 'Від Івана': 'john',
+      'До Римлян': 'romans', '1-е Коринтян': '1corinthians', '2-е Коринтян': '2corinthians',
+      'До Галатів': 'galatians', 'До Ефесян': 'ephesians', 'До Филипʼян': 'philippians',
+      'До Колосян': 'colossians', '1-е Солунян': '1thessalonians', '2-е Солунян': '2thessalonians',
+      'До Євреїв': 'hebrews', 'Якова': 'james', '1-е Петра': '1peter', '2-е Петра': '2peter',
+      '1-е Івана': '1john', 'Обʼявлення': 'revelation'
+    };
+    
+    const slug = bookSlugs[book] || book.toLowerCase();
+    let foundCount = 0;
+
+    for (const meta of TRANSLATIONS_META) {
+      try {
+        const url = `/bible/${meta.key}/${slug}.json`;
+        const resp = await fetch(url);
+        if (!resp.ok) continue;
+        
+        const data = await resp.json();
+        const chData = data.chapters?.find((c: any) => c.chapter === chapter);
+        const vData = chData?.verses?.find((v: any) => v.verse === verse);
+        
+        if (vData && vData.text) {
+          const el = $<HTMLTextAreaElement>(`addTrans_${meta.key}`);
+          if (el) el.value = vData.text.trim();
+          foundCount++;
+        }
+      } catch (e) {
+        // Silent fail for specific translation
       }
-    } catch (err) {
-      toast('Помилка при пошуку');
+    }
+
+    if (foundCount > 0) {
+      toast(`Знайдено перекладів: ${foundCount}`);
+    } else {
+      // Fallback to API if nothing found locally
+      toast('В локальній базі не знайдено. Шукаю в API...');
+      try {
+        const apiBook = bookSlugs[book] || book;
+        const url = `https://bible-api.com/${apiBook}+${chapter}:${verse}?translation=ukr`;
+        const resp = await fetch(url);
+        const data = await resp.json();
+        if (data.text) {
+          const el = $<HTMLTextAreaElement>(`addTrans_ubio`); // Default to Ohienko for API
+          if (el) el.value = data.text.trim();
+          toast('Знайдено в API (Огієнко)');
+        } else {
+          toast('Ніде не знайдено');
+        }
+      } catch (err) {
+        toast('Помилка при запиті до API');
+      }
     }
   },
 
