@@ -1,6 +1,9 @@
 import { signInWithPopup, signOut } from 'firebase/auth';
 import { auth, googleProvider, onAuth } from '../core/firebase';
+import VersesDB from '../core/database';
+import Stats from '../core/stats';
 import UI from './ui';
+import Manage from './manage';
 import { $ } from '../utils/helpers';
 
 const AuthUI = {
