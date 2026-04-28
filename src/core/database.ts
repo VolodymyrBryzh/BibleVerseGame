@@ -1,11 +1,8 @@
 import Dexie, { Table } from 'dexie';
 import { BUILT_IN_VERSES, BibleVerse } from '../constants/bibleData';
+import { db as fdb, auth } from './firebase';
+import { collection, getDocs, addDoc, deleteDoc, doc, setDoc, query, where, writeBatch } from 'firebase/firestore';
 
-/**
- * BibleDatabase — a robust IndexedDB implementation using Dexie.js.
- * This is a "normal" database for web applications, supporting
- * proper indexing and larger datasets than localStorage.
- */
 export class BibleDatabase extends Dexie {
   verses!: Table<BibleVerse>;
   stats!: Table<Attempt>;
@@ -20,7 +17,7 @@ export class BibleDatabase extends Dexie {
 }
 
 export interface Attempt {
-  id?: number;
+  id?: number | string;
   verseId: string;
   mode: string;
   translationKey: string;
@@ -35,12 +32,43 @@ const VersesDB = {
   _cache: [] as BibleVerse[],
 
   async init(): Promise<void> {
-    // Check if we have built-in verses in DB, if not — seed them
-    const count = await db.verses.count();
-    if (count === 0) {
-      await db.verses.bulkAdd(BUILT_IN_VERSES);
+    if (auth.currentUser) {
+      await this.syncFromFirestore();
+    } else {
+      const count = await db.verses.count();
+      if (count === 0) {
+        await db.verses.bulkAdd(BUILT_IN_VERSES);
+      }
     }
     await this.refreshCache();
+  },
+
+  async syncFromFirestore(): Promise<void> {
+    if (!auth.currentUser) return;
+    const uid = auth.currentUser.uid;
+    const colRef = collection(fdb, `users/${uid}/verses`);
+    const snapshot = await getDocs(colRef);
+    
+    const verses: BibleVerse[] = [];
+    snapshot.forEach(doc => {
+      verses.push({ id: doc.id, ...doc.data() } as BibleVerse);
+    });
+
+    if (verses.length === 0) {
+      // First time user? Seed with built-ins
+      const batch = writeBatch(fdb);
+      for (const v of BUILT_IN_VERSES) {
+        const { id, ...data } = v;
+        const newDocRef = doc(collection(fdb, `users/${uid}/verses`));
+        batch.set(newDocRef, data);
+        verses.push({ id: newDocRef.id, ...data } as BibleVerse);
+      }
+      await batch.commit();
+    }
+
+    // Update local cache for offline/performance
+    await db.verses.clear();
+    await db.verses.bulkAdd(verses);
   },
 
   async refreshCache(): Promise<void> {
@@ -52,7 +80,6 @@ const VersesDB = {
   },
 
   getById(id: string): BibleVerse | undefined {
-    // Note: in IndexedDB id might be numeric, but our system uses strings too.
     return this._cache.find(v => v.id.toString() === id.toString());
   },
 
@@ -61,21 +88,37 @@ const VersesDB = {
   },
 
   async addVerse(verseObj: BibleVerse): Promise<string> {
-    const id = await db.verses.add(verseObj);
+    let finalId: string;
+    
+    if (auth.currentUser) {
+      const uid = auth.currentUser.uid;
+      const { id, ...data } = verseObj;
+      const docRef = await addDoc(collection(fdb, `users/${uid}/verses`), data);
+      finalId = docRef.id;
+    } else {
+      const id = await db.verses.add(verseObj);
+      finalId = id.toString();
+    }
+
     await this.refreshCache();
-    return id.toString();
+    if (auth.currentUser) await this.init(); // Refresh from cloud to be sure
+    return finalId;
   },
 
   async removeVerse(id: string): Promise<void> {
-    // Only allow removing non-built-in? Or just anything.
-    // For now, allow removing by id.
-    const numericId = parseInt(id);
-    if (!isNaN(numericId)) {
-      await db.verses.delete(numericId);
+    if (auth.currentUser) {
+      const uid = auth.currentUser.uid;
+      await deleteDoc(doc(fdb, `users/${uid}/verses`, id));
     } else {
-      await db.verses.where('id').equals(id).delete();
+      const numericId = parseInt(id);
+      if (!isNaN(numericId)) {
+        await db.verses.delete(numericId);
+      } else {
+        await db.verses.where('id').equals(id).delete();
+      }
     }
     await this.refreshCache();
+    if (auth.currentUser) await this.init();
   },
 
   isBuiltIn(id: string): boolean {
@@ -97,12 +140,9 @@ const VersesDB = {
     let count = 0;
     for (const v of data) {
       if (!v.book || !v.chapter || !v.verse || !v.translations) continue;
-      // Remove ID from imported verses to let Dexie generate new numeric IDs
-      const { id, ...verseData } = v;
-      await db.verses.add(verseData as BibleVerse);
+      await this.addVerse(v);
       count++;
     }
-    await this.refreshCache();
     return count;
   },
 

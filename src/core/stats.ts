@@ -1,6 +1,8 @@
 import VersesDB, { db, Attempt } from './database';
 import UI from '../ui/ui';
 import { toast } from '../utils/helpers';
+import { db as fdb, auth } from './firebase';
+import { collection, getDocs, addDoc, doc, getDoc, setDoc, query, orderBy, limit, writeBatch } from 'firebase/firestore';
 
 export interface StatsOverview {
   total: number;
@@ -18,32 +20,43 @@ const Stats = {
   _bestStreak: 0,
 
   async init(): Promise<void> {
-    // Migration from localStorage
-    const saved = localStorage.getItem('bvg_stats');
-    if (saved) {
-      try {
-        const data = JSON.parse(saved);
-        if (data.attempts && data.attempts.length > 0) {
-          // Check if DB already has stats to avoid double migration
-          const dbCount = await db.stats.count();
-          if (dbCount === 0) {
-            await db.stats.bulkAdd(data.attempts);
-          }
-        }
-        this._streak = data.streak || 0;
-        this._bestStreak = data.bestStreak || 0;
-        // Optionally clear localStorage after migration
-        // localStorage.removeItem('bvg_stats'); 
-      } catch (e) {
-        console.error('Migration failed', e);
-      }
+    if (auth.currentUser) {
+      await this.syncFromFirestore();
     } else {
-      // Load streak from a separate simple storage or calculate it
+      // Legacy local loading
       this._streak = parseInt(localStorage.getItem('bvg_streak') || '0');
       this._bestStreak = parseInt(localStorage.getItem('bvg_best_streak') || '0');
     }
 
     await this.refreshCache();
+  },
+
+  async syncFromFirestore(): Promise<void> {
+    if (!auth.currentUser) return;
+    const uid = auth.currentUser.uid;
+    
+    // 1. Load Metadata (Streaks)
+    const metaRef = doc(fdb, `users/${uid}/metadata`, 'stats');
+    const metaSnap = await getDoc(metaRef);
+    if (metaSnap.exists()) {
+      const data = metaSnap.data();
+      this._streak = data.streak || 0;
+      this._bestStreak = data.bestStreak || 0;
+    }
+
+    // 2. Load Recent Attempts (limit to avoid huge pulls)
+    const colRef = collection(fdb, `users/${uid}/stats`);
+    const q = query(colRef, orderBy('ts', 'desc'), limit(500));
+    const snapshot = await getDocs(q);
+    
+    const attempts: Attempt[] = [];
+    snapshot.forEach(doc => {
+      attempts.push({ id: doc.id, ...doc.data() } as Attempt);
+    });
+
+    // Update local cache
+    await db.stats.clear();
+    await db.stats.bulkAdd(attempts);
   },
 
   async refreshCache(): Promise<void> {
@@ -60,18 +73,36 @@ const Stats = {
       ts: Date.now()
     };
 
-    await db.stats.add(attempt);
-    
-    if (success) {
-      this._streak++;
-      this._bestStreak = Math.max(this._bestStreak, this._streak);
-    } else {
-      this._streak = 0;
-    }
+    if (auth.currentUser) {
+      const uid = auth.currentUser.uid;
+      // Save attempt
+      await addDoc(collection(fdb, `users/${uid}/stats`), attempt);
+      
+      // Update streaks
+      if (success) {
+        this._streak++;
+        this._bestStreak = Math.max(this._bestStreak, this._streak);
+      } else {
+        this._streak = 0;
+      }
 
-    // Keep streak in localStorage for quick access/persistence of simple values
-    localStorage.setItem('bvg_streak', this._streak.toString());
-    localStorage.setItem('bvg_best_streak', this._bestStreak.toString());
+      // Save metadata
+      await setDoc(doc(fdb, `users/${uid}/metadata`, 'stats'), {
+        streak: this._streak,
+        bestStreak: this._bestStreak,
+        lastUpdated: Date.now()
+      });
+    } else {
+      await db.stats.add(attempt);
+      if (success) {
+        this._streak++;
+        this._bestStreak = Math.max(this._bestStreak, this._streak);
+      } else {
+        this._streak = 0;
+      }
+      localStorage.setItem('bvg_streak', this._streak.toString());
+      localStorage.setItem('bvg_best_streak', this._bestStreak.toString());
+    }
 
     await this.refreshCache();
   },
@@ -82,7 +113,6 @@ const Stats = {
     const accuracy = total ? Math.round(correct / total * 100) : 0;
     const learned = this._getLearnedCount();
     
-    // Calculate verses done today (based on local date)
     const today = new Date().setHours(0, 0, 0, 0);
     const todayDone = this._attempts.filter(x => {
       const d = new Date(x.ts).setHours(0, 0, 0, 0);
@@ -157,6 +187,14 @@ const Stats = {
 
   async reset(): Promise<void> {
     if (!confirm('Точно скинути всю статистику?')) return;
+    
+    if (auth.currentUser) {
+        // We probably shouldn't bulk delete in a simple way for Firestore here for now
+        // or we use a batch. But let's keep it simple.
+        toast('Скидання хмарної статистики наразі недоступне');
+        return;
+    }
+
     await db.stats.clear();
     this._streak = 0;
     this._bestStreak = 0;
