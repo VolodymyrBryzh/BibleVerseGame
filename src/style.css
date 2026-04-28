@@ -7,7 +7,7 @@
   --text: #1a1a1a;
   --text-light: #555555;
   --text-muted: #888888;
-  --accent: #3a6b4a;
+  --accent: #3a4a2e;
   --accent-light: #518c64;
   --accent-bg: #edf5ef;
   --danger: #d63031;
@@ -100,6 +100,17 @@ body {
   display: flex; justify-content: space-around;
   padding: 10px 0 calc(10px + env(safe-area-inset-bottom, 0px));
   z-index: 100;
+}
+.nav-indicator {
+  position: absolute;
+  top: 0;
+  left: 6.25%; /* (25% / 2) - (12.5% / 2) */
+  width: 12.5%;
+  height: 3px;
+  background: var(--accent);
+  border-radius: 0 0 4px 4px;
+  transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 6px rgba(58, 74, 46, 0.3);
 }
 .nav-btn {
   flex: 1;

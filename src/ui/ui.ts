@@ -42,10 +42,19 @@ const UI = {
     
     // Update nav
     const navBtns = document.querySelectorAll('.nav-btn');
-    navBtns.forEach(b => {
+    let activeIndex = 0;
+    navBtns.forEach((b, index) => {
       const btn = b as HTMLElement;
-      btn.classList.toggle('active', btn.dataset.screen === id);
+      const isActive = btn.dataset.screen === id;
+      btn.classList.toggle('active', isActive);
+      if (isActive) activeIndex = index;
     });
+
+    // Move indicator
+    const indicator = $('navIndicator');
+    if (indicator) {
+      indicator.style.left = `${activeIndex * 25 + 6.25}%`;
+    }
     
     // Specific screen logic
     if (id === 'screenStats') this.renderStats();
