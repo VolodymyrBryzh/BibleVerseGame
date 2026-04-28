@@ -239,9 +239,9 @@ const Game = {
     else if (this.currentMode === 'continue') this._checkContinue();
   },
 
-  _recordAndShow(success: boolean, accuracy: number, correctText?: string): void {
+  async _recordAndShow(success: boolean, accuracy: number, correctText?: string): Promise<void> {
     if (this.currentVerse && this.currentTranslation && this.currentMode) {
-      Stats.record(this.currentVerse.id, this.currentMode, this.currentTranslation, success, accuracy);
+      await Stats.record(this.currentVerse.id, this.currentMode, this.currentTranslation, success, accuracy);
     }
     this._showResult(success, accuracy, correctText);
   },

@@ -1,81 +1,98 @@
-import VersesDB from './database';
+import VersesDB, { db, Attempt } from './database';
 import UI from '../ui/ui';
 import { toast } from '../utils/helpers';
 
-export interface Attempt {
-  verseId: string;
-  mode: string;
-  translationKey: string;
-  success: boolean;
+export interface StatsOverview {
+  total: number;
+  correct: number;
   accuracy: number;
-  ts: number;
-}
-
-export interface StatsData {
-  attempts: Attempt[];
   streak: number;
   bestStreak: number;
+  learned: number;
 }
 
 const Stats = {
-  _data: null as StatsData | null,
+  _attempts: [] as Attempt[],
+  _streak: 0,
+  _bestStreak: 0,
 
-  _default(): StatsData {
-    return { attempts: [], streak: 0, bestStreak: 0 };
-  },
-
-  init(): void {
+  async init(): Promise<void> {
+    // Migration from localStorage
     const saved = localStorage.getItem('bvg_stats');
     if (saved) {
-      try { 
-        this._data = JSON.parse(saved); 
-      } catch(e) { 
-        this._data = this._default(); 
+      try {
+        const data = JSON.parse(saved);
+        if (data.attempts && data.attempts.length > 0) {
+          // Check if DB already has stats to avoid double migration
+          const dbCount = await db.stats.count();
+          if (dbCount === 0) {
+            await db.stats.bulkAdd(data.attempts);
+          }
+        }
+        this._streak = data.streak || 0;
+        this._bestStreak = data.bestStreak || 0;
+        // Optionally clear localStorage after migration
+        // localStorage.removeItem('bvg_stats'); 
+      } catch (e) {
+        console.error('Migration failed', e);
       }
     } else {
-      this._data = this._default();
+      // Load streak from a separate simple storage or calculate it
+      this._streak = parseInt(localStorage.getItem('bvg_streak') || '0');
+      this._bestStreak = parseInt(localStorage.getItem('bvg_best_streak') || '0');
     }
+
+    await this.refreshCache();
   },
 
-  record(verseId: string, mode: string, translationKey: string, success: boolean, accuracy: number): void {
-    if (!this._data) return;
-    this._data.attempts.push({
-      verseId, mode, translationKey, success, accuracy,
+  async refreshCache(): Promise<void> {
+    this._attempts = await db.stats.orderBy('ts').toArray();
+  },
+
+  async record(verseId: string, mode: string, translationKey: string, success: boolean, accuracy: number): Promise<void> {
+    const attempt: Attempt = {
+      verseId: verseId.toString(),
+      mode,
+      translationKey,
+      success,
+      accuracy,
       ts: Date.now()
-    });
+    };
+
+    await db.stats.add(attempt);
+    
     if (success) {
-      this._data.streak++;
-      this._data.bestStreak = Math.max(this._data.bestStreak, this._data.streak);
+      this._streak++;
+      this._bestStreak = Math.max(this._bestStreak, this._streak);
     } else {
-      this._data.streak = 0;
+      this._streak = 0;
     }
-    this._save();
+
+    // Keep streak in localStorage for quick access/persistence of simple values
+    localStorage.setItem('bvg_streak', this._streak.toString());
+    localStorage.setItem('bvg_best_streak', this._bestStreak.toString());
+
+    await this.refreshCache();
   },
 
-  getOverview() {
-    if (!this._data) return { total: 0, correct: 0, accuracy: 0, streak: 0, bestStreak: 0, learned: 0 };
-    const a = this._data.attempts;
-    const total = a.length;
-    const correct = a.filter(x => x.success).length;
+  getOverview(): StatsOverview {
+    const total = this._attempts.length;
+    const correct = this._attempts.filter(x => x.success).length;
     const accuracy = total ? Math.round(correct / total * 100) : 0;
-    
-    // Optimization: avoid re-calculating byVerse if already done recently (or just keep it simple)
     const learned = this._getLearnedCount();
     
     return { 
       total, 
       correct, 
       accuracy, 
-      streak: this._data.streak, 
-      bestStreak: this._data.bestStreak, 
+      streak: this._streak, 
+      bestStreak: this._bestStreak, 
       learned 
     };
   },
 
   _getLearnedCount(): number {
-    if (!this._data) return 0;
     const byVerse = this._groupByVerse();
-    
     let count = 0;
     for (const vid in byVerse) {
       const arr = byVerse[vid];
@@ -89,8 +106,7 @@ const Stats = {
   },
 
   _groupByVerse(): Record<string, Attempt[]> {
-    if (!this._data) return {};
-    return this._data.attempts.reduce((acc, a) => {
+    return this._attempts.reduce((acc, a) => {
       if (!acc[a.verseId]) acc[a.verseId] = [];
       acc[a.verseId].push(a);
       return acc;
@@ -98,9 +114,7 @@ const Stats = {
   },
 
   getPerVerse() {
-    if (!this._data) return [];
-    
-    const byVerse = this._data.attempts.reduce((acc, a) => {
+    const byVerse = this._attempts.reduce((acc, a) => {
       if (!acc[a.verseId]) acc[a.verseId] = { total: 0, correct: 0, errors: {} as Record<string, number> };
       const d = acc[a.verseId];
       d.total++;
@@ -132,18 +146,16 @@ const Stats = {
       .slice(0, 5);
   },
 
-  reset(): void {
+  async reset(): Promise<void> {
     if (!confirm('Точно скинути всю статистику?')) return;
-    this._data = this._default();
-    this._save();
+    await db.stats.clear();
+    this._streak = 0;
+    this._bestStreak = 0;
+    localStorage.setItem('bvg_streak', '0');
+    localStorage.setItem('bvg_best_streak', '0');
+    await this.refreshCache();
     UI.renderStats();
     toast('Статистику скинуто');
-  },
-
-  _save(): void {
-    if (this._data) {
-      localStorage.setItem('bvg_stats', JSON.stringify(this._data));
-    }
   }
 };
 

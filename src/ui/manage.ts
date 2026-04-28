@@ -25,7 +25,43 @@ const Manage = {
     `).join('');
   },
 
-  saveVerse(): void {
+  async fetchVerse(): Promise<void> {
+    const book = $<HTMLInputElement>('addBook')?.value.trim();
+    const chapter = $<HTMLInputElement>('addChapter')?.value;
+    const verse = $<HTMLInputElement>('addVerse')?.value;
+
+    if (!book || !chapter || !verse) return toast('Введіть книгу, розділ та вірш');
+
+    toast('Шукаю...');
+
+    try {
+      // Map Ukrainian book name to getbible format (approximate)
+      // For a "normal" DB, we'd have a full map, but here's a shortcut
+      const bookMap: Record<string, string> = {
+        'Від Івана': 'John', 'Від Матвія': 'Matthew', 'Від Марка': 'Mark', 'Від Луки': 'Luke',
+        'До Римлян': 'Romans', 'Псалом': 'Psalms', 'Приповісті': 'Proverbs', 'Буття': 'Genesis'
+      };
+      
+      const searchBook = bookMap[book] || book;
+      const url = `https://bible-api.com/${searchBook}+${chapter}:${verse}?translation=ukr`;
+      
+      const resp = await fetch(url);
+      const data = await resp.json();
+      
+      if (data.text) {
+        // Automatically fill in the first translation available
+        const el = $<HTMLTextAreaElement>(`addTrans_ohienko`);
+        if (el) el.value = data.text.trim();
+        toast('Знайдено (Огієнко)');
+      } else {
+        toast('Не знайдено в базі API');
+      }
+    } catch (err) {
+      toast('Помилка при пошуку');
+    }
+  },
+
+  async saveVerse(): Promise<void> {
     const bookEl = $<HTMLInputElement>('addBook');
     const chapterEl = $<HTMLInputElement>('addChapter');
     const verseEl = $<HTMLInputElement>('addVerse');
@@ -52,7 +88,7 @@ const Manage = {
 
     if (!hasAny) return toast('Додай хоча б один переклад');
 
-    VersesDB.addVerse({ 
+    await VersesDB.addVerse({ 
       id: '', 
       book, 
       chapter, 
@@ -78,8 +114,8 @@ const Manage = {
     });
   },
 
-  renderVerseList(): void {
-    const all = VersesDB.getAll();
+  renderVerseList(verses?: BibleVerse[]): void {
+    const all = verses || VersesDB.getAll();
     const countEl = $('verseCount');
     if (countEl) countEl.textContent = all.length.toString();
     
@@ -87,7 +123,7 @@ const Manage = {
     if (!container) return;
     
     if (!all.length) {
-      container.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;">Немає віршів</p>';
+      container.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;">Нічого не знайдено</p>';
       return;
     }
 
@@ -100,7 +136,7 @@ const Manage = {
         <div class="verse-list-item">
           <div>
             <div class="verse-list-ref">${ref}</div>
-            <div class="verse-list-tags">${transKeys} переклад(ів) · ${v.tags?.join(', ') || ''}</div>
+            <div class="verse-list-tags">${transKeys} переклад(ів) ${v.tags?.length ? '· ' + v.tags.join(', ') : ''}</div>
           </div>
           <div class="verse-list-actions">
             ${isBuiltIn ? '' : `<button class="btn btn-sm btn-danger" onclick="Manage.removeVerse('${v.id}')">✕</button>`}
@@ -112,9 +148,15 @@ const Manage = {
     container.innerHTML = html;
   },
 
-  removeVerse(id: string): void {
+  handleSearch(): void {
+    const query = $<HTMLInputElement>('verseSearch')?.value || '';
+    const filtered = VersesDB.search(query);
+    this.renderVerseList(filtered);
+  },
+
+  async removeVerse(id: string): Promise<void> {
     if (!confirm('Видалити цей вірш?')) return;
-    VersesDB.removeVerse(id);
+    await VersesDB.removeVerse(id);
     this.renderVerseList();
     UI.updateVerseFilter();
     toast('Вірш видалено');
@@ -138,10 +180,10 @@ const Manage = {
     if (!file) return;
     
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = async (e) => {
       try {
         const content = e.target?.result as string;
-        const count = VersesDB.importVerses(content);
+        const count = await VersesDB.importVerses(content);
         toast(`Імпортовано ${count} віршів`);
         this.renderVerseList();
         UI.updateVerseFilter();

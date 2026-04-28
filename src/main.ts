@@ -14,9 +14,9 @@ import Manage from './ui/manage';
 (window as any).Manage = Manage;
 
 // Initialize app
-document.addEventListener('DOMContentLoaded', () => {
-  VersesDB.init();
-  Stats.init();
+document.addEventListener('DOMContentLoaded', async () => {
+  await VersesDB.init();
+  await Stats.init();
   UI.init();
   Manage.init();
 });
