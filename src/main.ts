@@ -6,6 +6,7 @@ import Stats from './core/stats';
 import VersesDB from './core/database';
 import Game from './engine/game';
 import Background from './ui/background';
+import Navbar from './ui/navbar';
 
 // Expose to window for inline HTML event handlers
 (window as any).UI = UI;
@@ -17,6 +18,7 @@ import Background from './ui/background';
 
 // Initialize app through AuthUI
 document.addEventListener('DOMContentLoaded', () => {
-  Background.init(); // Спершу ініціалізуємо фон
-  AuthUI.init();
+	Background.init(); // Спершу ініціалізуємо фон
+	Navbar.init();     // Додаємо навігацію
+	AuthUI.init();
 });

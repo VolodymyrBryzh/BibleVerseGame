@@ -91,8 +91,8 @@ const UI = {
     // Move indicator
     const indicator = $('navIndicator');
     if (indicator) {
-      // 200% = 2 * 12.5% (indicator width) = 25% (button width)
-      indicator.style.transform = `translateX(${activeIndex * 200}%)`;
+      // 100% = 1 button width
+      indicator.style.transform = `translateX(${activeIndex * 100}%)`;
     }
 
     

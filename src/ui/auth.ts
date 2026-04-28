@@ -33,6 +33,15 @@ const AuthUI = {
     }
   },
 
+  continueAsGuest() {
+    console.log('Continuing as guest');
+    VersesDB.init();
+    Stats.init();
+    UI.init();
+    Manage.init();
+    this.showApp();
+  },
+
   async logout() {
     try {
       await signOut(auth);

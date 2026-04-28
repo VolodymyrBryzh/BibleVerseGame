@@ -19,57 +19,63 @@
 					<div style="font-size: 4rem; margin-bottom: 20px;">📖</div>
 					<h1 style="font-size: 2rem; margin-bottom: 10px;">BibleVerse</h1>
 					<p style="color:var(--text-light); margin-bottom: 30px;">Вивчайте Біблію разом із нами. Ваші дані будуть синхронізовані між усіма пристроями.</p>
-					
-					<button class="btn btn-primary btn-block" onclick="AuthUI.login()" style="display:flex; align-items:center; justify-content:center; gap:12px; padding:16px;">
+
+					<button class="btn btn-primary btn-block" onclick="AuthUI.login()" style="display:flex; align-items:center; justify-content:center; gap:12px; padding:16px; margin-bottom:12px;">
 						<img src="/src/ui/img/googleLogo.svg" width="20" height="20" alt="Google"> Увійти через Google
 					</button>
-				</div>
-			</div>
-			<!-- ===== HEADER ===== -->
-		<!-- ===== SCREEN: DASHBOARD ===== -->
-		<div id="screenDashboard" class="screen active">
-			<div class="dashboard-top">
-				<div class="date-row">
-					<span id="currentDate" class="dashboard-date">ВІВТОРОК · 12 ЛЮТОГО</span>
-					<div style="display:flex; gap:8px; align-items:center;">
-						<div class="streak-badge">
-							<span class="streak-icon">🔥</span>
-							<span id="streakCount">0</span> дн.
-						</div>
-						<button class="logout" onclick="AuthUI.logout()" style="padding:4px; opacity:0.6; min-width:auto; flex:none;"><span class="nav-icon" style="-webkit-mask-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsPSJjdXJyZW50Q29sb3IiIGQ9Ik01IDIxYTIgMiAwIDAgMS0yLTJWNWEyIDIgMCAwIDEgMi0yaDR2MmI1djE0SDV6bTcgMmwxLjQxLTEuNDFMMTQuMTcgMTNIMTFWMTFoMy4xN2wtMS43Ni0xLjc2TDE0IDhMMTkgMTNsLTUgNXoiLz48L3N2Zz4='); mask-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsPSJjdXJyZW50Q29sb3IiIGQ9Ik01IDIxYTIgMiAwIDAgMS0yLTJWNWEyIDIgMCAwIDEgMi0yaDR2MmI1djE0SDV6bTcgMmwxLjQxLTEuNDFMMTQuMTcgMTNIMTFWMTFoMy4xN2wtMS43Ni0xLjc2TDE0IDhMMTkgMTNsLTUgNXoiLz48L3N2Zz4='); width:20px; height:20px;"></span></button>
-					</div>
-				</div>
-				<h1 class="dashboard-title">Слово<br>на кожен день</h1>
-				
-				<div class="progress-card">
-					<div class="progress-header">
-						<div class="progress-info">
-							<div class="progress-label">СЬОГОДНІ</div>
-							<div class="progress-stats"><span id="dailyDone">0</span> з <span id="dailyGoal">5</span> віршів</div>
-						</div>
-						<div class="progress-percentage"><span id="dailyPercent">0</span>%</div>
-					</div>
-					<div class="progress-bar-container">
-						<div id="dailyProgressBar" class="progress-bar-fill" style="width: 0%;"></div>
-					</div>
-				</div>
-			</div>
-
-			<div class="container">
-				
-				<div id="dailyVerseContainer"></div>
-
-				<div class="card">
-					<div class="card-title">Швидкий старт</div>
-					<button class="btn btn-primary btn-block" onclick="UI.navigate('screenHome', $('navBtnGame'))" style="padding:16px;">
-						Почати гру
+					
+					<button class="btn btn-block" onclick="AuthUI.continueAsGuest()" style="padding:16px; background: transparent; border: 1.5px solid var(--border); color: var(--text-muted);">
+						Продовжити як гість
 					</button>
 				</div>
 			</div>
-		</div>
 
-		<!-- ===== SCREEN: HOME (GAME) ===== -->
-		<div id="screenHome" class="screen">
+			<!-- ===== HEADER ===== -->
+
+			<!-- ===== SCREEN: DASHBOARD ===== -->
+			<div id="screenDashboard" class="screen active">
+				<div class="dashboard-top">
+					<div class="date-row">
+						<span id="currentDate" class="dashboard-date">ВІВТОРОК · 12 ЛЮТОГО</span>
+						<div style="display:flex; gap:8px; align-items:center;">
+							<div class="streak-badge">
+								<span class="streak-icon">🔥</span>
+								<span id="streakCount">0</span> дн.
+							</div>
+							<button class="logout" onclick="AuthUI.logout()" style="padding:4px; opacity:0.6; min-width:auto; flex:none;"><span class="nav-icon" style="-webkit-mask-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsPSJjdXJyZW50Q29sb3IiIGQ9Ik01IDIxYTIgMiAwIDAgMS0yLTJWNWEyIDIgMCAwIDEgMi0yaDR2MmI1djE0SDV6bTcgMmwxLjQxLTEuNDFMMTQuMTcgMTNIMTFWMTFoMy4xN2wtMS43Ni0xLjc2TDE0IDhMMTkgMTNsLTUgNXoiLz48L3N2Zz4='); mask-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsPSJjdXJyZW50Q29sb3IiIGQ9Ik01IDIxYTIgMiAwIDAgMS0yLTJWNWEyIDIgMCAwIDEgMi0yaDR2MmI1djE0SDV6bTcgMmwxLjQxLTEuNDFMMTQuMTcgMTNIMTFWMTFoMy4xN2wtMS43Ni0xLjc2TDE0IDhMMTkgMTNsLTUgNXoiLz48L3N2Zz4='); width:20px; height:20px;"></span></button>
+						</div>
+					</div>
+					<h1 class="dashboard-title">Слово<br>на кожен день</h1>
+
+					<div class="progress-card">
+						<div class="progress-header">
+							<div class="progress-info">
+								<div class="progress-label">СЬОГОДНІ</div>
+								<div class="progress-stats"><span id="dailyDone">0</span> з <span id="dailyGoal">5</span> віршів</div>
+							</div>
+							<div class="progress-percentage"><span id="dailyPercent">0</span>%</div>
+						</div>
+						<div class="progress-bar-container">
+							<div id="dailyProgressBar" class="progress-bar-fill" style="width: 0%;"></div>
+						</div>
+					</div>
+				</div>
+
+				<div class="container">
+
+					<div id="dailyVerseContainer"></div>
+
+					<div class="card">
+						<div class="card-title">Швидкий старт</div>
+						<button class="btn btn-primary btn-block" onclick="UI.navigate('screenHome', $('navBtnGame'))" style="padding:16px;">
+							Почати гру
+						</button>
+					</div>
+				</div>
+			</div>
+
+			<!-- ===== SCREEN: HOME (GAME) ===== -->
+			<div id="screenHome" class="screen">
 				<div class="card">
 					<div class="card-title">Режим гри</div>
 					<div class="mode-grid">
@@ -213,33 +219,12 @@
 						<button class="btn btn-sm" onclick="Manage.exportData()">📤 Експорт</button>
 						<button class="btn btn-sm" onclick="$('importFile').click()">📥 Імпорт</button>
 						<button class="btn btn-sm" onclick="$('importBookFile').click()" style="background:var(--accent-bg); color:var(--accent)">📖 Завантажити книгу</button>
-						
+
 						<input type="file" id="importFile" accept=".json" style="display:none" onchange="Manage.importData(event)">
 						<input type="file" id="importBookFile" accept=".json" style="display:none" onchange="Manage.importBookJSON(event)">
 					</div>
 				</div>
 			</div>
-		</div>
-
-		<!-- ===== BOTTOM NAV ===== -->
-		<div id="mainNav" class="bottom-nav" style="display:none">
-			<div id="navIndicator" class="nav-indicator"></div>
-			<button class="nav-btn active" onclick="UI.navigate('screenDashboard', this)" data-screen="screenDashboard">
-				<span class="nav-icon icon-home"></span>
-				Головна
-			</button>
-			<button id="navBtnGame" class="nav-btn" onclick="UI.navigate('screenHome', this)" data-screen="screenHome">
-				<span class="nav-icon icon-game"></span>
-				Гра
-			</button>
-			<button class="nav-btn" onclick="UI.navigate('screenStats', this)" data-screen="screenStats">
-				<span class="nav-icon icon-stats"></span>
-				Статистика
-			</button>
-			<button class="nav-btn" onclick="UI.navigate('screenManage', this)" data-screen="screenManage">
-				<span class="nav-icon icon-manage"></span>
-				Вірші
-			</button>
 		</div>
 
 		<!-- ===== TOAST ===== -->
