@@ -88,10 +88,10 @@ const UI = {
       if (isActive) activeIndex = index;
     });
 
-    // Move indicator using transform — reliable regardless of padding/grid
+    // Move indicator — each button = 25% of nav width
     const indicator = $('navIndicator');
     if (indicator) {
-      indicator.style.transform = `translateX(${activeIndex * 100}%)`;
+      indicator.style.left = `${activeIndex * 25}%`;
     }
     
     // Specific screen logic

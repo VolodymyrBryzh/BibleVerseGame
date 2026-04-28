@@ -208,15 +208,13 @@ body {
 .bottom-nav {
   position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
   width: 100%; max-width: 500px;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.88);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-top: 1px solid var(--border);
-  display: grid; 
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
   padding: 10px 0 calc(10px + env(safe-area-inset-bottom, 0px));
   z-index: 100;
-  position: fixed; /* override for stacking context */
 }
 .nav-indicator {
   position: absolute;
@@ -226,9 +224,8 @@ body {
   height: 3px;
   background: #3a4a2e;
   border-radius: 0 0 6px 6px;
-  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 2px 6px rgba(58, 74, 46, 0.25);
-  z-index: 10;
   pointer-events: none;
 }
 .nav-btn {
