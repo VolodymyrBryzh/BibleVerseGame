@@ -1,6 +1,7 @@
 /* ===== CSS VARIABLES ===== */
 :root {
   --bg: #fdfdfb;
+  --app-bg: rgba(253, 253, 251, 0.7);
   --bg-card: #ffffff;
   --bg-selected: #f0f7f2;
   --bg-hover: #f9f8f4;
@@ -43,7 +44,7 @@
 html { font-size: 16px; -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
 body {
   font-family: var(--font);
-  background: #f0f0f0; /* Subtle grey background for the page */
+  background: transparent; /* Changed to let modern background show */
   color: var(--text);
   min-height: 100dvh;
   line-height: 1.6;
@@ -55,11 +56,10 @@ body {
 .app {
   width: 100%;
   max-width: 500px; /* Fixed mobile width */
-  background: var(--bg);
+  background: transparent;
   min-height: 100dvh;
   padding: 20px 20px 100px;
   position: relative;
-  box-shadow: 0 0 40px rgba(0,0,0,0.05); /* Soft shadow for the 'phone' look */
 }
 
 /* ===== LOADER ===== */
@@ -443,6 +443,7 @@ select {
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #0f0f0f;
+    --app-bg: rgba(15, 15, 15, 0.7);
     --bg-card: #1a1a1a;
     --bg-selected: #1a241d;
     --bg-hover: #222222;
