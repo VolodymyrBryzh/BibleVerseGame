@@ -24,17 +24,21 @@ const UI = {
 
     // 2. Update Stats (Streak & Progress)
     const o = Stats.getOverview();
-    if ($('streakCount')) $('streakCount').textContent = o.streak.toString();
+    const streakEl = $('streakCount');
+    if (streakEl) streakEl.textContent = o.streak.toString();
     
-    // For "Daily Progress", we'll simulate or use session stats
-    // Let's assume a goal of 5 and get today's count from Stats if available
     const todayDone = o.todayDone || 0;
     const dailyGoal = 5;
     const percent = Math.min(Math.round((todayDone / dailyGoal) * 100), 100);
 
-    if ($('dailyDone')) $('dailyDone').textContent = todayDone.toString();
-    if ($('dailyPercent')) $('dailyPercent').textContent = percent.toString();
-    if ($('dailyProgressBar')) $('dailyProgressBar').style.width = `${percent}%`;
+    const doneEl = $('dailyDone');
+    if (doneEl) doneEl.textContent = todayDone.toString();
+    
+    const percentEl = $('dailyPercent');
+    if (percentEl) percentEl.textContent = percent.toString();
+    
+    const barEl = $('dailyProgressBar');
+    if (barEl) barEl.style.width = `${percent}%`;
 
     // 3. Render Daily Verse
     const container = $('dailyVerseContainer');

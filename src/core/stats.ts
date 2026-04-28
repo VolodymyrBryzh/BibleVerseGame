@@ -81,13 +81,21 @@ const Stats = {
     const accuracy = total ? Math.round(correct / total * 100) : 0;
     const learned = this._getLearnedCount();
     
+    // Calculate verses done today (based on local date)
+    const today = new Date().setHours(0, 0, 0, 0);
+    const todayDone = this._attempts.filter(x => {
+      const d = new Date(x.ts).setHours(0, 0, 0, 0);
+      return d === today && x.success;
+    }).length;
+
     return { 
       total, 
       correct, 
       accuracy, 
       streak: this._streak, 
       bestStreak: this._bestStreak, 
-      learned 
+      learned,
+      todayDone
     };
   },
 
