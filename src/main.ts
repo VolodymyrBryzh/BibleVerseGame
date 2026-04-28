@@ -1,12 +1,16 @@
 import './style.css';
+// ui
 import AuthUI from './ui/auth';
 import UI from './ui/ui';
 import Manage from './ui/manage';
-import Stats from './core/stats';
-import VersesDB from './core/database';
-import Game from './engine/game';
 import Background from './ui/background';
 import Navbar from './ui/navbar';
+import Dashboard from './ui/dashboard';
+// core
+import Stats from './core/stats';
+import VersesDB from './core/database';
+// engine
+import Game from './engine/game';
 
 // Expose to window for inline HTML event handlers
 (window as any).UI = UI;
@@ -15,10 +19,12 @@ import Navbar from './ui/navbar';
 (window as any).Stats = Stats;
 (window as any).VersesDB = VersesDB;
 (window as any).Game = Game;
+(window as any).Dashboard = Dashboard;
 
 // Initialize app through AuthUI
 document.addEventListener('DOMContentLoaded', () => {
-	Background.init(); // Спершу ініціалізуємо фон
-	Navbar.init();     // Додаємо навігацію
-	AuthUI.init();
+	AuthUI.init(); // Запускаємо авторизацію
+	Dashboard.init(); // Ініціалізуємо головну сторінку
+	Navbar.init(); // Ініціалізуємо навігацію
+	Background.init(); // Ініціалізуємо фон
 });

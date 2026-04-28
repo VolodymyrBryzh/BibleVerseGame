@@ -1,236 +1,216 @@
 <!DOCTYPE html>
 <html lang="uk">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-		<title>Bible Game</title>
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-	</head>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	<title>Bible Game</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-	<body>
-		<!-- ===== APP ===== -->
-		<div class="app">
-			<!-- ===== SCREEN: AUTH ===== -->
-			<div id="screenAuth" class="screen" style="display:none; justify-content:center; align-items:center; min-height:80vh;">
-				<div class="card" style="text-align:center; padding: 40px 20px; width: 100%;">
-					<div style="font-size: 4rem; margin-bottom: 20px;">📖</div>
-					<h1 style="font-size: 2rem; margin-bottom: 10px;">BibleVerse</h1>
-					<p style="color:var(--text-light); margin-bottom: 30px;">Вивчайте Біблію разом із нами. Ваші дані будуть синхронізовані між усіма пристроями.</p>
+</head>
 
-					<button class="btn btn-primary btn-block" onclick="AuthUI.login()" style="display:flex; align-items:center; justify-content:center; gap:12px; padding:16px; margin-bottom:12px;">
-						<img src="/src/ui/img/googleLogo.svg" width="20" height="20" alt="Google"> Увійти через Google
-					</button>
-					
-					<button class="btn btn-block" onclick="AuthUI.continueAsGuest()" style="padding:16px; background: transparent; border: 1.5px solid var(--border); color: var(--text-muted);">
-						Продовжити як гість
-					</button>
-				</div>
-			</div>
+<body>
+	<!-- ===== APP ===== -->
+	<div class="app">
+		<!-- ===== SCREEN: AUTH ===== -->
+		<div id="screenAuth" class="screen"
+			style="display:none; justify-content:center; align-items:center; min-height:80vh;">
+			<div class="card" style="text-align:center; padding: 40px 20px; width: 100%;">
+				<div style="font-size: 4rem; margin-bottom: 20px;">📖</div>
+				<h1 style="font-size: 2rem; margin-bottom: 10px;">BibleVerse</h1>
+				<p style="color:var(--text-light); margin-bottom: 30px;">Вивчайте Біблію разом із нами. Ваші дані будуть
+					синхронізовані між усіма пристроями.</p>
 
-			<!-- ===== HEADER ===== -->
-
-			<!-- ===== SCREEN: DASHBOARD ===== -->
-			<div id="screenDashboard" class="screen active">
-				<div class="dashboard-top">
-					<div class="date-row">
-						<span id="currentDate" class="dashboard-date">ВІВТОРОК · 12 ЛЮТОГО</span>
-						<div style="display:flex; gap:8px; align-items:center;">
-							<div class="streak-badge">
-								<span class="streak-icon">🔥</span>
-								<span id="streakCount">0</span> дн.
-							</div>
-							<button class="logout" onclick="AuthUI.logout()" style="padding:4px; opacity:0.6; min-width:auto; flex:none;"><span class="nav-icon" style="-webkit-mask-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsPSJjdXJyZW50Q29sb3IiIGQ9Ik01IDIxYTIgMiAwIDAgMS0yLTJWNWEyIDIgMCAwIDEgMi0yaDR2MmI1djE0SDV6bTcgMmwxLjQxLTEuNDFMMTQuMTcgMTNIMTFWMTFoMy4xN2wtMS43Ni0xLjc2TDE0IDhMMTkgMTNsLTUgNXoiLz48L3N2Zz4='); mask-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsPSJjdXJyZW50Q29sb3IiIGQ9Ik01IDIxYTIgMiAwIDAgMS0yLTJWNWEyIDIgMCAwIDEgMi0yaDR2MmI1djE0SDV6bTcgMmwxLjQxLTEuNDFMMTQuMTcgMTNIMTFWMTFoMy4xN2wtMS43Ni0xLjc2TDE0IDhMMTkgMTNsLTUgNXoiLz48L3N2Zz4='); width:20px; height:20px;"></span></button>
-						</div>
-					</div>
-					<h1 class="dashboard-title">Слово<br>на кожен день</h1>
-
-					<div class="progress-card">
-						<div class="progress-header">
-							<div class="progress-info">
-								<div class="progress-label">СЬОГОДНІ</div>
-								<div class="progress-stats"><span id="dailyDone">0</span> з <span id="dailyGoal">5</span> віршів</div>
-							</div>
-							<div class="progress-percentage"><span id="dailyPercent">0</span>%</div>
-						</div>
-						<div class="progress-bar-container">
-							<div id="dailyProgressBar" class="progress-bar-fill" style="width: 0%;"></div>
-						</div>
-					</div>
-				</div>
-
-				<div class="container">
-
-					<div id="dailyVerseContainer"></div>
-
-					<div class="card">
-						<div class="card-title">Швидкий старт</div>
-						<button class="btn btn-primary btn-block" onclick="UI.navigate('screenHome', $('navBtnGame'))" style="padding:16px;">
-							Почати гру
-						</button>
-					</div>
-				</div>
-			</div>
-
-			<!-- ===== SCREEN: HOME (GAME) ===== -->
-			<div id="screenHome" class="screen">
-				<div class="card">
-					<div class="card-title">Режим гри</div>
-					<div class="mode-grid">
-						<div class="mode-card selected" data-mode="word-order" onclick="UI.selectMode(this)">
-							<div class="mode-icon">🔀</div>
-							<div class="mode-info"><h3>Складання слів</h3><p>Відновити правильний порядок слів</p></div>
-						</div>
-						<div class="mode-card" data-mode="fill-gaps" onclick="UI.selectMode(this)">
-							<div class="mode-icon">✏️</div>
-							<div class="mode-info"><h3>Заповни пропуски</h3><p>Вписати приховані слова</p></div>
-						</div>
-						<div class="mode-card" data-mode="continue" onclick="UI.selectMode(this)">
-							<div class="mode-icon">💬</div>
-							<div class="mode-info"><h3>Продовж вірш</h3><p>Показано початок — напиши решту</p></div>
-						</div>
-					</div>
-				</div>
-
-				<div class="card">
-					<div class="card-title">Налаштування</div>
-					<div class="filter-row">
-						<div class="filter-label">Переклад</div>
-						<select id="filterTranslation" onchange="UI.updateVerseFilter()"></select>
-					</div>
-					<div class="filter-row">
-						<div class="filter-label">Вірш</div>
-						<select id="filterVerse">
-							<option value="all">Всі вірші (випадковий)</option>
-						</select>
-					</div>
-					<button class="btn btn-primary btn-block" onclick="Game.start()" style="margin-top: 8px;">
-						Почати гру
-					</button>
-				</div>
-			</div>
-
-			<!-- ===== SCREEN: GAME ===== -->
-			<div class="screen" id="screenGame">
-				<div class="card">
-					<div class="game-header">
-						<div>
-							<div class="game-ref" id="gameRef"></div>
-							<div class="game-translation" id="gameTransName"></div>
-						</div>
-						<button class="btn btn-sm" onclick="UI.showScreen('screenHome')">✕ Вийти</button>
-					</div>
-					<div class="game-instruction" id="gameInstruction"></div>
-					<div id="gameArea"></div>
-					<div id="gameResult"></div>
-					<div id="gameActions" style="margin-top:12px; display:flex; gap:8px; justify-content:center;"></div>
-				</div>
-			</div>
-
-			<!-- ===== SCREEN: STATS ===== -->
-			<div class="screen" id="screenStats">
-				<div class="stats-grid">
-					<div class="stat-card">
-						<div class="stat-value" id="statTotal">0</div>
-						<div class="stat-label">Всього спроб</div>
-					</div>
-					<div class="stat-card">
-						<div class="stat-value" id="statAccuracy">0%</div>
-						<div class="stat-label">Точність</div>
-					</div>
-					<div class="stat-card">
-						<div class="stat-value" id="statStreak">0</div>
-						<div class="stat-label">Серія підряд</div>
-					</div>
-					<div class="stat-card">
-						<div class="stat-value" id="statLearned">0</div>
-						<div class="stat-label">Вивчено (≥80%)</div>
-					</div>
-				</div>
-
-				<div class="card">
-					<div class="card-title">Прогрес по віршах</div>
-					<div id="verseStats"></div>
-				</div>
-
-				<div class="card">
-					<div class="card-title">Найслабші місця</div>
-					<div id="weakSpots"><p style="color:var(--text-muted);font-size:0.85rem;">Поки що недостатньо даних</p></div>
-				</div>
-
-				<button class="btn btn-sm btn-danger" onclick="Stats.reset()" style="margin-top:12px;">
-					Скинути статистику
+				<button class="btn btn-primary btn-block" onclick="AuthUI.login()"
+					style="display:flex; align-items:center; justify-content:center; gap:12px; padding:16px; margin-bottom:12px;">
+					<img src="/src/ui/img/googleLogo.svg" width="20" height="20" alt="Google"> Увійти через Google
 				</button>
-			</div>
 
-			<!-- ===== SCREEN: MANAGE ===== -->
-			<div class="screen" id="screenManage">
-				<div class="card">
-					<div class="card-title">Додати вірш</div>
-					<div class="form-group">
-						<label>Переклад</label>
-						<select id="addSearchTranslation" onchange="Manage.onTranslationChange()">
-							<!-- Will be populated by JS -->
-						</select>
-					</div>
-					<div class="form-row">
-						<div class="form-group">
-							<label>Книга</label>
-							<select id="addBook" onchange="Manage.onBookChange()">
-								<option value="">Спочатку оберіть переклад...</option>
-							</select>
-						</div>
-						<div class="form-group">
-							<label>Розділ</label>
-							<select id="addChapter" onchange="Manage.onChapterChange()">
-								<option value="">--</option>
-							</select>
-						</div>
-						<div class="form-group">
-							<label>Вірш</label>
-							<select id="addVerse" onchange="Manage.onVerseChange()">
-								<option value="">--</option>
-							</select>
-						</div>
-					</div>
-					<div class="form-group">
-						<label>Теги (через кому)</label>
-						<input id="addTags" placeholder="любов, спасіння">
-					</div>
-					<div id="addTranslations"></div>
-					<button class="btn btn-primary btn-block" onclick="Manage.saveVerse()" style="margin-top:8px;">
-						Зберегти вірш
-					</button>
-				</div>
-
-				<div class="card">
-					<div class="card-title">Мої вірші (<span id="verseCount">0</span>)</div>
-					<div class="form-group" style="margin-bottom:12px">
-						<input type="text" id="verseSearch" placeholder="Пошук за книгою, тегом або текстом..." oninput="Manage.handleSearch()">
-					</div>
-					<div id="verseList"></div>
-				</div>
-
-				<div class="card">
-					<div class="card-title">Імпорт / Експорт</div>
-					<div style="display:flex;gap:8px;flex-wrap:wrap;">
-						<button class="btn btn-sm" onclick="Manage.exportData()">📤 Експорт</button>
-						<button class="btn btn-sm" onclick="$('importFile').click()">📥 Імпорт</button>
-						<button class="btn btn-sm" onclick="$('importBookFile').click()" style="background:var(--accent-bg); color:var(--accent)">📖 Завантажити книгу</button>
-
-						<input type="file" id="importFile" accept=".json" style="display:none" onchange="Manage.importData(event)">
-						<input type="file" id="importBookFile" accept=".json" style="display:none" onchange="Manage.importBookJSON(event)">
-					</div>
-				</div>
+				<button class="btn btn-block" onclick="AuthUI.continueAsGuest()"
+					style="padding:16px; background: transparent; border: 1.5px solid var(--border); color: var(--text-muted);">
+					Продовжити як гість
+				</button>
 			</div>
 		</div>
 
-		<!-- ===== TOAST ===== -->
-		<div class="toast" id="toast"></div>
+		<!-- ===== HEADER ===== -->
 
-		<!-- ===== VITE ENTRY POINT ===== -->
-		<script type="module" src="/src/main.ts"></script>
-	</body>
+
+
+		<!-- ===== SCREEN: HOME (GAME) ===== -->
+		<div id="screenHome" class="screen">
+			<div class="card">
+				<div class="card-title">Режим гри</div>
+				<div class="mode-grid">
+					<div class="mode-card selected" data-mode="word-order" onclick="UI.selectMode(this)">
+						<div class="mode-icon">🔀</div>
+						<div class="mode-info">
+							<h3>Складання слів</h3>
+							<p>Відновити правильний порядок слів</p>
+						</div>
+					</div>
+					<div class="mode-card" data-mode="fill-gaps" onclick="UI.selectMode(this)">
+						<div class="mode-icon">✏️</div>
+						<div class="mode-info">
+							<h3>Заповни пропуски</h3>
+							<p>Вписати приховані слова</p>
+						</div>
+					</div>
+					<div class="mode-card" data-mode="continue" onclick="UI.selectMode(this)">
+						<div class="mode-icon">💬</div>
+						<div class="mode-info">
+							<h3>Продовж вірш</h3>
+							<p>Показано початок — напиши решту</p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="card">
+				<div class="card-title">Налаштування</div>
+				<div class="filter-row">
+					<div class="filter-label">Переклад</div>
+					<select id="filterTranslation" onchange="UI.updateVerseFilter()"></select>
+				</div>
+				<div class="filter-row">
+					<div class="filter-label">Вірш</div>
+					<select id="filterVerse">
+						<option value="all">Всі вірші (випадковий)</option>
+					</select>
+				</div>
+				<button class="btn btn-primary btn-block" onclick="Game.start()" style="margin-top: 8px;">
+					Почати гру
+				</button>
+			</div>
+		</div>
+
+		<!-- ===== SCREEN: GAME ===== -->
+		<div class="screen" id="screenGame">
+			<div class="card">
+				<div class="game-header">
+					<div>
+						<div class="game-ref" id="gameRef"></div>
+						<div class="game-translation" id="gameTransName"></div>
+					</div>
+					<button class="btn btn-sm" onclick="UI.showScreen('screenHome')">✕ Вийти</button>
+				</div>
+				<div class="game-instruction" id="gameInstruction"></div>
+				<div id="gameArea"></div>
+				<div id="gameResult"></div>
+				<div id="gameActions" style="margin-top:12px; display:flex; gap:8px; justify-content:center;"></div>
+			</div>
+		</div>
+
+		<!-- ===== SCREEN: STATS ===== -->
+		<div class="screen" id="screenStats">
+			<div class="stats-grid">
+				<div class="stat-card">
+					<div class="stat-value" id="statTotal">0</div>
+					<div class="stat-label">Всього спроб</div>
+				</div>
+				<div class="stat-card">
+					<div class="stat-value" id="statAccuracy">0%</div>
+					<div class="stat-label">Точність</div>
+				</div>
+				<div class="stat-card">
+					<div class="stat-value" id="statStreak">0</div>
+					<div class="stat-label">Серія підряд</div>
+				</div>
+				<div class="stat-card">
+					<div class="stat-value" id="statLearned">0</div>
+					<div class="stat-label">Вивчено (≥80%)</div>
+				</div>
+			</div>
+
+			<div class="card">
+				<div class="card-title">Прогрес по віршах</div>
+				<div id="verseStats"></div>
+			</div>
+
+			<div class="card">
+				<div class="card-title">Найслабші місця</div>
+				<div id="weakSpots">
+					<p style="color:var(--text-muted);font-size:0.85rem;">Поки що недостатньо даних</p>
+				</div>
+			</div>
+
+			<button class="btn btn-sm btn-danger" onclick="Stats.reset()" style="margin-top:12px;">
+				Скинути статистику
+			</button>
+		</div>
+
+		<!-- ===== SCREEN: MANAGE ===== -->
+		<div class="screen" id="screenManage">
+			<div class="card">
+				<div class="card-title">Додати вірш</div>
+				<div class="form-group">
+					<label>Переклад</label>
+					<select id="addSearchTranslation" onchange="Manage.onTranslationChange()">
+						<!-- Will be populated by JS -->
+					</select>
+				</div>
+				<div class="form-row">
+					<div class="form-group">
+						<label>Книга</label>
+						<select id="addBook" onchange="Manage.onBookChange()">
+							<option value="">Спочатку оберіть переклад...</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label>Розділ</label>
+						<select id="addChapter" onchange="Manage.onChapterChange()">
+							<option value="">--</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label>Вірш</label>
+						<select id="addVerse" onchange="Manage.onVerseChange()">
+							<option value="">--</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label>Теги (через кому)</label>
+					<input id="addTags" placeholder="любов, спасіння">
+				</div>
+				<div id="addTranslations"></div>
+				<button class="btn btn-primary btn-block" onclick="Manage.saveVerse()" style="margin-top:8px;">
+					Зберегти вірш
+				</button>
+			</div>
+
+			<div class="card">
+				<div class="card-title">Мої вірші (<span id="verseCount">0</span>)</div>
+				<div class="form-group" style="margin-bottom:12px">
+					<input type="text" id="verseSearch" placeholder="Пошук за книгою, тегом або текстом..."
+						oninput="Manage.handleSearch()">
+				</div>
+				<div id="verseList"></div>
+			</div>
+
+			<div class="card">
+				<div class="card-title">Імпорт / Експорт</div>
+				<div style="display:flex;gap:8px;flex-wrap:wrap;">
+					<button class="btn btn-sm" onclick="Manage.exportData()">📤 Експорт</button>
+					<button class="btn btn-sm" onclick="$('importFile').click()">📥 Імпорт</button>
+					<button class="btn btn-sm" onclick="$('importBookFile').click()"
+						style="background:var(--accent-bg); color:var(--accent)">📖 Завантажити книгу</button>
+
+					<input type="file" id="importFile" accept=".json" style="display:none" onchange="Manage.importData(event)">
+					<input type="file" id="importBookFile" accept=".json" style="display:none"
+						onchange="Manage.importBookJSON(event)">
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- ===== TOAST ===== -->
+	<div class="toast" id="toast"></div>
+
+	<!-- ===== VITE ENTRY POINT ===== -->
+	<script type="module" src="/src/main.ts"></script>
+</body>
+
 </html>

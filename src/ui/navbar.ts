@@ -40,12 +40,7 @@ const Navbar = {
 			});
 		});
 
-		const appEl = document.querySelector('.app');
-		if (appEl) {
-			appEl.appendChild(navContainer);
-		} else {
-			document.body.appendChild(navContainer);
-		}
+		document.body.appendChild(navContainer);
 	}
 };
 

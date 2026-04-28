@@ -1,16 +1,19 @@
 /* ===== BOTTOM NAV ===== */
 .bottom-nav {
-	position: fixed; 
-	bottom: 24px; /* Floating style */
-	left: 50%; 
+	position: fixed;
+	bottom: 24px;
+	/* Floating style */
+	left: 50%;
 	transform: translateX(-50%);
-	width: calc(100% - 40px); /* Margins on the sides */
+	width: calc(100% - 40px);
+	/* Margins on the sides */
 	max-width: 420px;
 	background: rgba(255, 255, 255, 0.65);
 	backdrop-filter: blur(24px);
 	-webkit-backdrop-filter: blur(24px);
 	border: 1px solid rgba(255, 255, 255, 0.4);
-	border-radius: 28px; /* Pill shape */
+	border-radius: 28px;
+	/* Pill shape */
 	display: flex;
 	padding: 6px;
 	z-index: 100;
@@ -21,10 +24,12 @@
 .nav-indicator {
 	position: absolute;
 	top: 6px;
-	left: 6px; 
-	width: calc(25% - 3px); /* Account for padding */
+	left: 6px;
+	width: calc(25% - 3px);
+	/* Account for padding */
 	height: calc(100% - 12px);
-	background: rgba(58, 74, 46, 0.08); /* Soft green pill behind active */
+	background: rgba(58, 74, 46, 0.08);
+	/* Soft green pill behind active */
 	border-radius: 22px;
 	transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 	z-index: 0;
@@ -33,16 +38,35 @@
 
 .nav-btn {
 	flex: 1;
-	background: none; border: none; cursor: pointer;
-	display: flex; flex-direction: column; align-items: center; justify-content: center;
-	padding: 8px 0; color: var(--text-muted);
-	font-size: 0.7rem; gap: 4px; transition: all var(--transition);
+	background: none;
+	border: none;
+	cursor: pointer;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 8px 0;
+	color: var(--text-muted);
+	font-size: 0.7rem;
+	gap: 4px;
+	transition: all var(--transition);
 	font-weight: 700;
 	position: relative;
 	z-index: 1;
+	outline: none;
+	user-select: none;
+	-webkit-user-select: none;
 }
 
-.nav-btn.active { color: var(--accent); }
+.nav-btn:focus,
+.nav-btn:active {
+	outline: none;
+	background: transparent;
+}
+
+.nav-btn.active {
+	color: var(--accent);
+}
 
 .nav-icon {
 	display: block;
@@ -65,10 +89,25 @@
 	transform: translateY(-2px) scale(1.1);
 }
 
-.icon-home { -webkit-mask-image: url('./img/navbar/iconHome.svg'); mask-image: url('./img/navbar/iconHome.svg'); }
-.icon-game { -webkit-mask-image: url('./img/navbar/iconGame.svg'); mask-image: url('./img/navbar/iconGame.svg'); }
-.icon-stats { -webkit-mask-image: url('./img/navbar/iconStats.svg'); mask-image: url('./img/navbar/iconStats.svg'); }
-.icon-manage { -webkit-mask-image: url('./img/navbar/iconManage.svg'); mask-image: url('./img/navbar/iconManage.svg'); }
+.icon-home {
+	-webkit-mask-image: url('./img/navbar/iconHome.svg');
+	mask-image: url('./img/navbar/iconHome.svg');
+}
+
+.icon-game {
+	-webkit-mask-image: url('./img/navbar/iconGame.svg');
+	mask-image: url('./img/navbar/iconGame.svg');
+}
+
+.icon-stats {
+	-webkit-mask-image: url('./img/navbar/iconStats.svg');
+	mask-image: url('./img/navbar/iconStats.svg');
+}
+
+.icon-manage {
+	-webkit-mask-image: url('./img/navbar/iconManage.svg');
+	mask-image: url('./img/navbar/iconManage.svg');
+}
 
 @media (prefers-color-scheme: dark) {
 	.bottom-nav {
@@ -76,6 +115,7 @@
 		border-color: rgba(255, 255, 255, 0.08) !important;
 		box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
 	}
+
 	.nav-indicator {
 		background: rgba(94, 166, 118, 0.15);
 	}
