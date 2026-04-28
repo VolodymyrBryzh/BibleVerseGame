@@ -2,7 +2,7 @@ import VersesDB, { db, Attempt } from './database';
 import UI from '../ui/ui';
 import { toast } from '../utils/helpers';
 import { db as fdb, auth } from './firebase';
-import { collection, getDocs, addDoc, doc, getDoc, setDoc, query, orderBy, limit, writeBatch } from 'firebase/firestore';
+import { collection, getDocs, addDoc, doc, getDoc, setDoc } from 'firebase/firestore';
 
 export interface StatsOverview {
   total: number;

@@ -1,7 +1,7 @@
 import Dexie, { Table } from 'dexie';
 import { BUILT_IN_VERSES, BibleVerse } from '../constants/bibleData';
 import { db as fdb, auth } from './firebase';
-import { collection, getDocs, addDoc, deleteDoc, doc, setDoc, query, where, writeBatch } from 'firebase/firestore';
+import { collection, getDocs, addDoc, deleteDoc, doc, writeBatch } from 'firebase/firestore';
 
 export class BibleDatabase extends Dexie {
   verses!: Table<BibleVerse>;
