@@ -212,7 +212,8 @@ body {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-top: 1px solid var(--border);
-  display: flex; justify-content: space-around;
+  display: grid; 
+  grid-template-columns: repeat(4, 1fr); /* Perfect 25% slots */
   padding: 10px 0 calc(10px + env(safe-area-inset-bottom, 0px));
   z-index: 100;
 }
