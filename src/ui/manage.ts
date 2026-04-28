@@ -52,8 +52,12 @@ const Manage = {
     for (const meta of TRANSLATIONS_META) {
       try {
         const url = `/bible/${meta.key}/${slug}.json`;
+        console.log(`Checking local file: ${url}`);
         const resp = await fetch(url);
-        if (!resp.ok) continue;
+        if (!resp.ok) {
+          console.warn(`Local file not found: ${url}`);
+          continue;
+        }
         
         const data = await resp.json();
         const chData = data.chapters?.find((c: any) => c.chapter === chapter);
