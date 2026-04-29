@@ -1,4 +1,4 @@
-import { signInWithPopup, signOut } from 'firebase/auth';
+import { signInWithPopup, signInWithRedirect, getRedirectResult, signOut } from 'firebase/auth';
 import { auth, googleProvider, onAuth } from '../core/firebase';
 import VersesDB from '../core/database';
 import Stats from '../core/stats';
@@ -8,6 +8,9 @@ import { $ } from '../utils/helpers';
 
 const AuthUI = {
 	init() {
+		// Handle redirect result (when returning from Google sign-in)
+		getRedirectResult(auth).catch(e => console.error('Redirect result error', e));
+
 		onAuth(async (user) => {
 			if (user) {
 				console.log('User logged in:', user.email);
@@ -25,10 +28,17 @@ const AuthUI = {
 
 	async login() {
 		try {
+			// Try popup first (works on desktop)
 			await signInWithPopup(auth, googleProvider);
-		} catch (error) {
-			console.error('Login failed', error);
-			alert('Помилка входу. Спробуйте ще раз.');
+		} catch (error: any) {
+			if (error?.code === 'auth/popup-blocked' || error?.code === 'auth/cancelled-popup-request') {
+				// Fallback to redirect (works on mobile & when popups blocked)
+				console.log('Popup blocked, falling back to redirect...');
+				await signInWithRedirect(auth, googleProvider);
+			} else {
+				console.error('Login failed', error);
+				alert('Помилка входу. Спробуйте ще раз.');
+			}
 		}
 	},
 
