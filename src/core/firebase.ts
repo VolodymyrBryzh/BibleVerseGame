@@ -5,7 +5,7 @@ import { getFirestore } from 'firebase/firestore';
 // TODO: Replace with your project's customized Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBmBLtbarrkDb7DyP2cEey1xfc6-Rh8XQk",
-  authDomain: "bible-verse-game-seven.firebaseapp.com",
+  authDomain: "bible-verse-game-seven.vercel.app",
   projectId: "bible-verse-game-seven",
   storageBucket: "bible-verse-game-seven.firebasestorage.app",
   messagingSenderId: "881993495113",
