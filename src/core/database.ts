@@ -10,7 +10,7 @@ function saveGuestVerses(verses: BibleVerse[]): void {
 	localStorage.setItem(GUEST_STORAGE_KEY, JSON.stringify(verses));
 }
 import { db as fdb, auth } from './firebase';
-import { collection, getDocs, addDoc, deleteDoc, doc, writeBatch } from 'firebase/firestore';
+import { collection, getDocs, addDoc, deleteDoc, doc } from 'firebase/firestore';
 
 export class BibleDatabase extends Dexie {
 	verses!: Table<BibleVerse>;
