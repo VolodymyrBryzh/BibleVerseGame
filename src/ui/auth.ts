@@ -1,4 +1,4 @@
-import { signInWithRedirect, getRedirectResult, signOut } from 'firebase/auth';
+import { signInWithPopup, signInWithRedirect, getRedirectResult, signInAnonymously, signOut } from 'firebase/auth';
 import { auth, googleProvider, onAuth } from '../core/firebase';
 import VersesDB from '../core/database';
 import Stats from '../core/stats';
@@ -8,12 +8,16 @@ import { $ } from '../utils/helpers';
 
 const AuthUI = {
 	init() {
-		// Handle redirect result (when returning from Google sign-in)
-		getRedirectResult(auth).catch(e => console.error('Redirect result error', e));
+		// Обробляємо повернення після redirect-логіну (на мобільних)
+		getRedirectResult(auth).then((result) => {
+			if (result && result.user) {
+				console.log('Successfully logged in via redirect');
+			}
+		}).catch(e => console.error('Redirect result error', e));
 
 		onAuth(async (user) => {
 			if (user) {
-				console.log('User logged in:', user.email);
+				console.log('User logged in:', user.email || 'Anonymous', user.uid);
 				await VersesDB.init();
 				await Stats.init();
 				UI.init();
@@ -28,20 +32,30 @@ const AuthUI = {
 
 	async login() {
 		try {
-			await signInWithRedirect(auth, googleProvider);
+			// Спочатку пробуємо popup (найкраще для десктопа)
+			await signInWithPopup(auth, googleProvider);
 		} catch (error: any) {
-			console.error('Login failed', error);
-			alert('Помилка входу. Спробуйте ще раз.');
+			if (error?.code === 'auth/popup-blocked' || error?.code === 'auth/cancelled-popup-request') {
+				// Якщо заблоковано (на мобільних), переходимо на redirect
+				console.log('Popup blocked, falling back to redirect...');
+				await signInWithRedirect(auth, googleProvider);
+			} else {
+				console.error('Login failed', error);
+				alert('Помилка входу. Спробуйте ще раз.');
+			}
 		}
 	},
 
 	async continueAsGuest() {
-		console.log('Continuing as guest');
-		await VersesDB.init();
-		await Stats.init();
-		UI.init();
-		Manage.init();
-		this.showApp();
+		try {
+			console.log('Logging in anonymously...');
+			// Входимо анонімно. Firebase створить повноцінний акаунт (uid) і
+			// всі дані будуть зберігатися в Firestore, як і для звичайного юзера!
+			await signInAnonymously(auth);
+		} catch (error: any) {
+			console.error('Anonymous login failed', error);
+			alert('Помилка гостьового входу. Спробуйте ще раз.');
+		}
 	},
 
 	async logout() {

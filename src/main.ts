@@ -24,7 +24,7 @@ import Game from './engine/game';
 // Initialize app through AuthUI
 document.addEventListener('DOMContentLoaded', () => {
 	AuthUI.init(); // Запускаємо авторизацію
-	Dashboard.init(); // Ініціалізуємо головну сторінку
-	Navbar.init(); // Ініціалізуємо навігацію
 	Background.init(); // Ініціалізуємо фон
+	Navbar.init(); // Ініціалізуємо навігацію
+	Dashboard.init(); // Ініціалізуємо головну сторінку
 });
