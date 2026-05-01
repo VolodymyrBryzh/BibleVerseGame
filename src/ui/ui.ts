@@ -3,7 +3,7 @@ import Stats from '../core/stats';
 import Manage from './manage';
 import { TRANSLATIONS_META } from '../constants/bibleData';
 import { $ } from '../utils/helpers';
-import Dashboard from './dashboard';
+import Dashboard from './dashboard/index';
 
 const UI = {
 	init(): void {

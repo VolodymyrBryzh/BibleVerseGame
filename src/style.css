@@ -58,18 +58,19 @@ html {
 	-webkit-text-size-adjust: 100%;
 	scroll-behavior: smooth;
 	overflow-x: hidden;
+	overscroll-behavior: none;
 }
 
 body {
 	font-family: var(--font);
 	background: transparent;
-	/* Changed to let modern background show */
 	color: var(--text);
 	min-height: 100dvh;
 	line-height: 1.6;
 	overflow-x: hidden;
 	display: flex;
 	justify-content: center;
+	overscroll-behavior: none;
 }
 
 .app {
@@ -107,11 +108,11 @@ body {
 
 /* ===== DASHBOARD NEW DESIGN ===== */
 .dashboard-top {
-	padding: 60px 24px 40px;
+	padding: 40px 24px 20px;
 	background: rgba(255, 255, 255, 0.35);
 	backdrop-filter: blur(24px);
 	-webkit-backdrop-filter: blur(24px);
-	margin-bottom: 30px;
+	margin-bottom: 16px;
 	border-radius: 0 0 40px 40px;
 	border-bottom: 1px solid rgba(255, 255, 255, 0.4);
 }
@@ -147,11 +148,11 @@ body {
 }
 
 .dashboard-title {
-	font-size: 2.8rem;
+	font-size: 2.4rem;
 	line-height: 1.05;
 	font-weight: 850;
 	color: #2c2e35;
-	margin-bottom: 35px;
+	margin-bottom: 20px;
 	letter-spacing: -0.04em;
 }
 
@@ -160,7 +161,7 @@ body {
 	backdrop-filter: blur(20px);
 	-webkit-backdrop-filter: blur(20px);
 	border-radius: 28px;
-	padding: 24px;
+	padding: 16px 20px;
 	box-shadow: 0 12px 35px rgba(0, 0, 0, 0.06);
 	border: 1px solid rgba(255, 255, 255, 0.5);
 }
@@ -187,7 +188,7 @@ body {
 }
 
 .progress-percentage {
-	font-size: 2.2rem;
+	font-size: 1.8rem;
 	font-weight: 900;
 	color: #2c2e35;
 	letter-spacing: -0.05em;

@@ -1,11 +1,11 @@
 import './style.css';
 // ui
-import AuthUI from './ui/auth';
+import AuthUI from './ui/auth/index';
 import UI from './ui/ui';
 import Manage from './ui/manage';
 import Background from './ui/background';
 import Navbar from './ui/navbar';
-import Dashboard from './ui/dashboard';
+import Dashboard from './ui/dashboard/index';
 // core
 import Stats from './core/stats';
 import VersesDB from './core/database';

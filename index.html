@@ -4,7 +4,16 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-	<title>Bible Game</title>
+	<title>BibleVerse</title>
+	
+	<!-- PWA / Fullscreen support -->
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="theme-color" content="#fdfdfb">
+	<link rel="manifest" href="/manifest.json">
+	<link rel="apple-touch-icon" href="/icon-512.png">
+
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -14,33 +23,19 @@
 <body>
 	<!-- ===== APP ===== -->
 	<div class="app">
-		<!-- ===== SCREEN: AUTH ===== -->
-		<div id="screenAuth" class="screen"
-			style="display:none; justify-content:center; align-items:center; min-height:80vh;">
-			<div class="card" style="text-align:center; padding: 40px 20px; width: 100%;">
-				<div style="font-size: 4rem; margin-bottom: 20px;">📖</div>
-				<h1 style="font-size: 2rem; margin-bottom: 10px;">BibleVerse</h1>
-				<p style="color:var(--text-light); margin-bottom: 30px;">Вивчайте Біблію разом із нами. Ваші дані будуть
-					синхронізовані між усіма пристроями.</p>
-
-				<button class="btn btn-primary btn-block" onclick="AuthUI.login()"
-					style="display:flex; align-items:center; justify-content:center; gap:12px; padding:16px; margin-bottom:12px;">
-					<img src="/src/ui/img/googleLogo.svg" width="20" height="20" alt="Google"> Увійти через Google
-				</button>
-
-				<button class="btn btn-block" onclick="AuthUI.continueAsGuest()"
-					style="padding:16px; background: transparent; border: 1.5px solid var(--border); color: var(--text-muted);">
-					Продовжити як гість
-				</button>
-			</div>
-		</div>
-
 		<!-- ===== HEADER ===== -->
 
 
 
-		<!-- ===== SCREEN: HOME (GAME) ===== -->
 		<div id="screenHome" class="screen">
+			<!-- Тимчасова картка -->
+			<div class="card" style="text-align:center; padding: 60px 20px;">
+				<div style="font-size: 3.5rem; margin-bottom: 20px;">🚧</div>
+				<h2 style="margin-bottom: 12px; font-weight: 800;">Функція в розробці</h2>
+				<p style="color:var(--text-muted); line-height: 1.6;">Ми працюємо над ігровими режимами. Скоро тут з'явиться можливість цікаво та ефективно вивчати біблійні вірші!</p>
+			</div>
+
+			<!-- ОРИГІНАЛЬНИЙ КОД (ЗАКОМЕНТОВАНО)
 			<div class="card">
 				<div class="card-title">Режим гри</div>
 				<div class="mode-grid">
@@ -84,6 +79,7 @@
 					Почати гру
 				</button>
 			</div>
+			-->
 		</div>
 
 		<!-- ===== SCREEN: GAME ===== -->
@@ -105,6 +101,14 @@
 
 		<!-- ===== SCREEN: STATS ===== -->
 		<div class="screen" id="screenStats">
+			<!-- Тимчасова картка -->
+			<div class="card" style="text-align:center; padding: 60px 20px;">
+				<div style="font-size: 3.5rem; margin-bottom: 20px;">📊</div>
+				<h2 style="margin-bottom: 12px; font-weight: 800;">Статистика скоро буде</h2>
+				<p style="color:var(--text-muted); line-height: 1.6;">Тут ви зможете відстежувати свій прогрес, бачити вивчені вірші та аналізувати свої успіхи у вивченні Біблії.</p>
+			</div>
+
+			<!-- ОРИГІНАЛЬНИЙ КОД (ЗАКОМЕНТОВАНО)
 			<div class="stats-grid">
 				<div class="stat-card">
 					<div class="stat-value" id="statTotal">0</div>
@@ -139,6 +143,7 @@
 			<button class="btn btn-sm btn-danger" onclick="Stats.reset()" style="margin-top:12px;">
 				Скинути статистику
 			</button>
+			-->
 		</div>
 
 		<!-- ===== SCREEN: MANAGE ===== -->
@@ -202,6 +207,32 @@
 					<input type="file" id="importBookFile" accept=".json" style="display:none"
 						onchange="Manage.importBookJSON(event)">
 				</div>
+			</div>
+		</div>
+
+		<!-- ===== SCREEN: PROFILE ===== -->
+		<div class="screen" id="screenProfile">
+			<div class="card" style="text-align:center; padding: 40px 20px;">
+				<div id="userAvatar" style="font-size: 4rem; margin-bottom: 16px;">👤</div>
+				<h2 id="userName" style="margin-bottom: 4px;">Гість</h2>
+				<p id="userEmail" style="color:var(--text-muted); margin-bottom: 24px;">Анонімний вхід</p>
+
+				<div style="display:flex; flex-direction:column; gap:12px;">
+					<button class="btn btn-block" onclick="UI.showScreen('screenDashboard')" style="background:var(--accent-bg); color:var(--accent);">
+						Повернутися на головну
+					</button>
+					<button class="btn btn-danger btn-block" onclick="AuthUI.logout()">
+						Вийти з акаунта
+					</button>
+				</div>
+			</div>
+
+			<div class="card">
+				<div class="card-title">Про застосунок</div>
+				<p style="font-size:0.9rem; color:var(--text-light); line-height:1.6;">
+					BibleVerse — це ваш персональний помічник у вивченні та запам'ятовуванні Біблії.
+					Всі ваші дані автоматично синхронізуються з хмарою.
+				</p>
 			</div>
 		</div>
 	</div>
