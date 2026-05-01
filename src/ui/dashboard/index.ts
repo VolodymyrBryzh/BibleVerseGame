@@ -18,7 +18,7 @@ const Dashboard = {
 
 		const screen = document.createElement('div');
 		screen.id = 'screenDashboard';
-		screen.className = 'screen active';
+		screen.className = 'screen';
 		screen.innerHTML = html;
 
 		const appEl = document.querySelector('.app');

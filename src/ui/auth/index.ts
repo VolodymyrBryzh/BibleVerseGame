@@ -29,7 +29,7 @@ const AuthUI = {
 			const screen = document.createElement('div');
 			screen.id = 'screenAuth';
 			screen.className = 'screen';
-			screen.style.cssText = 'display:none; justify-content:center; align-items:center; min-height:80vh;';
+			screen.style.cssText = 'justify-content:center; align-items:center; min-height:80vh;';
 			screen.innerHTML = html;
 
 			const appEl = document.querySelector('.app');
