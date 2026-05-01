@@ -11,7 +11,9 @@ const Dashboard = {
 				${Progress.render()}
 			</div>
 			<div class="container">
-				${DailyVerse.render()}
+				<div id="dailyVerseContainer">
+					${DailyVerse.render()}
+				</div>
 				${QuickStart.render()}
 			</div>
 		`;
