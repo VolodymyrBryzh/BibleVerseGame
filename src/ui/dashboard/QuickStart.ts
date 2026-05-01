@@ -4,7 +4,7 @@ import { $ } from '../../utils/helpers';
 const QuickStart = {
 	render(): string {
 		return `
-			<div class="card" style="margin-top: 0px;">
+			<div class="card quick-start-card" style="margin-top: 0px;">
 				<div class="card-title" style="margin-bottom: 8px;">Швидкий старт</div>
 				<button id="btnQuickStart" class="btn btn-primary btn-block" style="padding:14px;">
 					Почати гру

@@ -75,11 +75,11 @@ body {
 	width: 100%;
 	max-width: 500px;
 	background: transparent;
-	height: 100%;
+	height: 100dvh;
 	display: flex;
 	flex-direction: column;
 	position: relative;
-	overflow: hidden;
+	overflow: hidden !important; /* Total scroll ban */
 }
 
 /* ===== LOADER ===== */
@@ -233,20 +233,34 @@ body {
 #screenDashboard {
 	padding-left: 0;
 	padding-right: 0;
-	display: flex;
-	flex-direction: column;
-	min-height: 100dvh;
-	padding-top: 260px; /* Приблизна висота фіксованого хедера + відступ */
+	position: relative;
+	height: 100dvh;
+	overflow: hidden;
 }
 
 #screenDashboard .container {
-	padding-left: 20px;
-	padding-right: 20px;
-	flex: 1;
+	padding: 0 20px;
+	height: 100%;
 	display: flex;
 	flex-direction: column;
-	justify-content: space-around; /* Равномерно распределяем карточки */
-	padding-bottom: 10px;
+}
+
+/* Specific positioning for modules */
+#dailyVerseContainer {
+	position: absolute;
+	top: 55%;
+	left: 20px;
+	right: 20px;
+	transform: translateY(-50%);
+	z-index: 10;
+}
+
+#screenDashboard .quick-start-card {
+	position: absolute;
+	bottom: 110px; /* Right above bottom nav */
+	left: 20px;
+	right: 20px;
+	z-index: 20;
 }
 
 .screen.active {
