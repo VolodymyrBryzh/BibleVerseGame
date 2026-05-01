@@ -230,8 +230,9 @@ body {
 	padding-right: 0;
 	display: flex;
 	flex-direction: column;
-	height: calc(100dvh - 80px);
-	overflow: hidden; /* Забороняємо скрол всього екрана */
+	height: 100%;
+	overflow: hidden;
+	/* Забороняємо скрол всього екрана */
 }
 
 #screenDashboard .container {
