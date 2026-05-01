@@ -147,22 +147,24 @@ body {
 }
 
 .dashboard-title {
-	font-size: 2.4rem;
-	line-height: 1.05;
-	font-weight: 850;
-	color: #2c2e35;
+	font-size: 2.2rem;
+	font-weight: 800;
+	margin: 0;
+	line-height: 1.1;
+	color: var(--text);
 	margin-bottom: 20px;
 	letter-spacing: -0.04em;
 }
 
 .progress-card {
-	background: rgba(255, 255, 255, 0.55);
-	backdrop-filter: blur(20px);
-	-webkit-backdrop-filter: blur(20px);
+	background: rgba(255, 255, 255, 0.65);
 	border-radius: 28px;
-	padding: 16px 20px;
-	box-shadow: 0 12px 35px rgba(0, 0, 0, 0.06);
-	border: 1px solid rgba(255, 255, 255, 0.5);
+	padding: 24px;
+	margin-bottom: 0px;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+	border: 1px solid rgba(255, 255, 255, 0.6);
+	position: relative;
+	overflow: hidden;
 }
 
 .progress-header {
@@ -228,8 +230,8 @@ body {
 	padding-right: 0;
 	display: flex;
 	flex-direction: column;
-	min-height: calc(100dvh - 80px); /* 80px for nav */
-	height: calc(100dvh - 80px);
+	height: calc(100dvh - 120px);
+	overflow: hidden; /* Забороняємо скрол всього екрана */
 }
 
 #screenDashboard .container {
@@ -240,6 +242,7 @@ body {
 	flex-direction: column;
 	justify-content: space-between;
 	padding-bottom: 20px;
+	overflow: hidden;
 }
 
 .screen.active {
