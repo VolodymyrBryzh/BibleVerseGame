@@ -217,7 +217,7 @@ body {
 
 /* ===== SCREEN MANAGEMENT ===== */
 .screen {
-	display: none;
+	display: none !important;
 	padding-bottom: 80px;
 	padding-left: 20px;
 	padding-right: 20px;
@@ -243,12 +243,13 @@ body {
 }
 
 .screen.active {
-	display: block;
+	display: block !important;
 	animation: fadeIn 0.3s ease-out;
 }
 
 #screenAuth.active,
-#screenLoading.active {
+#screenLoading.active,
+#screenDashboard.active {
 	display: flex !important;
 }
 
