@@ -236,11 +236,10 @@ body {
 }
 
 #screenDashboard .container {
-	padding: 0 20px;
+	padding: 0 20px 20px;
 	flex: 1;
 	display: flex;
 	flex-direction: column;
-	justify-content: space-between;
 	overflow: hidden;
 }
 
@@ -255,7 +254,8 @@ body {
 
 #screenDashboard .quick-start-card {
 	flex: 0 0 auto;
-	margin-top: 12px;
+	margin-top: auto; /* Виштовхуємо кнопку в самий низ */
+	margin-bottom: 10px;
 }
 
 .screen.active {
