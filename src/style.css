@@ -75,11 +75,11 @@ body {
 	width: 100%;
 	max-width: 500px;
 	background: transparent;
-	height: 100dvh;
+	min-height: 100dvh;
 	display: flex;
 	flex-direction: column;
 	position: relative;
-	overflow: hidden !important; /* Total scroll ban */
+	padding-bottom: 100px; /* Space for navbar */
 }
 
 /* ===== LOADER ===== */
@@ -106,13 +106,15 @@ body {
 
 /* ===== DASHBOARD NEW DESIGN ===== */
 .dashboard-top {
-	padding: 20px 24px 16px; /* Менші відступи зверху */
-	background: rgba(255, 255, 255, 0.95);
-	backdrop-filter: blur(24px);
-	-webkit-backdrop-filter: blur(24px);
+	position: sticky;
+	top: 0;
+	z-index: 100;
+	padding: 30px 24px 20px;
+	background: rgba(255, 255, 255, 0.96);
+	backdrop-filter: blur(20px);
+	-webkit-backdrop-filter: blur(20px);
 	border-radius: 0 0 32px 32px;
-	border-bottom: 1px solid rgba(255, 255, 255, 0.4);
-	flex: 0 0 auto;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .date-row {
@@ -229,18 +231,14 @@ body {
 	padding-right: 0;
 	display: flex;
 	flex-direction: column;
-	height: 100dvh;
-	overflow: hidden; /* Весь екран не скролиться */
+	width: 100%;
 }
 
 #screenDashboard .container {
-	padding: 0 20px 100px; /* Відступ знизу для навігації */
-	flex: 1;
+	padding: 20px;
 	display: flex;
 	flex-direction: column;
-	overflow-y: auto; /* Скролимо ТІЛЬКИ контентну частину */
-	-webkit-overflow-scrolling: touch;
-	gap: 16px;
+	gap: 20px;
 }
 
 #dailyVerseContainer {
@@ -253,9 +251,7 @@ body {
 }
 
 #screenDashboard .quick-start-card {
-	flex: 0 0 auto;
-	margin-top: auto; /* Виштовхуємо кнопку в самий низ */
-	margin-bottom: 10px;
+	margin-top: 10px;
 }
 
 .screen.active {
