@@ -74,12 +74,12 @@ body {
 .app {
 	width: 100%;
 	max-width: 500px;
-	/* Fixed mobile width */
 	background: transparent;
-	min-height: 100dvh;
-	padding: 20px 0 100px;
+	height: 100dvh;
+	display: flex;
+	flex-direction: column;
 	position: relative;
-	overflow-x: hidden;
+	overflow: hidden;
 }
 
 /* ===== LOADER ===== */
@@ -230,9 +230,9 @@ body {
 	padding-right: 0;
 	display: flex;
 	flex-direction: column;
+	flex: 1;
 	height: 100%;
 	overflow: hidden;
-	/* Забороняємо скрол всього екрана */
 }
 
 #screenDashboard .container {
@@ -241,9 +241,8 @@ body {
 	flex: 1;
 	display: flex;
 	flex-direction: column;
-	justify-content: space-between;
-	padding-bottom: 20px;
-	overflow: hidden;
+	justify-content: space-around; /* Равномерно распределяем карточки */
+	padding-bottom: 10px;
 }
 
 .screen.active {
