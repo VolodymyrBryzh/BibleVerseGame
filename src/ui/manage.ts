@@ -7,16 +7,17 @@ import { toast, $ } from '../utils/helpers';
 const Manage = {
 	editingId: null as string | null,
 	currentBookData: null as any,
-	bookSlugs: {
-		'Буття': 'genesis', 'Вихід': 'exodus', 'Левит': 'leviticus', 'Числа': 'numbers', 'Повторення Закону': 'deuteronomy',
-		'Псалом': 'psalms', 'Приповісті': 'proverbs', 'Єремія': 'jeremiah', 'Ісая': 'isaiah',
-		'Від Матвія': 'matthew', 'Від Марка': 'mark', 'Від Луки': 'luke', 'Від Івана': 'john',
-		'До Римлян': 'romans', '1-е Коринтян': '1corinthians', '2-е Коринтян': '2corinthians',
-		'До Галатів': 'galatians', 'До Ефесян': 'ephesians', 'До Филипʼян': 'philippians',
-		'До Колосян': 'colossians', '1-е Солунян': '1thessalonians', '2-е Солунян': '2thessalonians',
-		'До Євреїв': 'hebrews', 'Якова': 'james', '1-е Петра': '1peter', '2-е Петра': '2peter',
-		'1-е Івана': '1john', 'Обʼявлення': 'revelation'
-	} as Record<string, string>,
+	bookCodes: [
+		'gen', 'exo', 'lev', 'num', 'deu', 'jos', 'jdg', 'rut', '1sa', '2sa',
+		'1ki', '2ki', '1ch', '2ch', 'ezr', 'neh', 'est', 'job', 'psa', 'pro',
+		'ecc', 'sng', 'isa', 'jer', 'lam', 'ezk', 'dan', 'hos', 'jol', 'amo',
+		'oba', 'jon', 'mic', 'nam', 'hab', 'zep', 'hag', 'zec', 'mal',
+		'mat', 'mrk', 'luk', 'jhn', 'act', 'rom', '1co', '2co', 'gal', 'eph',
+		'php', 'col', '1th', '2th', '1ti', '2ti', 'tit', 'phm', 'heb', 'jas',
+		'1pe', '2pe', '1jn', '2jn', '3jn', 'jud', 'rev'
+	],
+	// Dynamic mapping: Book Name -> Code (populated during initBookDropdown)
+	bookNameMap: {} as Record<string, string>,
 
 	init(): void {
 		this.renderTranslationFields();
@@ -34,14 +35,12 @@ const Manage = {
 		const validTranslations = await Promise.all(TRANSLATIONS_META.map(async (t) => {
 			// We only need to find ONE book with content to consider the translation valid
 			// To speed up, we check Genesis first, then others if needed
-			const slugs = Object.values(this.bookSlugs);
+			const codes = this.bookCodes;
+			const testCodes = [codes[0], codes[18], codes[39]]; // gen, psa, mat
 
-			// Check first 5 books to be sure (Genesis, Matthew, etc.)
-			const testSlugs = [slugs[0], slugs[9], slugs[15]]; // Genesis, Psalms, Matthew (approx)
-
-			for (const slug of testSlugs) {
+			for (const code of testCodes) {
 				try {
-					const resp = await fetch(`/bible/${t.key}/${slug}.json`);
+					const resp = await fetch(`/bible/${t.key}/${code}.json`);
 					if (resp.ok) {
 						const data = await resp.json();
 						const hasContent = data.chapters?.some((ch: any) =>
@@ -77,19 +76,23 @@ const Manage = {
 		const select = $<HTMLSelectElement>('addBook');
 		if (!select) return;
 
-		select.innerHTML = '<option value="">Завантаження...</option>';
-
-		const checks = Object.entries(this.bookSlugs).map(async ([name, slug]) => {
+		this.bookNameMap = {};
+		const checks = this.bookCodes.map(async (code) => {
 			try {
-				const resp = await fetch(`/bible/${transKey}/${slug}.json`);
+				const resp = await fetch(`/bible/${transKey}/${code}.json`);
 				if (!resp.ok) return null;
 
 				const data = await resp.json();
+				const bookName = data.metadata?.book || code;
 				const hasAnyContent = data.chapters?.some((ch: any) =>
 					ch.verses?.some((v: any) => v.text && v.text.trim() !== '')
 				);
 
-				return hasAnyContent ? name : null;
+				if (hasAnyContent) {
+					this.bookNameMap[bookName] = code;
+					return bookName;
+				}
+				return null;
 			} catch (e) {
 				return null;
 			}
@@ -121,9 +124,9 @@ const Manage = {
 
 		if (!book) return;
 
-		const slug = this.bookSlugs[book];
+		const code = this.bookNameMap[book];
 		try {
-			const resp = await fetch(`/bible/${transKey}/${slug}.json`);
+			const resp = await fetch(`/bible/${transKey}/${code}.json`);
 			if (!resp.ok) throw new Error();
 			this.currentBookData = await resp.json();
 
@@ -172,12 +175,12 @@ const Manage = {
 
 		toast('Завантажую текст...');
 
-		const slug = this.bookSlugs[book];
+		const code = this.bookNameMap[book];
 		let foundCount = 0;
 
 		for (const meta of TRANSLATIONS_META) {
 			try {
-				const url = `/bible/${meta.key}/${slug}.json`;
+				const url = `/bible/${meta.key}/${code}.json`;
 				const resp = await fetch(url);
 				if (!resp.ok) continue;
 
