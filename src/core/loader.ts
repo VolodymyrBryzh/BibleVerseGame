@@ -12,7 +12,7 @@ export interface BibleBookJSON {
     chapter: number;
     verses: {
       verse: number;
-      text: string;
+      text: string | (string | { red: string } | { italic: string } | { i: string } | { text: string })[];
     }[];
   }[];
 }
@@ -28,6 +28,24 @@ const BibleLoader = {
 
     jsonData.chapters.forEach(ch => {
       ch.verses.forEach(v => {
+        let textContent = '';
+        
+        // Handle red text support: v.text can be a string or an array of segments
+        if (typeof v.text === 'string') {
+          textContent = v.text;
+        } else if (Array.isArray(v.text)) {
+          textContent = v.text.map(part => {
+            if (typeof part === 'string') return part;
+            if (typeof part === 'object') {
+              const p = part as any;
+              if (p.red) return `<r>${p.red}</r>`;
+              if (p.italic || p.i) return `<i>${p.italic || p.i}</i>`;
+              if (p.text) return p.text;
+            }
+            return '';
+          }).join('');
+        }
+
         versesToStore.push({
           id: `${translation}-${book}-${ch.chapter}-${v.verse}`.toLowerCase(),
           book,
@@ -35,7 +53,7 @@ const BibleLoader = {
           verse: v.verse,
           tags: [book.toLowerCase()],
           translations: {
-            [translation]: v.text
+            [translation]: textContent
           }
         });
       });

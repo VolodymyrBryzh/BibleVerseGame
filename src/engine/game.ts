@@ -2,7 +2,7 @@ import VersesDB from '../core/database';
 import Stats from '../core/stats';
 import UI from '../ui/ui';
 import { TRANSLATIONS_META, BibleVerse } from '../constants/bibleData';
-import { toast, tokenize, normalize, shuffle, $ } from '../utils/helpers';
+import { toast, tokenize, normalize, shuffle, prepareFormattedText, formatVerseText, $ } from '../utils/helpers';
 
 const Game = {
   currentVerse: null as BibleVerse | null,
@@ -44,7 +44,8 @@ const Game = {
     this.currentTranslation = transKey;
     this.currentMode = mode;
 
-    const text = VersesDB.getTranslationText(verse, transKey);
+    const rawText = VersesDB.getTranslationText(verse, transKey);
+    const text = prepareFormattedText(rawText);
     const transName = TRANSLATIONS_META.find(t => t.key === transKey)?.name || transKey;
 
     if (this.elements.ref) this.elements.ref.textContent = VersesDB.getReference(verse);
@@ -99,7 +100,7 @@ const Game = {
     area.innerHTML = `
       <div class="answer-zone" id="answerZone"></div>
       <div class="word-bank" id="wordBank">
-        ${shuffled.map((w, i) => `<span class="word-chip" data-idx="${i}">${w}</span>`).join('')}
+        ${shuffled.map((w, i) => `<span class="word-chip" data-idx="${i}">${formatVerseText(w)}</span>`).join('')}
       </div>
     `;
 
@@ -124,7 +125,7 @@ const Game = {
 
     const chip = document.createElement('span');
     chip.className = 'answer-chip';
-    chip.textContent = el.textContent;
+    chip.innerHTML = el.innerHTML;
     chip.onclick = () => {
       el.classList.remove('used');
       chip.remove();
@@ -134,7 +135,7 @@ const Game = {
 
   _checkWordOrder(): void {
     const chips = document.querySelectorAll('#answerZone .answer-chip');
-    const userWords = Array.from(chips).map(c => c.textContent || '');
+    const userWords = Array.from(chips).map(c => c.innerHTML || '');
 
     if (userWords.length !== this._correctWords.length) return toast('Розмісти всі слова');
 
@@ -163,7 +164,7 @@ const Game = {
         const width = Math.max(60, w.length * 12);
         html += `<input class="gap-input" data-gap="${gapIdx}" style="width:${width}px" autocomplete="off" autocapitalize="off" spellcheck="false"> `;
       } else {
-        html += w + ' ';
+        html += formatVerseText(w) + ' ';
       }
     });
     html += '</div>';
@@ -202,7 +203,7 @@ const Game = {
 
     if (this.elements.area) {
       this.elements.area.innerHTML = `
-        <div class="verse-prompt">${prompt}</div>
+        <div class="verse-prompt">${formatVerseText(prompt)}</div>
         <textarea class="continue-area" id="continueInput" placeholder="Продовжуй тут..."></textarea>
       `;
     }
@@ -257,7 +258,7 @@ const Game = {
     if (this.elements.result) {
       this.elements.result.innerHTML = `
         <div class="result-banner ${cls}">${msg}</div>
-        ${correctText && !success ? `<div class="correct-answer"><strong>Правильна відповідь:</strong><br>${correctText}</div>` : ''}
+        ${correctText && !success ? `<div class="correct-answer"><strong>Правильна відповідь:</strong><br>${formatVerseText(correctText)}</div>` : ''}
       `;
     }
 

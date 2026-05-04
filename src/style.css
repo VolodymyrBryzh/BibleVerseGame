@@ -60,6 +60,15 @@ html {
 	overflow-x: hidden;
 }
 
+.red-text {
+	color: #d32f2f; /* Deep red for words of Jesus */
+	font-weight: 500;
+}
+
+.italic-text {
+	font-style: italic;
+}
+
 body {
 	font-family: var(--font);
 	background: transparent;

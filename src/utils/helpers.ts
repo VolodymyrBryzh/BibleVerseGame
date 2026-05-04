@@ -21,9 +21,10 @@ export function tokenize(text: string): string[] {
   return text.split(/\s+/).filter(w => w.length > 0);
 }
 
-/** Normalize a string for comparison (lowercase, strip punctuation) */
+/** Normalize a string for comparison (lowercase, strip punctuation and formatting tags) */
 export function normalize(s: string): string {
-  return s.toLowerCase().replace(/[.,;:!?«»""\"''ʼ'()—–\-]/g, '').trim();
+  const stripped = s.replace(/<\/?[ri]>/g, ''); // Strip <r> or <i> tags
+  return stripped.toLowerCase().replace(/[.,;:!?«»""\"''ʼ'()—–\-]/g, '').trim();
 }
 
 /** Fisher-Yates Shuffle */
@@ -39,4 +40,18 @@ export function shuffle<T>(array: T[]): T[] {
 /** DOM Helper */
 export function $<T extends HTMLElement>(id: string): T | null {
   return document.getElementById(id) as T;
+}
+
+/** Formats verse text to include red text spans and italic */
+export function formatVerseText(text: string): string {
+  return text
+    .replace(/<r>(.*?)<\/r>/g, '<span class="red-text">$1</span>')
+    .replace(/<i>(.*?)<\/i>/g, '<i class="italic-text">$1</i>');
+}
+
+/** Prepares formatted text for tokenization by wrapping each word in its own tags */
+export function prepareFormattedText(text: string): string {
+  return text.replace(/<(r|i)>(.*?)<\/\1>/g, (_, tag, content) => {
+    return content.split(/\s+/).map((w: string) => w.trim() ? `<${tag}>${w}</${tag}>` : '').join(' ');
+  });
 }
