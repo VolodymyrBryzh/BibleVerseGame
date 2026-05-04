@@ -36,7 +36,7 @@ const DailyVerse = {
 			<div class="card" style="flex: 1; display: flex; flex-direction: column; border-left: 4px solid var(--accent); margin-top: 0px; overflow-y: auto;">
 				<div class="card-title" style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:var(--accent); margin-bottom:12px; flex: 0 0 auto;">Вірш дня</div>
 				<div style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-					<p style="font-style: italic; margin-bottom:16px; font-size:1.15rem; line-height:1.5; color:var(--text);">"${formatVerseText(trans)}"</p>
+					<p style="margin-bottom:16px; font-size:1.15rem; line-height:1.5; color:var(--text);">"${formatVerseText(trans)}"</p>
 					<div style="text-align:right; font-weight:700; color:var(--text-muted); font-size:0.95rem;">${VersesDB.getReference(dailyVerse)}</div>
 				</div>
 			</div>

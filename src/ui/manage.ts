@@ -2,11 +2,12 @@ import VersesDB from '../core/database';
 import BibleLoader from '../core/loader';
 import UI from './ui';
 import { TRANSLATIONS_META, BibleVerse } from '../constants/bibleData';
-import { toast, $ } from '../utils/helpers';
+import { toast, $, formatVerseText } from '../utils/helpers';
 
 const Manage = {
 	editingId: null as string | null,
 	currentBookData: null as any,
+	currentVerseTranslations: {} as Record<string, string>,
 	bookCodes: [
 		'gen', 'exo', 'lev', 'num', 'deu', 'jos', 'jdg', 'rut', '1sa', '2sa',
 		'1ki', '2ki', '1ch', '2ch', 'ezr', 'neh', 'est', 'job', 'psa', 'pro',
@@ -156,8 +157,10 @@ const Manage = {
 		const chData = this.currentBookData.chapters.find((c: any) => c.chapter.toString() === chapter);
 		if (chData) {
 			chData.verses.forEach((v: any) => {
-				// Only show verses that have text
-				if (v.text && v.text.trim() !== '') {
+				// Only show verses that have text (can be string or array)
+				const hasText = typeof v.text === 'string' ? v.text.trim() !== '' : (Array.isArray(v.text) && v.text.length > 0);
+				
+				if (hasText) {
 					const opt = document.createElement('option');
 					opt.value = v.verse.toString();
 					opt.textContent = v.verse.toString();
@@ -176,42 +179,56 @@ const Manage = {
 		toast('Завантажую текст...');
 
 		const code = this.bookNameMap[book];
-		let foundCount = 0;
-
-		for (const meta of TRANSLATIONS_META) {
-			try {
-				const url = `/bible/${meta.key}/${code}.json`;
-				const resp = await fetch(url);
-				if (!resp.ok) continue;
-
+		const transKey = $<HTMLSelectElement>('addSearchTranslation')?.value || 'ubio';
+		this.currentVerseTranslations = {};
+		
+		try {
+			const url = `/bible/${transKey}/${code}.json`;
+			const resp = await fetch(url);
+			if (resp.ok) {
 				const data = await resp.json();
 				const chData = data.chapters?.find((c: any) => c.chapter === chapter);
 				const vData = chData?.verses?.find((v: any) => v.verse === verse);
 
-				const el = $<HTMLTextAreaElement>(`addTrans_${meta.key}`);
-				if (el) {
-					el.value = vData?.text?.trim() || '';
-					if (el.value) foundCount++;
+				const el = $('previewTransMain');
+				if (el && vData?.text) {
+					const text = vData.text;
+					let tagged = '';
+					if (typeof text === 'string') {
+						tagged = text.trim();
+					} else if (Array.isArray(text)) {
+						tagged = text.map((part: any) => {
+							if (typeof part === 'string') return part;
+							if (part.red) return `<r>${part.red}</r>`;
+							if (part.italic || part.i) return `<i>${part.italic || part.i}</i>`;
+							if (part.text) return part.text;
+							return '';
+						}).join('');
+					}
+					
+					this.currentVerseTranslations[transKey] = tagged;
+					el.innerHTML = formatVerseText(tagged);
+					toast('Текст завантажено');
+				} else if (el) {
+					el.innerHTML = '<span style="color: var(--text-muted); font-style: italic;">Текст не знайдено</span>';
 				}
-			} catch (e) { }
+			}
+		} catch (e) { 
+			toast('Помилка завантаження тексту');
 		}
-
-		if (foundCount > 0) toast(`Текст завантажено (${foundCount})`);
-		else toast('Текст не знайдено');
 	},
 
 	renderTranslationFields(): void {
 		const container = $('addTranslations');
 		if (!container) return;
 
-		container.innerHTML = TRANSLATIONS_META.map(t => `
-			<div class="translation-block">
-				<h4>${t.name}</h4>
-				<div class="form-group" style="margin:0">
-					<textarea id="addTrans_${t.key}" placeholder="Текст перекладу (необовʼязково)"></textarea>
+		container.innerHTML = `
+			<div class="translation-preview-block" style="margin-bottom: 16px;">
+				<div id="previewTransMain" class="verse-preview-text" style="padding: 16px; background: var(--bg-selected); border-radius: var(--radius-sm); border: 2px solid var(--accent-light); min-height: 60px; color: var(--text); line-height: 1.6; font-size: 1.1rem;">
+					<span style="color: var(--text-muted); font-style: italic; font-size: 0.95rem;">Оберіть книгу та вірш...</span>
 				</div>
 			</div>
-		`).join('');
+		`;
 	},
 
 	async saveVerse(): Promise<void> {
@@ -222,19 +239,10 @@ const Manage = {
 
 		if (!book || !chapter || !verse) return toast('Заповніть всі поля');
 
-		const translations: Record<string, string> = {};
-		let hasAny = false;
+		const translations: Record<string, string> = { ...this.currentVerseTranslations };
+		const hasAny = Object.keys(translations).length > 0;
 
-		TRANSLATIONS_META.forEach(t => {
-			const el = $<HTMLTextAreaElement>(`addTrans_${t.key}`);
-			const text = el?.value.trim() || '';
-			if (text) {
-				translations[t.key] = text;
-				hasAny = true;
-			}
-		});
-
-		if (!hasAny) return toast('Додайте хоча б один переклад');
+		if (!hasAny) return toast('Текст перекладів не завантажено');
 
 		await VersesDB.addVerse({
 			id: Date.now().toString(),
