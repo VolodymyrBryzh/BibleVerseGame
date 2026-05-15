@@ -9,8 +9,11 @@ import { $ } from '../../utils/helpers';
 
 const AuthUI = {
 	init(): void {
+		console.log('AuthUI.init() called');
+		
 		// 1. Створюємо HTML-структуру екрана входу, якщо її ще немає
 		if (!$('screenAuth')) {
+			console.log('Creating screenAuth element...');
 			const html = `
 				<div class="card" style="text-align:center; padding: 40px 20px; width: 100%;">
 					<div style="font-size: 4rem; margin-bottom: 20px;">📖</div>
@@ -34,11 +37,34 @@ const AuthUI = {
 			screen.innerHTML = html;
 
 			const appEl = document.querySelector('.app');
-			if (appEl) appEl.prepend(screen);
+			if (appEl) {
+				appEl.prepend(screen);
+				console.log('screenAuth prepended to .app');
+			} else {
+				console.error('.app element not found!');
+			}
+		}
 
-			// Додаємо обробники подій
-			$('btnGoogleLogin')?.addEventListener('click', () => this.login());
-			$('btnGuestLogin')?.addEventListener('click', () => this.continueAsGuest());
+		// Додаємо обробники подій (щоразу при ініціалізації)
+		const googleBtn = $('btnGoogleLogin');
+		const guestBtn = $('btnGuestLogin');
+		
+		console.log('Google button found in DOM:', !!googleBtn);
+		console.log('Guest button found in DOM:', !!guestBtn);
+
+		if (googleBtn) {
+			// Видаляємо старий обробник (якщо є) і додаємо новий
+			googleBtn.onclick = () => {
+				console.log('Google login button clicked!');
+				this.login();
+			};
+		}
+		
+		if (guestBtn) {
+			guestBtn.onclick = () => {
+				console.log('Guest login button clicked!');
+				this.continueAsGuest();
+			};
 		}
 
 		// 2. Обробляємо Firebase Auth
