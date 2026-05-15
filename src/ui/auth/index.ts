@@ -20,11 +20,11 @@ const AuthUI = {
 					<h1 style="font-size: 2rem; margin-bottom: 10px;">BibleVerse</h1>
 					<p style="color:var(--text-light); margin-bottom: 30px;">Вивчайте Біблію разом із нами. Ваші дані будуть синхронізовані між усіма пристроями.</p>
 
-					<button id="btnGoogleLogin" class="btn btn-primary btn-block" style="display:flex; align-items:center; justify-content:center; gap:12px; padding:16px; margin-bottom:12px;">
+					<button id="btnGoogleLogin" class="btn btn-primary btn-block" style="display:flex; align-items:center; justify-content:center; gap:12px; padding:16px; margin-bottom:12px; position:relative; z-index:100;">
 						<img src="/img/googleLogo.svg" width="20" height="20" alt="Google"> Увійти через Google
 					</button>
 
-					<button id="btnGuestLogin" class="btn btn-block" style="padding:16px; background: transparent; border: 1.5px solid var(--border); color: var(--text-muted);">
+					<button id="btnGuestLogin" class="btn btn-block" style="padding:16px; background: transparent; border: 1.5px solid var(--border); color: var(--text-muted); position:relative; z-index:100;">
 						Продовжити як гість
 					</button>
 				</div>
@@ -50,41 +50,63 @@ const AuthUI = {
 		const guestBtn = $('btnGuestLogin');
 		
 		console.log('Google button found in DOM:', !!googleBtn);
-		console.log('Guest button found in DOM:', !!guestBtn);
-
+		
 		if (googleBtn) {
-			// Видаляємо старий обробник (якщо є) і додаємо новий
-			googleBtn.onclick = () => {
-				console.log('Google login button clicked!');
+			console.log('Attaching addEventListener to Google button');
+			googleBtn.addEventListener('click', (e) => {
+				e.preventDefault();
+				e.stopPropagation();
+				console.log('Google login button clicked via addEventListener!');
 				this.login();
-			};
+			});
 		}
 		
 		if (guestBtn) {
-			guestBtn.onclick = () => {
+			guestBtn.addEventListener('click', () => {
 				console.log('Guest login button clicked!');
 				this.continueAsGuest();
-			};
+			});
 		}
 
+		// Глобальний дебаг кліків
+		document.addEventListener('click', (e) => {
+			const target = e.target as HTMLElement;
+			console.log('Global click target:', target.tagName, target.id, target.className);
+		}, { capture: true });
+
 		// 2. Обробляємо Firebase Auth
+		console.log('Checking redirect result...');
 		getRedirectResult(auth).then((result) => {
 			if (result && result.user) {
-				console.log('Successfully logged in via redirect');
+				console.log('Successfully logged in via redirect! User:', result.user.email);
+			} else {
+				console.log('No redirect result found (normal flow or failed redirect)');
 			}
-		}).catch(e => console.error('Redirect result error', e));
+		}).catch(e => {
+			console.error('Redirect result error:', e.code, e.message);
+			alert('Помилка авторизації після повернення: ' + e.message);
+		});
 
+		console.log('Setting up onAuth listener...');
 		onAuth(async (user) => {
 			if (user) {
-				console.log('User logged in:', user.email || 'Anonymous', user.uid);
+				console.log('onAuth: User detected!', user.email || 'Anonymous', user.uid);
 				this.updateProfileUI(user);
-				await VersesDB.init();
-				await Stats.init();
-				UI.init();
-				Manage.init();
-				this.showApp();
+				
+				try {
+					console.log('Initializing DB and Stats...');
+					await VersesDB.init();
+					await Stats.init();
+					console.log('Initializing UI and Manage...');
+					UI.init();
+					Manage.init();
+					console.log('Showing app...');
+					this.showApp();
+				} catch (err) {
+					console.error('Error during app initialization after login:', err);
+				}
 			} else {
-				console.log('User logged out');
+				console.log('onAuth: No user found (User logged out)');
 				this.showLogin();
 			}
 		});
