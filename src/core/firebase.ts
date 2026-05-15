@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, onAuthStateChanged, User, setPersistence, browserLocalPersistence } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, onAuthStateChanged, User, setPersistence, indexedDBLocalPersistence } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
 // TODO: Replace with your project's customized Firebase configuration
@@ -16,7 +16,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
-setPersistence(auth, browserLocalPersistence); // Force local storage persistence
+setPersistence(auth, indexedDBLocalPersistence); // Even more robust persistence
 export const db = getFirestore(app);
 export const googleProvider = new GoogleAuthProvider();
 
