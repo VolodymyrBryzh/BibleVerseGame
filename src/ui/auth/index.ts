@@ -17,7 +17,7 @@ const AuthUI = {
 					<p style="color:var(--text-light); margin-bottom: 30px;">Вивчайте Біблію разом із нами. Ваші дані будуть синхронізовані між усіма пристроями.</p>
 
 					<button id="btnGoogleLogin" class="btn btn-primary btn-block" style="display:flex; align-items:center; justify-content:center; gap:12px; padding:16px; margin-bottom:12px;">
-						<img src="../../public/img/googleLogo.svg" width="20" height="20" alt="Google"> Увійти через Google
+						<img src="/img/googleLogo.svg" width="20" height="20" alt="Google"> Увійти через Google
 					</button>
 
 					<button id="btnGuestLogin" class="btn btn-block" style="padding:16px; background: transparent; border: 1.5px solid var(--border); color: var(--text-muted);">
