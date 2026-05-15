@@ -1,5 +1,6 @@
 import { signInWithPopup, signInWithRedirect, getRedirectResult, signInAnonymously, signOut } from 'firebase/auth';
 import { auth, googleProvider, onAuth } from '../../core/firebase';
+googleProvider.setCustomParameters({ prompt: 'select_account' });
 import VersesDB from '../../core/database';
 import Stats from '../../core/stats';
 import UI from '../ui';
@@ -79,14 +80,24 @@ const AuthUI = {
 
 	async login(): Promise<void> {
 		try {
+			console.log('Starting Google login...');
 			await signInWithPopup(auth, googleProvider);
 		} catch (error: any) {
-			if (error?.code === 'auth/popup-blocked' || error?.code === 'auth/cancelled-popup-request') {
-				console.log('Popup blocked, falling back to redirect...');
-				await signInWithRedirect(auth, googleProvider);
+			console.error('Login error code:', error?.code);
+			console.error('Login error message:', error?.message);
+
+			if (error?.code === 'auth/popup-blocked' || error?.code === 'auth/cancelled-popup-request' || error?.code === 'auth/popup-closed-by-user') {
+				console.log('Popup issue, falling back to redirect...');
+				try {
+					await signInWithRedirect(auth, googleProvider);
+				} catch (redirectError: any) {
+					console.error('Redirect failed', redirectError);
+					alert('Помилка редиректу: ' + (redirectError?.message || 'невідома помилка'));
+				}
+			} else if (error?.code === 'auth/unauthorized-domain') {
+				alert('Помилка: цей домен не авторизований у Firebase. Додайте його в консолі Firebase.');
 			} else {
-				console.error('Login failed', error);
-				alert('Помилка входу. Спробуйте ще раз.');
+				alert('Помилка входу: ' + (error?.message || 'Спробуйте ще раз.'));
 			}
 		}
 	},
