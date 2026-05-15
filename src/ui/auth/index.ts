@@ -10,6 +10,15 @@ import { $ } from '../../utils/helpers';
 const AuthUI = {
 	init(): void {
 		console.log('AuthUI.init() called');
+
+		// Перевірка доступу до сховища
+		try {
+			localStorage.setItem('storage_test', '1');
+			localStorage.removeItem('storage_test');
+		} catch (e) {
+			console.error('Storage access is blocked!');
+			alert('Увага: Ваш браузер блокує доступ до локального сховища. Авторизація через Google може не працювати. Будь ласка, вимкніть "Захист від відстеження" або дозвольте сторонні cookies у налаштуваннях браузера.');
+		}
 		
 		// 1. Створюємо HTML-структуру екрана входу, якщо її ще немає
 		if (!$('screenAuth')) {
