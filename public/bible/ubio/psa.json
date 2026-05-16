@@ -1,0 +1,20 @@
+{
+	"metadata": {
+		"id": "PSA",
+		"book": "ПСАЛМИ",
+		"abbreviation": "Пс.",
+		"translation": "ubio",
+		"language": "uk"
+	},
+	"chapters": [
+		{
+			"chapter": 33,
+			"verses": [
+				{
+					"verse": 21,
+					"text": "Адже в Ньому радість нашого серця, бо на Його святе Ім’я ми покладаємось."
+				}
+			]
+		}
+	]
+}

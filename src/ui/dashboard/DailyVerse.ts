@@ -25,9 +25,10 @@ const DailyVerse = {
 			return;
 		}
 
-		// Логіка випадкового вірша на день
+		// Пріоритет для Псалом 33:21, інакше випадковий на день
+		const fixedVerse = allVerses.find(v => v.book === 'PSA' && v.chapter === 33 && v.verse === 21);
 		const daySeed = Math.floor(Date.now() / (1000 * 60 * 60 * 24));
-		const dailyVerse = allVerses[daySeed % allVerses.length];
+		const dailyVerse = fixedVerse || allVerses[daySeed % allVerses.length];
 
 		const transKeys = Object.keys(dailyVerse.translations);
 		const trans = dailyVerse.translations[transKeys[0]] || '';
