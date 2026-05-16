@@ -61,7 +61,8 @@ html {
 }
 
 .red-text {
-	color: #d32f2f; /* Deep red for words of Jesus */
+	color: #d32f2f;
+	/* Deep red for words of Jesus */
 	font-weight: 500;
 }
 
@@ -88,7 +89,8 @@ body {
 	display: flex;
 	flex-direction: column;
 	position: relative;
-	padding-bottom: 100px; /* Space for navbar */
+	padding-bottom: 100px;
+	/* Space for navbar */
 }
 
 /* ===== LOADER ===== */
@@ -118,7 +120,7 @@ body {
 	position: sticky;
 	top: 0;
 	z-index: 100;
-	padding: 30px 24px 20px;
+	padding: 25px 20px 10px;
 	background: rgba(255, 255, 255, 0.96);
 	backdrop-filter: blur(20px);
 	-webkit-backdrop-filter: blur(20px);
@@ -157,7 +159,8 @@ body {
 }
 
 .dashboard-title {
-	font-size: 1.8rem; /* Трохи менший шрифт для мобільних */
+	font-size: 1.8rem;
+	/* Трохи менший шрифт для мобільних */
 	font-weight: 850;
 	margin: 0;
 	line-height: 1.1;
@@ -231,8 +234,8 @@ body {
 .screen {
 	display: none !important;
 	padding-bottom: 80px;
-	padding-left: 20px;
-	padding-right: 20px;
+	padding-left: 10px;
+	padding-right: 10px;
 }
 
 #screenDashboard {
@@ -244,7 +247,7 @@ body {
 }
 
 #screenDashboard .container {
-	padding: 20px;
+	padding: 0 20px;
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
@@ -770,7 +773,16 @@ select {
 /* ===== RESPONSIVE ===== */
 @media (max-width: 450px) {
 	.app {
-		padding: 0 16px 100px;
+		padding: 0 0px 100px;
+	}
+
+	.dashboard-top {
+		padding: 20px 20px 10px;
+		border-radius: 0 0 32px 32px;
+	}
+
+	.container {
+		padding: 0 16px;
 	}
 
 	.stats-grid {
