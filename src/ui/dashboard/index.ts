@@ -14,7 +14,7 @@ const Dashboard = {
 				<div id="dailyVerseContainer">
 					${DailyVerse.render()}
 				</div>
-				${QuickStart.render()}
+				<!-- ${QuickStart.render()} -->
 			</div>
 		`;
 
@@ -40,7 +40,7 @@ const Dashboard = {
 		Header.update();
 		Progress.update();
 		DailyVerse.update();
-		QuickStart.update();
+		// QuickStart.update();
 	}
 };
 
