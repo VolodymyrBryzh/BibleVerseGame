@@ -53,7 +53,7 @@ const Game = {
     if (this.elements.actions) this.elements.actions.innerHTML = '';
 
     this._initMode(mode, text);
-    UI.showScreen('screenGame');
+    UI.showScreen('screenGamePlay');
     
     // Global key listener for the game
     this._setupKeys();

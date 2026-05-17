@@ -108,35 +108,41 @@ body {
 }
 
 /* ===== THEME TOGGLE BUTTON ===== */
-.theme-toggle-btn {
-	all: unset;
+/* Theme tumbler */
+.theme-tumbler {
+	width: 44px;
+	height: 24px;
+	background: var(--border-strong);
+	border: none;
+	border-radius: 12px;
+	position: relative;
 	cursor: pointer;
-	width: 36px;
-	height: 36px;
-	border-radius: 50%;
-	border: 1px solid var(--border-strong);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	color: var(--text-muted);
-	transition: all var(--transition);
+	padding: 0;
+	transition: background 0.3s;
 	flex-shrink: 0;
 }
 
-.theme-toggle-btn:hover {
-	border-color: var(--accent);
-	color: var(--accent);
-	background: var(--accent-bg);
+.theme-tumbler-knob {
+	display: block;
+	width: 20px;
+	height: 20px;
+	background: #fff;
+	border-radius: 50%;
+	position: absolute;
+	top: 2px;
+	left: 2px;
+	transition: transform 0.3s;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
 
-.theme-toggle-btn:active {
-	transform: scale(0.92);
+[data-theme="acid"] .theme-tumbler {
+	background: var(--primary);
 }
 
-.theme-toggle-icon--acid { display: none; }
-.theme-toggle-icon--editorial { display: flex; }
-[data-theme="acid"] .theme-toggle-icon--acid { display: flex; }
-[data-theme="acid"] .theme-toggle-icon--editorial { display: none; }
+[data-theme="acid"] .theme-tumbler-knob {
+	transform: translateX(20px);
+	background: var(--accent);
+}
 
 .header-icon-btn {
 	all: unset;
@@ -1252,25 +1258,6 @@ select {
 }
 
 /* Acid: Theme toggle */
-[data-theme="acid"] .theme-toggle-btn {
-	background: var(--accent);
-	color: var(--primary);
-	border-color: var(--border);
-	box-shadow: var(--shadow-sm);
-}
-
-[data-theme="acid"] .theme-toggle-btn:hover {
-	transform: translate(-1px, -1px);
-	box-shadow: var(--shadow);
-	background: var(--accent);
-	color: var(--primary);
-}
-
-[data-theme="acid"] .theme-toggle-btn:active {
-	transform: translate(1px, 1px);
-	box-shadow: 1px 1px 0 #0A0A0A;
-}
-
 /* Acid: Dashboard */
 [data-theme="acid"] .dashboard-top {
 	background: var(--bg);
@@ -1397,9 +1384,9 @@ select {
 }
 
 [data-theme="acid"] .mode-card.selected .mode-icon {
-	background: var(--accent);
+	background: var(--primary-ink);
 	color: var(--primary);
-	border: var(--border-w) solid var(--border);
+	border: var(--border-w) solid var(--primary);
 	transform: rotate(-4deg);
 }
 

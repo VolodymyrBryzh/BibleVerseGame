@@ -1,19 +1,21 @@
 import Stats from '../../core/stats';
 import { $ } from '../../utils/helpers';
 
+const MONTHLY_GOAL = 4;
+
 const Progress = {
 	render(): string {
 		return `
 			<div class="progress-card">
 				<div class="progress-header">
-					<div class="progress-label">СЬОГОДНІ</div>
+					<div class="progress-label">ЦЬОГО МІСЯЦЯ</div>
 					<div class="progress-stats">
-						<span id="dailyDone">0</span><span class="serif-accent"> / <span id="dailyGoal">5</span></span>
+						<span id="monthlyDone">0</span><span class="serif-accent"> / <span id="monthlyGoal">${MONTHLY_GOAL}</span></span>
 						<span class="serif-accent" style="font-size:1.35rem;"> віршів</span>
 					</div>
 				</div>
 				<div class="progress-bar-container">
-					<div id="dailyProgressBar" class="progress-bar-fill" style="width: 0%;"></div>
+					<div id="monthlyProgressBar" class="progress-bar-fill" style="width: 0%;"></div>
 				</div>
 			</div>
 		`;
@@ -21,14 +23,13 @@ const Progress = {
 
 	update(): void {
 		const o = Stats.getOverview();
-		const todayDone = o.todayDone || 0;
-		const dailyGoal = 5;
-		const percent = Math.min(Math.round((todayDone / dailyGoal) * 100), 100);
+		const monthDone = o.monthDone || 0;
+		const percent = Math.min(Math.round((monthDone / MONTHLY_GOAL) * 100), 100);
 
-		const doneEl = $('dailyDone');
-		if (doneEl) doneEl.textContent = todayDone.toString();
+		const doneEl = $('monthlyDone');
+		if (doneEl) doneEl.textContent = monthDone.toString();
 
-		const barEl = $('dailyProgressBar');
+		const barEl = $('monthlyProgressBar');
 		if (barEl) barEl.style.width = `${percent}%`;
 	}
 };

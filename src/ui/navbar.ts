@@ -9,7 +9,7 @@ const Navbar = {
 				<span class="nav-icon icon-home"></span>
 				Головна
 			</button>
-			<button id="navBtnGame" class="nav-btn" data-screen="screenDashboard" data-scroll="dashModeSection">
+			<button id="navBtnGame" class="nav-btn" data-screen="screenGame">
 				<span class="nav-icon icon-game"></span>
 				Гра
 			</button>
@@ -37,12 +37,6 @@ const Navbar = {
 				const screen = el.dataset.screen;
 				if (screen) {
 					UI.navigate(screen);
-					const scrollTo = el.dataset.scroll;
-					if (scrollTo) {
-						setTimeout(() => {
-							document.getElementById(scrollTo)?.scrollIntoView({ behavior: 'smooth' });
-						}, 50);
-					}
 				}
 			});
 		});

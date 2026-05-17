@@ -5,9 +5,11 @@ import Theme from './theme';
 import { TRANSLATIONS_META } from '../constants/bibleData';
 import { $ } from '../utils/helpers';
 import Dashboard from './dashboard/index';
+import GameSetup from './game-setup/index';
 
 const UI = {
 	init(): void {
+		GameSetup.init();
 		this.renderTranslationFilter();
 		this.updateVerseFilter();
 		this.renderStats();

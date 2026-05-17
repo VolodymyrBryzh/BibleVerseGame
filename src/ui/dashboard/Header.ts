@@ -9,13 +9,8 @@ const Header = {
 			<div class="date-row">
 				<span id="currentDate" class="dashboard-date"></span>
 				<div style="display:flex; gap:12px; align-items:center;">
-					<button id="btnThemeToggle" class="theme-toggle-btn" aria-label="Theme">
-						<span class="theme-toggle-icon theme-toggle-icon--editorial">
-							<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1 4 5 5 5 10a5 5 0 01-10 0c0-2 1-3 2-4-1 4 2 5 3 5 0-3-1-7 0-11z"/></svg>
-						</span>
-						<span class="theme-toggle-icon theme-toggle-icon--acid">
-							<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4l1.5 4.5L18 10l-4.5 1.5L12 16l-1.5-4.5L6 10l4.5-1.5L12 4z"/><path d="M19 16l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7.7-2z"/></svg>
-						</span>
+					<button id="btnThemeToggle" class="theme-tumbler" aria-label="Theme">
+						<span class="theme-tumbler-knob"></span>
 					</button>
 					<div class="streak-badge">
 						<svg class="streak-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1 4 5 5 5 10a5 5 0 01-10 0c0-2 1-3 2-4-1 4 2 5 3 5 0-3-1-7 0-11z"/></svg>
@@ -72,7 +67,7 @@ const Header = {
 		if (titleAcid) titleAcid.innerHTML = 'СЛОВО<br><span class="acid-highlight">живе.</span>';
 
 		const descAcid = $('heroDescAcid');
-		if (descAcid) descAcid.textContent = 'Вивчай Святе Письмо як гру. По одному віршу за раз — і Слово залишиться в тобі.';
+		if (descAcid) descAcid.textContent = 'Вивчай Святе Письмо. По одному віршу за раз — і Слово залишиться в тобі.';
 
 		const streakEl = $('streakCount');
 		const overview = Stats.getOverview();
@@ -94,8 +89,7 @@ const Header = {
 		if (heroStartBtn && !heroStartBtn.dataset.bound) {
 			heroStartBtn.dataset.bound = '1';
 			heroStartBtn.addEventListener('click', () => {
-				const gameSection = document.getElementById('dashModeSection');
-				if (gameSection) gameSection.scrollIntoView({ behavior: 'smooth' });
+				UI.navigate('screenGame');
 			});
 		}
 	}
