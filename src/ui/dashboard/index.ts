@@ -1,20 +1,18 @@
 import Header from './Header';
 import Progress from './Progress';
 import DailyVerse from './DailyVerse';
-import QuickStart from './QuickStart';
 
 const Dashboard = {
 	init(): void {
 		const html = `
 			<div class="dashboard-top">
 				${Header.render()}
-				${Progress.render()}
 			</div>
+			${Progress.render()}
 			<div class="container">
 				<div id="dailyVerseContainer">
 					${DailyVerse.render()}
 				</div>
-				<!-- ${QuickStart.render()} -->
 			</div>
 		`;
 
@@ -40,7 +38,6 @@ const Dashboard = {
 		Header.update();
 		Progress.update();
 		DailyVerse.update();
-		// QuickStart.update();
 	}
 };
 

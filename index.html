@@ -16,7 +16,7 @@
 
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=IBM+Plex+Mono:wght@400;500;600&family=Unbounded:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
 </head>
 
@@ -28,14 +28,6 @@
 
 
 		<div id="screenHome" class="screen">
-			<!-- Тимчасова картка -->
-			<div class="card" style="text-align:center; padding: 60px 20px;">
-				<div style="font-size: 3.5rem; margin-bottom: 20px;">🚧</div>
-				<h2 style="margin-bottom: 12px; font-weight: 800;">Функція в розробці</h2>
-				<p style="color:var(--text-muted); line-height: 1.6;">Ми працюємо над ігровими режимами. Скоро тут з'явиться можливість цікаво та ефективно вивчати біблійні вірші!</p>
-			</div>
-
-			<!-- ОРИГІНАЛЬНИЙ КОД (ЗАКОМЕНТОВАНО)
 			<div class="card">
 				<div class="card-title">Режим гри</div>
 				<div class="mode-grid">
@@ -53,11 +45,11 @@
 							<p>Вписати приховані слова</p>
 						</div>
 					</div>
-					<div class="mode-card" data-mode="continue" onclick="UI.selectMode(this)">
-						<div class="mode-icon">💬</div>
+					<div class="mode-card" data-mode="first-letters" onclick="UI.selectMode(this)">
+						<div class="mode-icon">🔤</div>
 						<div class="mode-info">
-							<h3>Продовж вірш</h3>
-							<p>Показано початок — напиши решту</p>
+							<h3>Перші букви</h3>
+							<p>Бачиш лише першу букву — згадай слово</p>
 						</div>
 					</div>
 				</div>
@@ -79,7 +71,6 @@
 					Почати гру
 				</button>
 			</div>
-			-->
 		</div>
 
 		<!-- ===== SCREEN: GAME ===== -->
@@ -101,14 +92,6 @@
 
 		<!-- ===== SCREEN: STATS ===== -->
 		<div class="screen" id="screenStats">
-			<!-- Тимчасова картка -->
-			<div class="card" style="text-align:center; padding: 60px 20px;">
-				<div style="font-size: 3.5rem; margin-bottom: 20px;">📊</div>
-				<h2 style="margin-bottom: 12px; font-weight: 800;">Статистика скоро буде</h2>
-				<p style="color:var(--text-muted); line-height: 1.6;">Тут ви зможете відстежувати свій прогрес, бачити вивчені вірші та аналізувати свої успіхи у вивченні Біблії.</p>
-			</div>
-
-			<!-- ОРИГІНАЛЬНИЙ КОД (ЗАКОМЕНТОВАНО)
 			<div class="stats-grid">
 				<div class="stat-card">
 					<div class="stat-value" id="statTotal">0</div>
@@ -143,7 +126,6 @@
 			<button class="btn btn-sm btn-danger" onclick="Stats.reset()" style="margin-top:12px;">
 				Скинути статистику
 			</button>
-			-->
 		</div>
 
 		<!-- ===== SCREEN: MANAGE ===== -->
@@ -225,6 +207,11 @@
 						Вийти з акаунта
 					</button>
 				</div>
+			</div>
+
+			<div class="card">
+				<div class="card-title">Тема оформлення</div>
+				<div class="theme-switcher" id="themeSwitcher"></div>
 			</div>
 
 			<div class="card">

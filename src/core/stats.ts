@@ -34,7 +34,7 @@ const Stats = {
       this.syncFromFirestore().then(() => {
         console.log('Stats: Background sync complete.');
         this.refreshCache().then(() => {
-          if ((window as any).UI) (window as any).UI.renderDashboard();
+          if ((window as any).Dashboard) (window as any).Dashboard.render();
         });
       }).catch(e => console.error('Stats: Background sync failed', e));
     }

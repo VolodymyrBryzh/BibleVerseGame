@@ -6,6 +6,7 @@ import Manage from './ui/manage';
 import Background from './ui/background';
 import Navbar from './ui/navbar';
 import Dashboard from './ui/dashboard/index';
+import Theme from './ui/theme';
 // core
 import Stats from './core/stats';
 import VersesDB from './core/database';
@@ -20,11 +21,13 @@ import Game from './engine/game';
 (window as any).VersesDB = VersesDB;
 (window as any).Game = Game;
 (window as any).Dashboard = Dashboard;
+(window as any).Theme = Theme;
 
 // Initialize app through AuthUI
 document.addEventListener('DOMContentLoaded', () => {
-	AuthUI.init(); // Запускаємо авторизацію
-	Background.init(); // Ініціалізуємо фон
-	Navbar.init(); // Ініціалізуємо навігацію
-	Dashboard.init(); // Ініціалізуємо головну сторінку
+	Theme.init();
+	AuthUI.init();
+	Background.init();
+	Navbar.init();
+	Dashboard.init();
 });

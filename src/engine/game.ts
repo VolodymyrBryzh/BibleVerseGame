@@ -10,7 +10,6 @@ const Game = {
   currentMode: null as string | null,
   _correctWords: [] as string[],
   _gapData: [] as string[],
-  _continueExpected: '',
   _fullText: '',
 
   // Cache elements
@@ -63,7 +62,7 @@ const Game = {
   _initMode(mode: string, text: string): void {
     if (mode === 'word-order') this._startWordOrder(text);
     else if (mode === 'fill-gaps') this._startFillGaps(text);
-    else if (mode === 'continue') this._startContinue(text);
+    else if (mode === 'first-letters') this._startFirstLetters(text);
   },
 
   _setupKeys(): void {
@@ -192,38 +191,42 @@ const Game = {
     this._recordAndShow(success, accuracy);
   },
 
-  // --- CONTINUE ---
-  _startContinue(text: string): void {
-    if (this.elements.instruction) this.elements.instruction.textContent = 'Допиши продовження вірша';
+  // --- FIRST LETTERS ---
+  _startFirstLetters(text: string): void {
+    if (this.elements.instruction) this.elements.instruction.textContent = 'Бачиш перші букви — напиши повні слова';
     const words = tokenize(text);
-    const showCount = Math.max(3, Math.floor(words.length * 0.25));
-    const prompt = words.slice(0, showCount).join(' ') + '...';
-    this._continueExpected = words.slice(showCount).join(' ');
     this._fullText = text;
+    this._correctWords = words;
+
+    const hints = words.map(w => {
+      const clean = w.replace(/<\/?[ri]>/g, '');
+      const firstChar = clean.charAt(0);
+      return firstChar.toUpperCase() + '___';
+    });
 
     if (this.elements.area) {
       this.elements.area.innerHTML = `
-        <div class="verse-prompt">${formatVerseText(prompt)}</div>
-        <textarea class="continue-area" id="continueInput" placeholder="Продовжуй тут..."></textarea>
+        <div class="first-letters-hint">${hints.join(' ')}</div>
+        <textarea class="continue-area" id="firstLettersInput" placeholder="Напиши весь вірш..."></textarea>
       `;
     }
     this._showCheckBtn();
-    setTimeout(() => ($('continueInput') as HTMLTextAreaElement)?.focus(), 100);
+    setTimeout(() => ($('firstLettersInput') as HTMLTextAreaElement)?.focus(), 100);
   },
 
-  _checkContinue(): void {
-    const input = $<HTMLTextAreaElement>('continueInput');
+  _checkFirstLetters(): void {
+    const input = $<HTMLTextAreaElement>('firstLettersInput');
     const userText = input?.value.trim() || '';
-    if (!userText) return toast('Напиши продовження');
+    if (!userText) return toast('Напиши вірш');
 
-    const expectedWords = tokenize(this._continueExpected);
+    const expectedWords = this._correctWords;
     const userWords = tokenize(userText);
     let correct = 0;
     for (let i = 0; i < expectedWords.length; i++) {
       if (userWords[i] && normalize(userWords[i]) === normalize(expectedWords[i])) correct++;
     }
     const accuracy = expectedWords.length > 0 ? correct / expectedWords.length : 0;
-    const success = accuracy >= 0.7;
+    const success = accuracy >= 0.8;
 
     this._recordAndShow(success, accuracy, this._fullText);
   },
@@ -237,7 +240,7 @@ const Game = {
   check(): void {
     if (this.currentMode === 'word-order') this._checkWordOrder();
     else if (this.currentMode === 'fill-gaps') this._checkFillGaps();
-    else if (this.currentMode === 'continue') this._checkContinue();
+    else if (this.currentMode === 'first-letters') this._checkFirstLetters();
   },
 
   async _recordAndShow(success: boolean, accuracy: number, correctText?: string): Promise<void> {

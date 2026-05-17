@@ -6,11 +6,11 @@ const Progress = {
 		return `
 			<div class="progress-card">
 				<div class="progress-header">
-					<div class="progress-info">
-						<div class="progress-label">СЬОГОДНІ</div>
-						<div class="progress-stats"><span id="dailyDone">0</span> з <span id="dailyGoal">5</span> віршів</div>
+					<div class="progress-label">СЬОГОДНІ</div>
+					<div class="progress-stats">
+						<span id="dailyDone">0</span><span class="serif-accent"> / <span id="dailyGoal">5</span></span>
+						<span class="serif-accent" style="font-size:1.35rem;"> віршів</span>
 					</div>
-					<div class="progress-percentage"><span id="dailyPercent">0</span>%</div>
 				</div>
 				<div class="progress-bar-container">
 					<div id="dailyProgressBar" class="progress-bar-fill" style="width: 0%;"></div>
@@ -27,9 +27,6 @@ const Progress = {
 
 		const doneEl = $('dailyDone');
 		if (doneEl) doneEl.textContent = todayDone.toString();
-
-		const percentEl = $('dailyPercent');
-		if (percentEl) percentEl.textContent = percent.toString();
 
 		const barEl = $('dailyProgressBar');
 		if (barEl) barEl.style.width = `${percent}%`;

@@ -1,6 +1,7 @@
 import VersesDB from '../core/database';
 import Stats from '../core/stats';
 import Manage from './manage';
+import Theme from './theme';
 import { TRANSLATIONS_META } from '../constants/bibleData';
 import { $ } from '../utils/helpers';
 import Dashboard from './dashboard/index';
@@ -39,6 +40,10 @@ const UI = {
 		// Specific screen logic
 		if (id === 'screenStats') this.renderStats();
 		if (id === 'screenManage') Manage.renderVerseList();
+		if (id === 'screenProfile') {
+			const sw = $('themeSwitcher');
+			if (sw) sw.innerHTML = Theme.renderSwitcher();
+		}
 
 		// Auto-scroll to top when switching screens
 		window.scrollTo(0, 0);
@@ -128,7 +133,7 @@ const UI = {
 				const modeNames: Record<string, string> = {
 					'word-order': 'Складання',
 					'fill-gaps': 'Пропуски',
-					'continue': 'Продовження'
+					'first-letters': 'Перші букви'
 				};
 				weakContainer.innerHTML = weak.map(v => {
 					const errors = Object.entries(v.errors).sort((a, b) => b[1] - a[1]);
