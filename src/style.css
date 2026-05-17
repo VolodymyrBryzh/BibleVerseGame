@@ -224,11 +224,12 @@ body {
 }
 
 .hero-desc {
-	margin: 14px 0 0;
+	margin: 14px auto 0;
 	max-width: 320px;
 	font-size: 0.85rem;
 	color: var(--text-light);
 	line-height: 1.55;
+	text-align: center;
 }
 
 .hero-desc--acid {
@@ -238,7 +239,7 @@ body {
 
 /* Hero section visibility */
 .hero-acid { display: none; }
-.hero-editorial { display: block; }
+.hero-editorial { display: block; text-align: center; }
 [data-theme="acid"] .hero-acid { display: block; }
 [data-theme="acid"] .hero-editorial { display: none; }
 
@@ -448,18 +449,17 @@ body {
 }
 
 .mode-icon {
-	width: 44px;
-	height: 44px;
+	width: 52px;
+	height: 52px;
 	border-radius: 50%;
 	background: transparent;
-	border: 1px solid var(--border-strong);
+	border: 1.5px solid var(--border-strong);
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	font-size: 1.2rem;
 	flex-shrink: 0;
 	transition: all var(--transition);
-	color: var(--accent);
+	color: var(--text);
 }
 
 .mode-info h3 {
@@ -592,7 +592,7 @@ body {
 	border-color: var(--accent);
 }
 
-.hero-cta { display: block; }
+.hero-cta { display: block; text-align: center; }
 [data-theme="acid"] .hero-cta { display: none; }
 
 /* ===== FORMS & BUTTONS — V5 editorial ===== */

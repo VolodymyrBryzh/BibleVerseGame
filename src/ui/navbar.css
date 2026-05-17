@@ -83,11 +83,6 @@
 	mask-image: url('./img/navbar/iconHome.svg');
 }
 
-.icon-game {
-	-webkit-mask-image: url('./img/navbar/iconGame.svg');
-	mask-image: url('./img/navbar/iconGame.svg');
-}
-
 .icon-stats {
 	-webkit-mask-image: url('./img/navbar/iconStats.svg');
 	mask-image: url('./img/navbar/iconStats.svg');

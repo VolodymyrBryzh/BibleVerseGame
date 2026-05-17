@@ -7,15 +7,11 @@ const Navbar = {
 			<div id="navIndicator" class="nav-indicator"></div>
 			<button class="nav-btn active" data-screen="screenDashboard">
 				<span class="nav-icon icon-home"></span>
-				Головна
-			</button>
-			<button id="navBtnGame" class="nav-btn" data-screen="screenGame">
-				<span class="nav-icon icon-game"></span>
 				Гра
 			</button>
 			<button class="nav-btn" data-screen="screenStats">
 				<span class="nav-icon icon-stats"></span>
-				Статистика
+				Стат
 			</button>
 			<button class="nav-btn" data-screen="screenManage">
 				<span class="nav-icon icon-manage"></span>

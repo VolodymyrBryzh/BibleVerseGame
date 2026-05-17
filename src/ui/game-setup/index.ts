@@ -18,21 +18,27 @@ const GameSetup = {
 					</div>
 					<div class="mode-grid" id="gameModeGrid">
 						<div class="mode-card selected" data-mode="word-order">
-							<div class="mode-icon">🔀</div>
+							<div class="mode-icon">
+								<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5"/><path d="M4 20L21 3"/><path d="M21 16v5h-5"/><path d="M15 15l6 6"/><path d="M4 4l5 5"/></svg>
+							</div>
 							<div class="mode-info">
 								<h3>Складання слів</h3>
 								<p>Відновити правильний порядок слів</p>
 							</div>
 						</div>
 						<div class="mode-card" data-mode="fill-gaps">
-							<div class="mode-icon">✏️</div>
+							<div class="mode-icon">
+								<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+							</div>
 							<div class="mode-info">
 								<h3>Заповни пропуски</h3>
 								<p>Вписати приховані слова</p>
 							</div>
 						</div>
 						<div class="mode-card" data-mode="first-letters">
-							<div class="mode-icon">🔤</div>
+							<div class="mode-icon">
+								<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4h2"/><path d="M5 4h2"/><path d="M9 4h2"/><path d="M1 8h4"/><path d="M7 8h4"/><path d="M1 12h2"/><path d="M5 12h4"/><path d="M11 12h2"/><path d="M1 16h6"/><path d="M9 16h4"/><path d="M15 4v16"/><path d="M19 4h4"/><path d="M19 8h2"/><path d="M19 12h4"/><path d="M19 16h2"/></svg>
+							</div>
 							<div class="mode-info">
 								<h3>Перші букви</h3>
 								<p>Бачиш лише першу букву — згадай слово</p>
