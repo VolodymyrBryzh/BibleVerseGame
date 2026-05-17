@@ -12,6 +12,7 @@ export interface StatsOverview {
   bestStreak: number;
   learned: number;
   todayDone: number;
+  monthDone: number;
 }
 
 const Stats = {
@@ -132,21 +133,29 @@ const Stats = {
     const correct = this._attempts.filter(x => x.success).length;
     const accuracy = total ? Math.round(correct / total * 100) : 0;
     const learned = this._getLearnedCount();
-    
+
     const today = new Date().setHours(0, 0, 0, 0);
     const todayDone = this._attempts.filter(x => {
       const d = new Date(x.ts).setHours(0, 0, 0, 0);
       return d === today && x.success;
     }).length;
 
-    return { 
-      total, 
-      correct, 
-      accuracy, 
-      streak: this._streak, 
-      bestStreak: this._bestStreak, 
+    const monthStart = new Date();
+    monthStart.setDate(1);
+    monthStart.setHours(0, 0, 0, 0);
+    const monthDone = this._attempts.filter(x => {
+      return x.ts >= monthStart.getTime() && x.success;
+    }).length;
+
+    return {
+      total,
+      correct,
+      accuracy,
+      streak: this._streak,
+      bestStreak: this._bestStreak,
       learned,
-      todayDone
+      todayDone,
+      monthDone
     };
   },
 
