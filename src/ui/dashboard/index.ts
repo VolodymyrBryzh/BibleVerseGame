@@ -2,8 +2,8 @@ import Header from './Header';
 import Progress from './Progress';
 import DailyVerse from './DailyVerse';
 import UI from '../ui';
-import { TRANSLATIONS_META } from '../../constants/bibleData';
-import VersesDB from '../../core/database';
+import { TRANSLATIONS_META as _TRANSLATIONS_META } from '../../constants/bibleData';
+import _VersesDB from '../../core/database';
 import { $ } from '../../utils/helpers';
 
 const Dashboard = {
