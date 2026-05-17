@@ -269,7 +269,7 @@ const Game = {
       this.elements.actions.innerHTML = `
         <button class="btn btn-primary" onclick="Game.start()">Наступний</button>
         <button class="btn" onclick="Game._retry()">Повторити</button>
-        <button class="btn" onclick="UI.showScreen('screenHome')">Меню</button>
+        <button class="btn" onclick="UI.showScreen('screenDashboard')">Меню</button>
       `;
     }
   },

@@ -1,5 +1,6 @@
 import Stats from '../../core/stats';
 import UI from '../ui';
+import Theme from '../theme';
 import { $ } from '../../utils/helpers';
 
 const Header = {
@@ -7,34 +8,40 @@ const Header = {
 		return `
 			<div class="date-row">
 				<span id="currentDate" class="dashboard-date"></span>
-				<div style="display:flex; gap:18px; align-items:center;">
+				<div style="display:flex; gap:12px; align-items:center;">
+					<button id="btnThemeToggle" class="theme-toggle-btn" aria-label="Theme">
+						<span class="theme-toggle-icon theme-toggle-icon--editorial">
+							<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1 4 5 5 5 10a5 5 0 01-10 0c0-2 1-3 2-4-1 4 2 5 3 5 0-3-1-7 0-11z"/></svg>
+						</span>
+						<span class="theme-toggle-icon theme-toggle-icon--acid">
+							<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4l1.5 4.5L18 10l-4.5 1.5L12 16l-1.5-4.5L6 10l4.5-1.5L12 4z"/><path d="M19 16l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7.7-2z"/></svg>
+						</span>
+					</button>
 					<div class="streak-badge">
-						<span class="streak-icon">🔥</span>
-						<span id="streakCount">0</span> дн.
+						<svg class="streak-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1 4 5 5 5 10a5 5 0 01-10 0c0-2 1-3 2-4-1 4 2 5 3 5 0-3-1-7 0-11z"/></svg>
+						<span id="streakCount">0</span>
 					</div>
-					<button id="btnProfile" style="all:unset; cursor:pointer; display:flex;">
-						<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-muted);">
+					<button id="btnProfile" class="header-icon-btn" aria-label="Profile">
+						<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
 							<circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/>
 						</svg>
 					</button>
 				</div>
 			</div>
-			<!-- Editorial title -->
 			<div class="hero-editorial">
-				<p style="margin:0; font-family:var(--font-serif); font-style:italic; font-size:1rem; color:var(--text-muted); font-weight:400;">Слово на сьогодні.</p>
-				<h1 class="dashboard-title" style="margin-top:8px;">
-					Вивчай<br>
-					<span style="font-family:var(--font-serif); font-style:italic; font-weight:400;">Святе Письмо</span><br>
-					без зусиль.
-				</h1>
-				<p style="margin:14px 0 0; max-width:280px; font-size:0.8rem; color:var(--text-muted); line-height:1.5;">Декілька хвилин на день — і вірш залишається в пам'яті назавжди.</p>
+				<p class="hero-subtitle" id="heroSubtitle"></p>
+				<h1 class="dashboard-title" id="heroTitle"></h1>
+				<p class="hero-desc" id="heroDesc"></p>
+				<div class="hero-cta">
+					<button id="btnHeroStart" class="btn-outline-pill">
+						<span id="heroCTAText"></span>
+						<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+					</button>
+				</div>
 			</div>
-			<!-- Acid title -->
 			<div class="hero-acid">
-				<h1 class="dashboard-title">
-					СЛОВО<br><span class="acid-highlight">живе.</span>
-				</h1>
-				<p style="margin:14px 0 0; max-width:280px; font-size:0.85rem; color:var(--text-muted); line-height:1.4; font-weight:500;">Вивчай Святе Письмо як гру. По одному віршу за раз.</p>
+				<h1 class="dashboard-title" id="heroTitleAcid"></h1>
+				<p class="hero-desc hero-desc--acid" id="heroDescAcid"></p>
 			</div>
 		`;
 	},
@@ -43,16 +50,54 @@ const Header = {
 		const dateEl = $('currentDate');
 		if (dateEl) {
 			const now = new Date();
-			const days = ['НЕДІЛЯ', 'ПОНЕДІЛОК', 'ВІВТОРОК', 'СЕРЕДА', 'ЧЕТВЕР', "П’ЯТНИЦЯ", 'СУБОТА'];
+			const days = ['НЕДІЛЯ', 'ПОНЕДІЛОК', 'ВІВТОРОК', 'СЕРЕДА', 'ЧЕТВЕР', 'ПʼЯТНИЦЯ', 'СУБОТА'];
 			const months = ['СІЧНЯ', 'ЛЮТОГО', 'БЕРЕЗНЯ', 'КВІТНЯ', 'ТРАВНЯ', 'ЧЕРВНЯ', 'ЛИПНЯ', 'СЕРПНЯ', 'ВЕРЕСНЯ', 'ЖОВТНЯ', 'ЛИСТОПАДА', 'ГРУДНЯ'];
 			dateEl.textContent = `${days[now.getDay()]} · ${now.getDate()} ${months[now.getMonth()]}`;
 		}
+
+		// Ukrainian text via unicode escapes to avoid encoding issues
+		const subtitle = $('heroSubtitle');
+		if (subtitle) subtitle.textContent = 'Слово на сьогодні.';
+
+		const title = $('heroTitle');
+		if (title) title.innerHTML = 'Вивчай<br><span class="dashboard-title-italic">Святе Письмо</span><br>без зусиль.';
+
+		const desc = $('heroDesc');
+		if (desc) desc.textContent = 'Декілька хвилин на день — і вірш залишається в памʼяті назавжди.';
+
+		const ctaText = $('heroCTAText');
+		if (ctaText) ctaText.textContent = 'ПОЧАТИ';
+
+		const titleAcid = $('heroTitleAcid');
+		if (titleAcid) titleAcid.innerHTML = 'СЛОВО<br><span class="acid-highlight">живе.</span>';
+
+		const descAcid = $('heroDescAcid');
+		if (descAcid) descAcid.textContent = 'Вивчай Святе Письмо як гру. По одному віршу за раз — і Слово залишиться в тобі.';
 
 		const streakEl = $('streakCount');
 		const overview = Stats.getOverview();
 		if (streakEl) streakEl.textContent = (overview.streak || 0).toString();
 
-		$('btnProfile')?.addEventListener('click', () => UI.navigate('screenProfile'));
+		const profileBtn = $('btnProfile');
+		if (profileBtn && !profileBtn.dataset.bound) {
+			profileBtn.dataset.bound = '1';
+			profileBtn.addEventListener('click', () => UI.navigate('screenProfile'));
+		}
+
+		const themeBtn = $('btnThemeToggle');
+		if (themeBtn && !themeBtn.dataset.bound) {
+			themeBtn.dataset.bound = '1';
+			themeBtn.addEventListener('click', () => Theme.toggle());
+		}
+
+		const heroStartBtn = $('btnHeroStart');
+		if (heroStartBtn && !heroStartBtn.dataset.bound) {
+			heroStartBtn.dataset.bound = '1';
+			heroStartBtn.addEventListener('click', () => {
+				const gameSection = document.getElementById('dashModeSection');
+				if (gameSection) gameSection.scrollIntoView({ behavior: 'smooth' });
+			});
+		}
 	}
 };
 

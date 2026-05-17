@@ -8,6 +8,7 @@ const Manage = {
 	editingId: null as string | null,
 	currentBookData: null as any,
 	currentVerseTranslations: {} as Record<string, string>,
+	_bookDropdownVersion: 0,
 	bookCodes: [
 		'gen', 'exo', 'lev', 'num', 'deu', 'jos', 'jdg', 'rut', '1sa', '2sa',
 		'1ki', '2ki', '1ch', '2ch', 'ezr', 'neh', 'est', 'job', 'psa', 'pro',
@@ -26,30 +27,42 @@ const Manage = {
 		this.initTranslationDropdown();
 	},
 
+	_hasText(v: any): boolean {
+		const t = v?.text;
+		if (typeof t === 'string') return t.trim() !== '';
+		if (Array.isArray(t)) return t.some((p: any) => {
+			if (typeof p === 'string') return p.trim() !== '';
+			if (typeof p === 'object' && p !== null) return Object.values(p).some((val: any) => typeof val === 'string' && val.trim() !== '');
+			return false;
+		});
+		return false;
+	},
+
+	async _fetchJSON(url: string): Promise<any | null> {
+		try {
+			const resp = await fetch(url);
+			if (!resp.ok) return null;
+			const ct = resp.headers.get('content-type') || '';
+			if (!ct.includes('json')) return null;
+			return await resp.json();
+		} catch { return null; }
+	},
+
 	async initTranslationDropdown(): Promise<void> {
 		const select = $<HTMLSelectElement>('addSearchTranslation');
 		if (!select) return;
 
 		select.innerHTML = '<option value="">Перевірка...</option>';
 
-		// Check which translations have at least one valid book
 		const validTranslations = await Promise.all(TRANSLATIONS_META.map(async (t) => {
-			// We only need to find ONE book with content to consider the translation valid
-			// To speed up, we check Genesis first, then others if needed
 			const codes = this.bookCodes;
 			const testCodes = [codes[0], codes[18], codes[39]]; // gen, psa, mat
 
 			for (const code of testCodes) {
-				try {
-					const resp = await fetch(`/bible/${t.key}/${code}.json`);
-					if (resp.ok) {
-						const data = await resp.json();
-						const hasContent = data.chapters?.some((ch: any) =>
-							ch.verses?.some((v: any) => v.text && v.text.trim() !== '')
-						);
-						if (hasContent) return t;
-					}
-				} catch (e) { }
+				const data = await this._fetchJSON(`/bible/${t.key}/${code}.json`);
+				if (data?.chapters?.some((ch: any) => ch.verses?.some((v: any) => this._hasText(v)))) {
+					return t;
+				}
 			}
 			return null;
 		}));
@@ -73,40 +86,39 @@ const Manage = {
 	},
 
 	async initBookDropdown(): Promise<void> {
+		const version = ++this._bookDropdownVersion;
 		const transKey = $<HTMLSelectElement>('addSearchTranslation')?.value || 'ubio';
 		const select = $<HTMLSelectElement>('addBook');
 		if (!select) return;
 
+		select.innerHTML = '<option value="">Завантаження...</option>';
 		this.bookNameMap = {};
+
 		const checks = this.bookCodes.map(async (code) => {
-			try {
-				const resp = await fetch(`/bible/${transKey}/${code}.json`);
-				if (!resp.ok) return null;
+			const data = await this._fetchJSON(`/bible/${transKey}/${code}.json`);
+			if (!data) return null;
 
-				const data = await resp.json();
-				const bookName = data.metadata?.book || code;
-				const hasAnyContent = data.chapters?.some((ch: any) =>
-					ch.verses?.some((v: any) => v.text && v.text.trim() !== '')
-				);
+			const bookName = data.metadata?.book || code;
+			const hasAnyContent = data.chapters?.some((ch: any) =>
+				ch.verses?.some((v: any) => this._hasText(v))
+			);
 
-				if (hasAnyContent) {
-					this.bookNameMap[bookName] = code;
-					return bookName;
-				}
-				return null;
-			} catch (e) {
-				return null;
-			}
+			if (hasAnyContent) return { bookName, code };
+			return null;
 		});
 
 		const results = await Promise.all(checks);
+		if (version !== this._bookDropdownVersion) return;
+
+		this.bookNameMap = {};
 		select.innerHTML = '<option value="">Оберіть книгу...</option>';
 
-		results.forEach(name => {
-			if (name) {
+		results.forEach(r => {
+			if (r) {
+				this.bookNameMap[r.bookName] = r.code;
 				const opt = document.createElement('option');
-				opt.value = name;
-				opt.textContent = name;
+				opt.value = r.bookName;
+				opt.textContent = r.bookName;
 				select.appendChild(opt);
 			}
 		});
@@ -127,9 +139,9 @@ const Manage = {
 
 		const code = this.bookNameMap[book];
 		try {
-			const resp = await fetch(`/bible/${transKey}/${code}.json`);
-			if (!resp.ok) throw new Error();
-			this.currentBookData = await resp.json();
+			const data = await this._fetchJSON(`/bible/${transKey}/${code}.json`);
+			if (!data) throw new Error();
+			this.currentBookData = data;
 
 			this.currentBookData.chapters.forEach((ch: any) => {
 				// Only show chapter if it has at least one non-empty verse
@@ -157,10 +169,7 @@ const Manage = {
 		const chData = this.currentBookData.chapters.find((c: any) => c.chapter.toString() === chapter);
 		if (chData) {
 			chData.verses.forEach((v: any) => {
-				// Only show verses that have text (can be string or array)
-				const hasText = typeof v.text === 'string' ? v.text.trim() !== '' : (Array.isArray(v.text) && v.text.length > 0);
-				
-				if (hasText) {
+				if (this._hasText(v)) {
 					const opt = document.createElement('option');
 					opt.value = v.verse.toString();
 					opt.textContent = v.verse.toString();
@@ -183,10 +192,8 @@ const Manage = {
 		this.currentVerseTranslations = {};
 		
 		try {
-			const url = `/bible/${transKey}/${code}.json`;
-			const resp = await fetch(url);
-			if (resp.ok) {
-				const data = await resp.json();
+			const data = await this._fetchJSON(`/bible/${transKey}/${code}.json`);
+			if (data) {
 				const chData = data.chapters?.find((c: any) => c.chapter === chapter);
 				const vData = chData?.verses?.find((v: any) => v.verse === verse);
 
