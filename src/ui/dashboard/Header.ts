@@ -13,7 +13,7 @@ const Header = {
 						<span class="theme-tumbler-knob"></span>
 					</button>
 					<div class="streak-badge">
-						<svg class="streak-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1 4 5 5 5 10a5 5 0 01-10 0c0-2 1-3 2-4-1 4 2 5 3 5 0-3-1-7 0-11z"/></svg>
+						<span class="xp-fire">🔥</span>
 						<span id="streakCount">0</span>
 					</div>
 					<button id="btnProfile" class="header-icon-btn" aria-label="Profile">
@@ -71,7 +71,7 @@ const Header = {
 
 		const streakEl = $('streakCount');
 		const overview = Stats.getOverview();
-		if (streakEl) streakEl.textContent = (overview.streak || 0).toString();
+		if (streakEl) streakEl.textContent = (overview.xp || 0).toString();
 
 		const profileBtn = $('btnProfile');
 		if (profileBtn && !profileBtn.dataset.bound) {

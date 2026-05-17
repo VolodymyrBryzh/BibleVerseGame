@@ -33,6 +33,7 @@ export interface Attempt {
 	success: boolean;
 	accuracy: number;
 	ts: number;
+	duration?: number;
 }
 
 export const db = new BibleDatabase();

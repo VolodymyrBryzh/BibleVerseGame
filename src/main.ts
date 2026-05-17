@@ -9,6 +9,7 @@ import Dashboard from './ui/dashboard/index';
 import Theme from './ui/theme';
 // core
 import Stats from './core/stats';
+import XP from './core/xp';
 import VersesDB from './core/database';
 // engine
 import Game from './engine/game';
@@ -26,6 +27,7 @@ import Game from './engine/game';
 // Initialize app through AuthUI
 document.addEventListener('DOMContentLoaded', () => {
 	Theme.init();
+	XP.init();
 	AuthUI.init();
 	Background.init();
 	Navbar.init();

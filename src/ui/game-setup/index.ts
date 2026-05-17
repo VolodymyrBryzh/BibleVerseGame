@@ -23,7 +23,7 @@ const GameSetup = {
 							</div>
 							<div class="mode-info">
 								<h3>Складання слів</h3>
-								<p>Відновити правильний порядок слів</p>
+								<p><span class="mode-difficulty easy">Легко</span> · <span class="mode-xp">+30 XP</span></p>
 							</div>
 						</div>
 						<div class="mode-card" data-mode="fill-gaps">
@@ -32,16 +32,16 @@ const GameSetup = {
 							</div>
 							<div class="mode-info">
 								<h3>Заповни пропуски</h3>
-								<p>Вписати приховані слова</p>
+								<p><span class="mode-difficulty medium">Середньо</span> · <span class="mode-xp">+45 XP</span></p>
 							</div>
 						</div>
-						<div class="mode-card" data-mode="first-letters">
+						<div class="mode-card" data-mode="continue">
 							<div class="mode-icon">
-								<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4h2"/><path d="M5 4h2"/><path d="M9 4h2"/><path d="M1 8h4"/><path d="M7 8h4"/><path d="M1 12h2"/><path d="M5 12h4"/><path d="M11 12h2"/><path d="M1 16h6"/><path d="M9 16h4"/><path d="M15 4v16"/><path d="M19 4h4"/><path d="M19 8h2"/><path d="M19 12h4"/><path d="M19 16h2"/></svg>
+								<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 10H3"/><path d="M21 6H3"/><path d="M21 14H3"/><path d="M17 18H3"/></svg>
 							</div>
 							<div class="mode-info">
-								<h3>Перші букви</h3>
-								<p>Бачиш лише першу букву — згадай слово</p>
+								<h3>Продовж вірш</h3>
+								<p><span class="mode-difficulty hard">Складно</span> · <span class="mode-xp">+60 XP</span></p>
 							</div>
 						</div>
 					</div>

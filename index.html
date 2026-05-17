@@ -48,40 +48,62 @@
 
 		<!-- ===== SCREEN: STATS ===== -->
 		<div class="screen" id="screenStats">
-			<div class="stats-grid">
-				<div class="stat-card">
-					<div class="stat-value" id="statTotal">0</div>
-					<div class="stat-label">Всього спроб</div>
+			<div class="container">
+				<!-- Streak hero card -->
+				<div class="stats-streak-card">
+					<div class="stats-streak-row">
+						<span class="stats-streak-number" id="statStreakDays">0</span>
+						<span class="stats-streak-label">днів</span>
+					</div>
+					<div class="stats-streak-sub" id="statStreakMsg">підряд · продовжуй.</div>
 				</div>
-				<div class="stat-card">
-					<div class="stat-value" id="statAccuracy">0%</div>
-					<div class="stat-label">Точність</div>
-				</div>
-				<div class="stat-card">
-					<div class="stat-value" id="statStreak">0</div>
-					<div class="stat-label">Серія підряд</div>
-				</div>
-				<div class="stat-card">
-					<div class="stat-value" id="statLearned">0</div>
-					<div class="stat-label">Вивчено (≥80%)</div>
-				</div>
-			</div>
 
-			<div class="card">
-				<div class="card-title">Прогрес по віршах</div>
-				<div id="verseStats"></div>
-			</div>
-
-			<div class="card">
-				<div class="card-title">Найслабші місця</div>
-				<div id="weakSpots">
-					<p style="color:var(--text-muted);font-size:0.85rem;">Поки що недостатньо даних</p>
+				<!-- 3-column stats -->
+				<div class="stats-3col">
+					<div class="stats-3col-item">
+						<div class="stats-3col-label">вивчено</div>
+						<div class="stats-3col-value">
+							<span class="stats-3col-num" id="statLearned2">0</span>
+							<span class="stats-3col-unit">віршів</span>
+						</div>
+					</div>
+					<div class="stats-3col-item">
+						<div class="stats-3col-label">точність</div>
+						<div class="stats-3col-value">
+							<span class="stats-3col-num" id="statAccuracy2">0</span>
+							<span class="stats-3col-unit">%</span>
+						</div>
+					</div>
+					<div class="stats-3col-item">
+						<div class="stats-3col-label">час</div>
+						<div class="stats-3col-value">
+							<span class="stats-3col-num" id="statTimeNum">0</span>
+							<span class="stats-3col-unit" id="statTimeUnit">с</span>
+						</div>
+					</div>
 				</div>
-			</div>
 
-			<button class="btn btn-sm btn-danger" onclick="Stats.reset()" style="margin-top:12px;">
-				Скинути статистику
-			</button>
+				<!-- Activity chart -->
+				<div class="stats-activity">
+					<div class="stats-activity-title">АКТИВНІСТЬ · 14 ДНІВ</div>
+					<div class="stats-activity-chart" id="activityChart"></div>
+					<div class="stats-activity-labels">
+						<span id="activityStart"></span>
+						<span id="activityMid"></span>
+						<span>СЬОГОДНІ</span>
+					</div>
+				</div>
+
+				<!-- Milestones -->
+				<div class="stats-milestones">
+					<div class="stats-milestones-title">ВІХИ · MILESTONES</div>
+					<div id="milestonesList"></div>
+				</div>
+
+				<button class="btn btn-sm btn-danger" onclick="Stats.reset()" style="margin-top:12px;">
+					Скинути статистику
+				</button>
+			</div>
 		</div>
 
 		<!-- ===== SCREEN: MANAGE ===== -->

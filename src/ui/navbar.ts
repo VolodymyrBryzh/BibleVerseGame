@@ -7,11 +7,15 @@ const Navbar = {
 			<div id="navIndicator" class="nav-indicator"></div>
 			<button class="nav-btn active" data-screen="screenDashboard">
 				<span class="nav-icon icon-home"></span>
+				Головна
+			</button>
+			<button class="nav-btn" data-screen="screenGame">
+				<span class="nav-icon icon-game"></span>
 				Гра
 			</button>
 			<button class="nav-btn" data-screen="screenStats">
 				<span class="nav-icon icon-stats"></span>
-				Стат
+				Статистика
 			</button>
 			<button class="nav-btn" data-screen="screenManage">
 				<span class="nav-icon icon-manage"></span>
@@ -22,10 +26,9 @@ const Navbar = {
 		const navContainer = document.createElement('div');
 		navContainer.id = 'mainNav';
 		navContainer.className = 'bottom-nav';
-		navContainer.style.display = 'none'; // Will be managed by AuthUI
+		navContainer.style.display = 'none';
 		navContainer.innerHTML = navHTML;
 
-		// Attach event listeners directly, avoiding inline onclick attributes
 		const buttons = navContainer.querySelectorAll('.nav-btn');
 		buttons.forEach(btn => {
 			btn.addEventListener('click', (e) => {

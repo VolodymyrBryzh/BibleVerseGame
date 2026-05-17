@@ -17,11 +17,9 @@ const UI = {
 	},
 
 	showScreen(id: string): void {
-		// Optimization: only update classes if screen changes or needs refresh
 		const screens = document.querySelectorAll('.screen');
 		screens.forEach(s => s.classList.toggle('active', s.id === id));
 
-		// Update nav
 		const navBtns = document.querySelectorAll('.nav-btn');
 		let activeIndex = 0;
 		navBtns.forEach((b, index) => {
@@ -31,15 +29,11 @@ const UI = {
 			if (isActive) activeIndex = index;
 		});
 
-		// Move indicator
 		const indicator = $('navIndicator');
 		if (indicator) {
-			// 100% = 1 button width
 			indicator.style.transform = `translateX(${activeIndex * 100}%)`;
 		}
 
-
-		// Specific screen logic
 		if (id === 'screenStats') this.renderStats();
 		if (id === 'screenManage') Manage.renderVerseList();
 		if (id === 'screenProfile') {
@@ -47,7 +41,6 @@ const UI = {
 			if (sw) sw.innerHTML = Theme.renderSwitcher();
 		}
 
-		// Auto-scroll to top when switching screens
 		window.scrollTo(0, 0);
 	},
 
@@ -89,67 +82,107 @@ const UI = {
 
 	renderStats(): void {
 		const o = Stats.getOverview();
-		const map = {
-			'statTotal': o.total,
-			'statAccuracy': o.accuracy + '%',
-			'statStreak': o.streak,
-			'statLearned': o.learned
-		};
 
-		Object.entries(map).forEach(([id, val]) => {
-			const el = $(id);
-			if (el) el.textContent = val.toString();
-		});
+		// Streak hero card
+		const streakNum = $('statStreakDays');
+		if (streakNum) streakNum.textContent = o.streak.toString();
+		const streakMsg = $('statStreakMsg');
+		if (streakMsg) {
+			streakMsg.textContent = o.streak > 0 ? 'підряд · продовжуй.' : 'починай серію!';
+		}
 
-		// Per verse progress
-		const perVerse = Stats.getPerVerse();
-		const container = $('verseStats');
-		if (container) {
-			if (!perVerse.length) {
-				container.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;">Зіграй хоча б раз</p>';
+		// 3-column stats
+		const learned = $('statLearned2');
+		if (learned) learned.textContent = o.learned.toString();
+		const acc = $('statAccuracy2');
+		if (acc) acc.textContent = o.accuracy.toString();
+
+		// Time
+		const totalSec = Stats.getTotalTime();
+		const hours = Math.floor(totalSec / 3600);
+		const mins = Math.floor((totalSec % 3600) / 60);
+		const secs = totalSec % 60;
+		const timeNum = $('statTimeNum');
+		const timeUnit = $('statTimeUnit');
+		if (timeNum && timeUnit) {
+			if (hours > 0) {
+				timeNum.textContent = hours.toString();
+				timeUnit.textContent = 'год';
+			} else if (mins > 0) {
+				timeNum.textContent = mins.toString();
+				timeUnit.textContent = secs > 0 ? `хв${secs}с` : 'хв';
 			} else {
-				container.innerHTML = perVerse.map(v => {
-					let badge = 'strong', badgeText = 'Вивчено';
-					if (v.pct < 50) { badge = 'weak'; badgeText = 'Потребує роботи'; }
-					else if (v.pct < 80) { badge = 'medium'; badgeText = 'В процесі'; }
-					return `
-						<div class="verse-stat-row">
-							<div>
-								<span class="verse-stat-ref">${v.ref}</span>
-								<span class="weak-badge ${badge}">${badgeText}</span>
-							</div>
-							<span class="verse-stat-pct">${v.pct}% (${v.total})</span>
-						</div>
-					`;
-				}).join('');
+				timeNum.textContent = secs.toString();
+				timeUnit.textContent = 'с';
 			}
 		}
 
-		// Weak spots optimization
-		const weak = Stats.getWeakSpots();
-		const weakContainer = $('weakSpots');
-		if (weakContainer) {
-			if (!weak.length) {
-				weakContainer.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;">Поки що недостатньо даних</p>';
-			} else {
-				const modeNames: Record<string, string> = {
-					'word-order': 'Складання',
-					'fill-gaps': 'Пропуски',
-					'first-letters': 'Перші букви'
-				};
-				weakContainer.innerHTML = weak.map(v => {
-					const errors = Object.entries(v.errors).sort((a, b) => b[1] - a[1]);
-					const worstMode = errors[0];
-					const modeHint = worstMode ? ` · найбільше помилок: ${modeNames[worstMode[0]] || worstMode[0]}` : '';
-					return `
-						<div class="verse-stat-row">
-							<span class="verse-stat-ref">${v.ref}</span>
-							<span style="font-size:0.8rem;color:var(--danger)">${v.pct}%${modeHint}</span>
-						</div>
-					`;
-				}).join('');
-			}
+		// Activity chart (14 days)
+		const activity = Stats.getActivityData(14);
+		const maxCount = Math.max(...activity.map(d => d.count), 1);
+		const chartEl = $('activityChart');
+		if (chartEl) {
+			chartEl.innerHTML = activity.map((d, i) => {
+				const h = Math.max((d.count / maxCount) * 100, 4);
+				const isToday = i === activity.length - 1;
+				return `<div class="stats-activity-bar${isToday ? ' today' : ''}" style="height:${h}%"></div>`;
+			}).join('');
 		}
+
+		// Activity date labels
+		const months = ['СІЧ','ЛЮТ','БЕР','КВІ','ТРА','ЧЕР','ЛИП','СЕР','ВЕР','ЖОВ','ЛИС','ГРУ'];
+		const startEl = $('activityStart');
+		if (startEl && activity[0]) {
+			const d = new Date(activity[0].date);
+			startEl.textContent = `${d.getDate()} ${months[d.getMonth()]}`;
+		}
+		const midEl = $('activityMid');
+		if (midEl && activity[7]) {
+			const d = new Date(activity[7].date);
+			midEl.textContent = `${d.getDate()} ${months[d.getMonth()]}`;
+		}
+
+		// Milestones
+		this._renderMilestones(o);
+	},
+
+	_renderMilestones(o: ReturnType<typeof Stats.getOverview>): void {
+		const container = $('milestonesList');
+		if (!container) return;
+
+		const psalmCount = Stats.getPsalmLearnedCount();
+
+		const milestones = [
+			{
+				icon: '🔥',
+				title: 'Тиждень підряд',
+				completed: o.bestStreak >= 7,
+				progress: `${Math.min(o.streak, 7)} з 7 днів`,
+			},
+			{
+				icon: '⭐',
+				title: 'Перші 50 віршів',
+				completed: o.learned >= 50,
+				progress: `${o.learned} з 50 завершено`,
+			},
+			{
+				icon: '✦',
+				title: 'Псалмоспівець',
+				completed: psalmCount >= 100,
+				progress: `${psalmCount} зі 100 псалмів`,
+			},
+		];
+
+		container.innerHTML = milestones.map(m => `
+			<div class="milestone-item">
+				<div class="milestone-icon${m.completed ? ' completed' : ''}">${m.icon}</div>
+				<div class="milestone-info">
+					<h3>${m.title}</h3>
+					<p>${m.completed ? 'Виконано' : m.progress}</p>
+				</div>
+				${m.completed ? '<span class="milestone-check">✓</span>' : ''}
+			</div>
+		`).join('');
 	}
 };
 
