@@ -439,9 +439,9 @@ body {
 }
 
 .mode-card.selected .mode-icon {
-	background: var(--accent);
-	color: #fff;
-	border-color: transparent;
+	background: var(--accent-bg);
+	color: var(--accent);
+	border-color: var(--accent);
 }
 
 .mode-icon {
