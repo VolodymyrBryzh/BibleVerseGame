@@ -264,14 +264,18 @@ body {
 .progress-header {
 	position: absolute;
 	left: 24px;
+	right: 24px;
 	bottom: 18px;
 	color: #fff;
 	z-index: 1;
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
 }
 
 .progress-label {
 	font-family: var(--font-mono);
-	font-size: 0.625rem;
+	font-size: 0.7rem;
 	letter-spacing: 1.4px;
 	font-weight: 500;
 	opacity: 0.85;
@@ -279,9 +283,8 @@ body {
 }
 
 .progress-stats {
-	margin-top: 4px;
 	font-family: var(--font);
-	font-size: 1.75rem;
+	font-size: 2.2rem;
 	font-weight: 600;
 	letter-spacing: -1px;
 	line-height: 1;

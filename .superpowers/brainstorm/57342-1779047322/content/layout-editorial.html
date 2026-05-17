@@ -1,0 +1,136 @@
+<h2>Розділення: Головна vs Гра</h2>
+<p class="subtitle">Тема Editorial — два окремі екрани. Всі англійські написи прибрано.</p>
+
+<div class="split">
+  <div class="mockup">
+    <div class="mockup-header">ГОЛОВНА (tab 1)</div>
+    <div class="mockup-body" style="background:#FAF8F3;color:#1a1a1a;font-family:Georgia,serif;padding:20px;">
+
+      <!-- Header -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+        <div>
+          <div style="font-size:11px;color:#999;text-transform:uppercase;letter-spacing:1px;">Травень 2026</div>
+          <div style="font-size:22px;font-weight:bold;">Святе Письмо</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <!-- Toggle tumbler -->
+          <div style="width:44px;height:24px;background:#ddd;border-radius:12px;position:relative;cursor:pointer;">
+            <div style="width:20px;height:20px;background:#fff;border-radius:50%;position:absolute;top:2px;left:2px;box-shadow:0 1px 3px rgba(0,0,0,0.2);"></div>
+          </div>
+          <div style="width:32px;height:32px;background:#eee;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;">👤</div>
+        </div>
+      </div>
+
+      <!-- Progress -->
+      <div style="background:#fff;border-radius:12px;padding:16px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,0.06);">
+        <div style="font-size:11px;color:#999;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Сьогодні</div>
+        <div style="display:flex;align-items:baseline;gap:4px;margin-bottom:4px;">
+          <span style="font-size:28px;font-weight:bold;">1</span>
+          <span style="font-size:16px;color:#999;font-style:italic;"> / 4</span>
+          <span style="font-size:13px;color:#999;font-style:italic;"> віршів за місяць</span>
+        </div>
+        <div style="height:6px;background:#eee;border-radius:3px;overflow:hidden;">
+          <div style="width:25%;height:100%;background:linear-gradient(90deg,#B07BD8,#FF5E8E);border-radius:3px;"></div>
+        </div>
+      </div>
+
+      <!-- Daily Verse -->
+      <div style="background:#fff;border-radius:12px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,0.06);">
+        <div style="font-size:11px;color:#999;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Вірш дня</div>
+        <div style="font-size:15px;line-height:1.6;font-style:italic;color:#333;">
+          «Бо так Бог полюбив світ, що дав Сина Свого Єдинородного...»
+        </div>
+        <div style="font-size:12px;color:#999;margin-top:8px;">Івана 3:16</div>
+      </div>
+
+      <!-- Navbar -->
+      <div style="position:absolute;bottom:0;left:0;right:0;background:#fff;display:flex;justify-content:space-around;padding:10px 0 16px;border-top:1px solid #eee;">
+        <div style="text-align:center;color:#B07BD8;font-size:11px;font-weight:600;">
+          <div style="font-size:18px;">🏠</div>Головна
+        </div>
+        <div style="text-align:center;color:#999;font-size:11px;">
+          <div style="font-size:18px;">📖</div>Гра
+        </div>
+        <div style="text-align:center;color:#999;font-size:11px;">
+          <div style="font-size:18px;">📊</div>Статистика
+        </div>
+        <div style="text-align:center;color:#999;font-size:11px;">
+          <div style="font-size:18px;">🔖</div>Вірші
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header">ГРА (tab 2)</div>
+    <div class="mockup-body" style="background:#FAF8F3;color:#1a1a1a;font-family:Georgia,serif;padding:20px;">
+
+      <!-- Section: Mode -->
+      <div style="margin-bottom:20px;">
+        <div style="font-size:11px;color:#999;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;">Крок 01</div>
+        <div style="font-size:20px;font-weight:bold;margin-bottom:12px;">Обери режим</div>
+
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="background:#fff;border:2px solid #B07BD8;border-radius:12px;padding:12px;display:flex;align-items:center;gap:12px;">
+            <div style="width:40px;height:40px;background:#f5f0fa;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">🔀</div>
+            <div><div style="font-weight:bold;font-size:14px;">Складання слів</div><div style="font-size:12px;color:#999;">Відновити правильний порядок слів</div></div>
+          </div>
+          <div style="background:#fff;border:1px solid #eee;border-radius:12px;padding:12px;display:flex;align-items:center;gap:12px;">
+            <div style="width:40px;height:40px;background:#f5f5f5;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">✏️</div>
+            <div><div style="font-weight:bold;font-size:14px;">Заповни пропуски</div><div style="font-size:12px;color:#999;">Вписати приховані слова</div></div>
+          </div>
+          <div style="background:#fff;border:1px solid #eee;border-radius:12px;padding:12px;display:flex;align-items:center;gap:12px;">
+            <div style="width:40px;height:40px;background:#f5f5f5;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">🔤</div>
+            <div><div style="font-weight:bold;font-size:14px;">Перші букви</div><div style="font-size:12px;color:#999;">Бачиш лише першу букву — згадай слово</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section: Settings -->
+      <div style="margin-bottom:20px;">
+        <div style="font-size:11px;color:#999;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;">Крок 02</div>
+        <div style="font-size:20px;font-weight:bold;margin-bottom:12px;">Налаштування</div>
+
+        <div style="margin-bottom:12px;">
+          <div style="font-size:11px;color:#999;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Переклад</div>
+          <div style="background:#fff;border:1px solid #ddd;border-radius:8px;padding:10px 12px;font-size:14px;">Біблія: Сучасний переклад ▾</div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:#999;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Вірш</div>
+          <div style="background:#fff;border:1px solid #ddd;border-radius:8px;padding:10px 12px;font-size:14px;">Всі вірші (випадковий) ▾</div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <button style="width:100%;padding:14px;background:linear-gradient(90deg,#B07BD8,#FF5E8E);color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:bold;cursor:pointer;">
+        ПОЧАТИ ГРУ
+      </button>
+
+      <!-- Navbar -->
+      <div style="position:absolute;bottom:0;left:0;right:0;background:#fff;display:flex;justify-content:space-around;padding:10px 0 16px;border-top:1px solid #eee;">
+        <div style="text-align:center;color:#999;font-size:11px;">
+          <div style="font-size:18px;">🏠</div>Головна
+        </div>
+        <div style="text-align:center;color:#B07BD8;font-size:11px;font-weight:600;">
+          <div style="font-size:18px;">📖</div>Гра
+        </div>
+        <div style="text-align:center;color:#999;font-size:11px;">
+          <div style="font-size:18px;">📊</div>Статистика
+        </div>
+        <div style="text-align:center;color:#999;font-size:11px;">
+          <div style="font-size:18px;">🔖</div>Вірші
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3 style="margin-top:32px;">Зміни відносно поточного стану:</h3>
+<ul style="line-height:1.8;">
+  <li>🏠 <strong>Головна</strong> — тільки прогрес (4 вірші/місяць) + вірш дня</li>
+  <li>🎮 <strong>Гра</strong> — окремий екран: режим, налаштування, кнопка старт</li>
+  <li>🚫 Прибрано англійські написи: <em>game mode</em>, <em>settings</em></li>
+  <li>🔄 Тумблер замість іконки для перемикання тем</li>
+  <li>📊 «0/5 віршів» → «1/4 віршів за місяць»</li>
+  <li>✏️ «ОБЕРИ ВАЙБ» → «Обери режим»</li>
+</ul>
