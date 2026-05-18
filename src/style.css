@@ -2069,3 +2069,69 @@ select {
 	font-weight: 500;
 }
 
+/* ===== SPLASH / WELCOME SCREEN ===== */
+.splash-screen {
+	display: none !important;
+	position: fixed;
+	inset: 0;
+	z-index: 9999;
+	background: var(--bg);
+	justify-content: center;
+	align-items: center;
+}
+
+.splash-screen.active {
+	display: flex !important;
+	animation: splashIn 0.5s ease-out;
+}
+
+.splash-screen.splash-fade-out {
+	animation: splashOut 0.6s ease-in forwards;
+}
+
+.splash-content {
+	text-align: center;
+}
+
+.splash-greeting {
+	font-family: var(--font-serif);
+	font-style: italic;
+	font-size: 1.1rem;
+	color: var(--text-muted);
+	margin-bottom: 8px;
+}
+
+.splash-name {
+	font-family: var(--font);
+	font-size: 2.8rem;
+	font-weight: 700;
+	color: var(--text);
+	letter-spacing: -1.5px;
+	line-height: 1.1;
+}
+
+@keyframes splashIn {
+	from { opacity: 0; transform: scale(0.96); }
+	to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes splashOut {
+	from { opacity: 1; transform: scale(1); }
+	to { opacity: 0; transform: scale(1.04); }
+}
+
+[data-theme="acid"] .splash-greeting {
+	font-family: var(--font);
+	font-style: normal;
+	font-weight: 500;
+	color: var(--text-muted);
+}
+
+[data-theme="acid"] .splash-name {
+	font-family: var(--font-display);
+	font-weight: 800;
+	text-transform: uppercase;
+	letter-spacing: -2px;
+	font-size: 3.2rem;
+}
+
