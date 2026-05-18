@@ -1032,6 +1032,15 @@ select {
 /* ===== GAME ACTIONS FIX ===== */
 #gameActions {
 	flex-wrap: wrap;
+	width: 100%;
+}
+
+#gameActions .btn {
+	flex: 1 1 auto;
+	min-width: 0;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 #screenGamePlay {
@@ -1110,11 +1119,13 @@ select {
 
 	#gameActions {
 		gap: 6px;
+		flex-direction: column;
 	}
 
 	#gameActions .btn {
-		padding: 10px 14px;
-		font-size: 0.8rem;
+		padding: 12px 16px;
+		font-size: 0.85rem;
+		width: 100%;
 	}
 }
 
