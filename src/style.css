@@ -1029,6 +1029,19 @@ select {
 	transform: translateX(-50%) translateY(-10px);
 }
 
+/* ===== GAME ACTIONS FIX ===== */
+#gameActions {
+	flex-wrap: wrap;
+}
+
+#screenGamePlay {
+	padding-bottom: 120px;
+}
+
+#screenGamePlay .card {
+	overflow: visible;
+}
+
 /* ===== RESPONSIVE — Mobile (default, <=450px) ===== */
 @media (max-width: 450px) {
 	.app {
@@ -1093,6 +1106,15 @@ select {
 	.btn-primary {
 		padding: 14px 24px;
 		font-size: 0.88rem;
+	}
+
+	#gameActions {
+		gap: 6px;
+	}
+
+	#gameActions .btn {
+		padding: 10px 14px;
+		font-size: 0.8rem;
 	}
 }
 
