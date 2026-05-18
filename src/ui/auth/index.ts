@@ -25,8 +25,31 @@ const AuthUI = {
 			console.log('Creating screenAuth element...');
 			const html = `
 				<div class="auth-card">
-					<div class="auth-image">
-						<img src="/img/auth-bg.jpg" alt="" class="auth-image-img" />
+					<div class="auth-hero">
+						<svg class="auth-hero-svg" viewBox="0 0 320 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<!-- open book -->
+							<rect x="40" y="80" width="110" height="150" rx="6" fill="var(--bg-selected)" stroke="var(--accent)" stroke-width="1.2"/>
+							<rect x="170" y="80" width="110" height="150" rx="6" fill="var(--bg-selected)" stroke="var(--accent)" stroke-width="1.2"/>
+							<path d="M150 80c0 0 10 8 10 50s-10 100-10 100" stroke="var(--accent)" stroke-width="1.2" fill="none"/>
+							<path d="M170 80c0 0-10 8-10 50s10 100 10 100" stroke="var(--accent)" stroke-width="1.2" fill="none"/>
+							<!-- text lines left -->
+							<line x1="56" y1="110" x2="130" y2="110" stroke="var(--text-muted)" stroke-width="0.8" opacity="0.2"/>
+							<line x1="56" y1="122" x2="124" y2="122" stroke="var(--text-muted)" stroke-width="0.8" opacity="0.15"/>
+							<line x1="56" y1="134" x2="128" y2="134" stroke="var(--text-muted)" stroke-width="0.8" opacity="0.2"/>
+							<line x1="56" y1="146" x2="118" y2="146" stroke="var(--text-muted)" stroke-width="0.8" opacity="0.15"/>
+							<line x1="56" y1="158" x2="126" y2="158" stroke="var(--text-muted)" stroke-width="0.8" opacity="0.1"/>
+							<!-- text lines right -->
+							<line x1="190" y1="110" x2="264" y2="110" stroke="var(--text-muted)" stroke-width="0.8" opacity="0.2"/>
+							<line x1="190" y1="122" x2="258" y2="122" stroke="var(--text-muted)" stroke-width="0.8" opacity="0.15"/>
+							<line x1="190" y1="134" x2="262" y2="134" stroke="var(--text-muted)" stroke-width="0.8" opacity="0.2"/>
+							<line x1="190" y1="146" x2="252" y2="146" stroke="var(--text-muted)" stroke-width="0.8" opacity="0.15"/>
+							<line x1="190" y1="158" x2="260" y2="158" stroke="var(--text-muted)" stroke-width="0.8" opacity="0.1"/>
+							<!-- glow/light from book -->
+							<ellipse cx="160" cy="130" rx="60" ry="40" fill="var(--accent)" opacity="0.03"/>
+							<!-- cross -->
+							<line x1="160" y1="20" x2="160" y2="65" stroke="var(--accent)" stroke-width="1.5" opacity="0.25"/>
+							<line x1="143" y1="38" x2="177" y2="38" stroke="var(--accent)" stroke-width="1.5" opacity="0.25"/>
+						</svg>
 					</div>
 					<div class="auth-content">
 						<h1 class="auth-title">Слово Живе</h1>
