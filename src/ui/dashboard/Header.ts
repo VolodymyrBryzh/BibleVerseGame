@@ -42,6 +42,12 @@ const Header = {
 			<div class="hero-acid">
 				<h1 class="dashboard-title" id="heroTitleAcid"></h1>
 				<p class="hero-desc hero-desc--acid" id="heroDescAcid"></p>
+				<div class="hero-cta-acid">
+					<button id="btnHeroStartAcid" class="btn-acid-pill">
+						ПОЧАТИ
+						<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+					</button>
+				</div>
 			</div>
 		`;
 	},
@@ -93,9 +99,13 @@ const Header = {
 		const heroStartBtn = $('btnHeroStart');
 		if (heroStartBtn && !heroStartBtn.dataset.bound) {
 			heroStartBtn.dataset.bound = '1';
-			heroStartBtn.addEventListener('click', () => {
-				UI.navigate('screenGame');
-			});
+			heroStartBtn.addEventListener('click', () => UI.navigate('screenGame'));
+		}
+
+		const heroStartAcid = $('btnHeroStartAcid');
+		if (heroStartAcid && !heroStartAcid.dataset.bound) {
+			heroStartAcid.dataset.bound = '1';
+			heroStartAcid.addEventListener('click', () => UI.navigate('screenGame'));
 		}
 	}
 };
