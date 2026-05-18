@@ -45,13 +45,15 @@ export function $<T extends HTMLElement>(id: string): T | null {
 /** Formats verse text to include red text spans and italic */
 export function formatVerseText(text: string): string {
   return text
+    .replace(/[Ⓐ-⓿①-⑳❶-➓@]/g, '')
     .replace(/<r>(.*?)<\/r>/g, '<span class="red-text">$1</span>')
     .replace(/<i>(.*?)<\/i>/g, '<i class="italic-text">$1</i>');
 }
 
 /** Prepares formatted text for tokenization by wrapping each word in its own tags */
 export function prepareFormattedText(text: string): string {
-  return text.replace(/<(r|i)>(.*?)<\/\1>/g, (_, tag, content) => {
+  const cleaned = text.replace(/[Ⓐ-⓿①-⑳❶-➓@]/g, '').trim();
+  return cleaned.replace(/<(r|i)>(.*?)<\/\1>/g, (_, tag, content) => {
     return content.split(/\s+/).map((w: string) => w.trim() ? `<${tag}>${w}</${tag}>` : '').join(' ');
   });
 }

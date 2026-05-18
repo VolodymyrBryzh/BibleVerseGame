@@ -24,18 +24,24 @@ const AuthUI = {
 		if (!$('screenAuth')) {
 			console.log('Creating screenAuth element...');
 			const html = `
-				<div class="card" style="text-align:center; padding: 40px 20px; width: 100%;">
-					<div style="font-size: 4rem; margin-bottom: 20px;">📖</div>
-					<h1 style="font-size: 2rem; margin-bottom: 10px;">BibleVerse</h1>
-					<p style="color:var(--text-light); margin-bottom: 30px;">Вивчайте Біблію разом із нами. Ваші дані будуть синхронізовані між усіма пристроями.</p>
+				<div class="auth-card">
+					<div class="auth-image">
+						<img src="/img/auth-bg.jpg" alt="" class="auth-image-img" />
+					</div>
+					<div class="auth-content">
+						<h1 class="auth-title">Слово Живе</h1>
+						<p class="auth-subtitle">Вивчай Святе Письмо. По одному віршу за раз — і Слово залишиться в тобі.</p>
 
-					<button id="btnGoogleLogin" class="btn btn-primary btn-block" style="display:flex; align-items:center; justify-content:center; gap:12px; padding:16px; margin-bottom:12px; position:relative; z-index:100;">
-						<img src="/img/googleLogo.svg" width="20" height="20" alt="Google"> Увійти через Google
-					</button>
+						<div class="auth-buttons">
+							<button id="btnGoogleLogin" class="btn btn-primary btn-block" style="display:flex; align-items:center; justify-content:center; gap:12px; padding:16px; position:relative; z-index:100;">
+								<img src="/img/googleLogo.svg" width="20" height="20" alt="Google"> Увійти через Google
+							</button>
 
-					<button id="btnGuestLogin" class="btn btn-block" style="padding:16px; background: transparent; border: 1.5px solid var(--border); color: var(--text-muted); position:relative; z-index:100;">
-						Продовжити як гість
-					</button>
+							<button id="btnGuestLogin" class="btn btn-block" style="padding:16px; background: transparent; border: 1.5px solid var(--border); color: var(--text-muted); position:relative; z-index:100;">
+								Продовжити як гість
+							</button>
+						</div>
+					</div>
 				</div>
 			`;
 

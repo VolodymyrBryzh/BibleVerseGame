@@ -11,7 +11,7 @@ const Progress = {
 					<div class="progress-label">ЦЬОГО МІСЯЦЯ</div>
 					<div class="progress-stats">
 						<span id="monthlyDone">0</span><span class="serif-accent"> / <span id="monthlyGoal">${MONTHLY_GOAL}</span></span>
-						<span class="serif-accent" style="font-size:1.35rem;"> віршів</span>
+						<span class="serif-accent progress-unit"> віршів</span>
 					</div>
 				</div>
 				<div class="progress-bar-container">

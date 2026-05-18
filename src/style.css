@@ -108,40 +108,32 @@ body {
 }
 
 /* ===== THEME TOGGLE BUTTON ===== */
-/* Theme tumbler */
-.theme-tumbler {
-	width: 44px;
-	height: 24px;
-	background: var(--border-strong);
-	border: none;
-	border-radius: 12px;
-	position: relative;
+.theme-toggle-icon {
+	all: unset;
 	cursor: pointer;
-	padding: 0;
-	transition: background 0.3s;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--text-muted);
+	transition: color var(--transition);
 	flex-shrink: 0;
 }
 
-.theme-tumbler-knob {
-	display: block;
-	width: 20px;
-	height: 20px;
-	background: #fff;
-	border-radius: 50%;
-	position: absolute;
-	top: 2px;
-	left: 2px;
-	transition: transform 0.3s;
-	box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+.theme-toggle-icon:hover {
+	color: var(--accent);
 }
 
-[data-theme="acid"] .theme-tumbler {
-	background: var(--primary);
-}
+.theme-icon--moon { display: none; }
+.theme-icon--sun { display: block; }
+[data-theme="acid"] .theme-icon--sun { display: none; }
+[data-theme="acid"] .theme-icon--moon { display: block; }
 
-[data-theme="acid"] .theme-tumbler-knob {
-	transform: translateX(20px);
-	background: var(--accent);
+/* XP label */
+.xp-label {
+	font-family: var(--font-mono);
+	font-size: 0.7rem;
+	font-weight: 700;
+	letter-spacing: 0.5px;
 }
 
 .header-icon-btn {
@@ -276,20 +268,24 @@ body {
 
 .progress-label {
 	font-family: var(--font-mono);
-	font-size: 0.7rem;
+	font-size: 0.9rem;
 	letter-spacing: 1.4px;
-	font-weight: 500;
-	opacity: 0.85;
+	font-weight: 600;
+	opacity: 0.9;
 	text-transform: uppercase;
 }
 
 .progress-stats {
 	font-family: var(--font);
-	font-size: 2.2rem;
-	font-weight: 600;
+	font-size: 2.8rem;
+	font-weight: 700;
 	letter-spacing: -1px;
 	line-height: 1;
 	color: #fff;
+}
+
+.progress-unit {
+	font-size: 1.6rem;
 }
 
 .progress-stats .serif-accent {
@@ -335,6 +331,7 @@ body {
 	display: flex;
 	flex-direction: column;
 	width: 100%;
+	min-height: calc(100dvh - 100px);
 }
 
 #screenDashboard .container {
@@ -342,6 +339,7 @@ body {
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
+	flex: 1;
 }
 
 #dailyVerseContainer {
@@ -1260,7 +1258,10 @@ select {
 	opacity: 0.08;
 }
 
-/* Acid: Theme toggle */
+[data-theme="acid"] .theme-toggle-icon {
+	color: var(--text);
+}
+
 /* Acid: Dashboard */
 [data-theme="acid"] .dashboard-top {
 	background: var(--bg);
@@ -1322,12 +1323,14 @@ select {
 [data-theme="acid"] .progress-label {
 	color: var(--primary);
 	opacity: 1;
+	font-size: 1rem;
+	font-weight: 700;
 }
 
 [data-theme="acid"] .progress-stats {
 	font-family: var(--font-display);
 	font-weight: 800;
-	font-size: 1.35rem;
+	font-size: 2rem;
 	letter-spacing: -1px;
 	color: var(--bg);
 }
@@ -1651,11 +1654,7 @@ select {
 	}
 }
 
-/* ===== XP FIRE BADGE ===== */
-.xp-fire {
-	font-size: 14px;
-	line-height: 1;
-}
+/* ===== XP BADGE ===== */
 
 /* ===== MODE DIFFICULTY & XP BADGES ===== */
 .mode-difficulty {
@@ -1958,5 +1957,97 @@ select {
 }
 [data-theme="acid"] .stats-milestones {
 	border-color: var(--border);
+}
+
+/* ===== AUTH SCREEN ===== */
+.auth-card {
+	width: 100%;
+	background: var(--bg-card);
+	border-radius: var(--radius);
+	border: 1px solid var(--border);
+	overflow: hidden;
+}
+
+.auth-image {
+	width: 100%;
+	aspect-ratio: 1 / 1;
+	overflow: hidden;
+	position: relative;
+}
+
+.auth-image::after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 40%;
+	background: linear-gradient(to top, var(--bg-card), transparent);
+}
+
+.auth-image-img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: center bottom;
+	display: block;
+}
+
+.auth-content {
+	text-align: center;
+	padding: 0 28px 40px;
+	margin-top: -20px;
+	position: relative;
+	z-index: 1;
+}
+
+.auth-title {
+	font-family: var(--font-serif);
+	font-size: 2.4rem;
+	font-weight: 600;
+	letter-spacing: -0.8px;
+	margin-bottom: 12px;
+	color: var(--text);
+	line-height: 1.1;
+}
+
+.auth-subtitle {
+	font-family: var(--font-serif);
+	font-style: italic;
+	font-size: 0.95rem;
+	color: var(--text-muted);
+	line-height: 1.55;
+	max-width: 300px;
+	margin: 0 auto 36px;
+}
+
+.auth-buttons {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+[data-theme="acid"] .auth-card {
+	border: var(--border-w) solid var(--border);
+	box-shadow: var(--shadow);
+	border-radius: var(--radius);
+}
+
+[data-theme="acid"] .auth-title {
+	font-family: var(--font-display);
+	font-weight: 800;
+	text-transform: uppercase;
+	letter-spacing: -1.5px;
+	font-size: 2.8rem;
+}
+
+[data-theme="acid"] .auth-subtitle {
+	font-family: var(--font);
+	font-style: normal;
+	font-weight: 500;
+}
+
+[data-theme="acid"] .auth-image::after {
+	background: linear-gradient(to top, var(--bg-card), transparent);
 }
 

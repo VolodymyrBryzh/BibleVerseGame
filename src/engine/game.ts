@@ -236,13 +236,16 @@ const Game = {
   // --- HINTS ---
   _showHintBtn(): void {
     if (this.currentMode !== 'word-order') return;
+    const existing = $('btnHint');
+    if (existing) existing.remove();
+
     const actions = this.elements.actions;
     if (!actions) return;
 
     const hintBtn = document.createElement('button');
     hintBtn.id = 'btnHint';
     hintBtn.className = 'btn btn-sm btn-hint';
-    hintBtn.innerHTML = `<span class="hint-icon">💡</span> Підказка <span class="hint-cost">−5 XP</span> <span class="hint-count">(${this._maxHints - this._hintsUsed})</span>`;
+    hintBtn.innerHTML = `<span class="hint-icon">💡</span> ПІДКАЗКА <span class="hint-cost">−5 XP</span> <span class="hint-count">(${this._maxHints - this._hintsUsed})</span>`;
     hintBtn.addEventListener('click', () => this.useHint());
     actions.parentElement?.insertBefore(hintBtn, actions);
   },

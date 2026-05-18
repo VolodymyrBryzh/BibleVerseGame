@@ -169,12 +169,7 @@ const Stats = {
       return d === today && x.success;
     }).length;
 
-    const monthStart = new Date();
-    monthStart.setDate(1);
-    monthStart.setHours(0, 0, 0, 0);
-    const monthDone = this._attempts.filter(x => {
-      return x.ts >= monthStart.getTime() && x.success;
-    }).length;
+    const monthDone = this._getMonthlyLearnedCount();
 
     return {
       total,
@@ -229,11 +224,28 @@ const Stats = {
     let count = 0;
     for (const vid in byVerse) {
       const arr = byVerse[vid];
-      if (arr.length >= 3) {
-        const last5 = arr.slice(-5);
-        const pct = last5.filter(x => x.success).length / last5.length;
-        if (pct >= 0.8) count++;
-      }
+      const last5 = arr.slice(-5);
+      if (last5.length >= 5 && last5.filter(x => x.accuracy >= 0.8).length / last5.length >= 0.8) count++;
+    }
+    return count;
+  },
+
+  _getMonthlyLearnedCount(): number {
+    const monthStart = new Date();
+    monthStart.setDate(1);
+    monthStart.setHours(0, 0, 0, 0);
+    const monthTs = monthStart.getTime();
+
+    const byVerse = this._groupByVerse();
+    let count = 0;
+    for (const vid in byVerse) {
+      const arr = byVerse[vid];
+      const last5 = arr.slice(-5);
+      if (last5.length < 5) continue;
+      const successRate = last5.filter(x => x.accuracy >= 0.8).length / last5.length;
+      if (successRate < 0.8) continue;
+      const hasMonthActivity = arr.some(a => a.ts >= monthTs);
+      if (hasMonthActivity) count++;
     }
     return count;
   },
