@@ -385,6 +385,41 @@ body {
 	line-height: 1.3;
 }
 
+/* ===== TOGGLE SWITCH ===== */
+.toggle-switch {
+	position: relative;
+	display: inline-block;
+	width: 48px;
+	height: 28px;
+	flex-shrink: 0;
+}
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+	position: absolute;
+	cursor: pointer;
+	inset: 0;
+	background: var(--border);
+	border-radius: 28px;
+	transition: background 0.25s;
+}
+.toggle-slider::before {
+	content: '';
+	position: absolute;
+	width: 22px;
+	height: 22px;
+	left: 3px;
+	bottom: 3px;
+	background: #fff;
+	border-radius: 50%;
+	transition: transform 0.25s;
+}
+.toggle-switch input:checked + .toggle-slider {
+	background: var(--accent);
+}
+.toggle-switch input:checked + .toggle-slider::before {
+	transform: translateX(20px);
+}
+
 /* ===== SECTION HEADS (V5 editorial style) ===== */
 .section-head-small {
 	font-family: var(--font-mono);

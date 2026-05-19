@@ -11,6 +11,7 @@ import Theme from './ui/theme';
 import Stats from './core/stats';
 import XP from './core/xp';
 import VersesDB from './core/database';
+import Notifications from './core/notifications';
 // engine
 import Game from './engine/game';
 
@@ -32,4 +33,14 @@ document.addEventListener('DOMContentLoaded', () => {
 	Background.init();
 	Navbar.init();
 	Dashboard.init();
+	Notifications.init();
+
+	const notifyToggle = document.getElementById('notifyToggle') as HTMLInputElement;
+	if (notifyToggle) {
+		notifyToggle.checked = Notifications.isEnabled();
+		notifyToggle.addEventListener('change', async () => {
+			const result = await Notifications.toggle();
+			notifyToggle.checked = Notifications.isEnabled();
+		});
+	}
 });
