@@ -64,7 +64,7 @@ const Notifications = {
       const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
 
       const token = await getToken(msg, {
-        vapidKey: '',
+        vapidKey: 'BMzP6SO5XwEnBTSNKvlbpUqtY5bKv7BWxn2PFGmiFr2yB90_Ho3jffqHtc4XcWEmlOOpYaSs41U6rDhtcpk1Ig4',
         serviceWorkerRegistration: registration,
       });
 
