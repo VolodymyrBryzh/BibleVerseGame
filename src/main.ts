@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	if (notifyToggle) {
 		notifyToggle.checked = Notifications.isEnabled();
 		notifyToggle.addEventListener('change', async () => {
-			const result = await Notifications.toggle();
+			await Notifications.toggle();
 			notifyToggle.checked = Notifications.isEnabled();
 		});
 	}

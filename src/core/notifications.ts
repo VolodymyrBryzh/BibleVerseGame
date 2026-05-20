@@ -1,5 +1,5 @@
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
-import { initializeApp, getApp } from 'firebase/app';
+import { getApp } from 'firebase/app';
 import { doc, setDoc, deleteDoc } from 'firebase/firestore';
 import { db, auth } from './firebase';
 import { toast } from '../utils/helpers';
