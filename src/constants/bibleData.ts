@@ -17,6 +17,7 @@ export interface BibleVerse {
 	book: string;
 	chapter: number;
 	verse: number;
+	verseTo?: number;
 	tags: string[];
 	translations: VerseTranslations;
 }

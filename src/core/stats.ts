@@ -250,6 +250,14 @@ const Stats = {
     return count;
   },
 
+  getFreezeState(): { available: boolean; daysSinceUsed: number } {
+    if (!this._lastFreezeDate) return { available: true, daysSinceUsed: 999 };
+    const today = new Date();
+    const lastFreeze = new Date(this._lastFreezeDate);
+    const daysSinceUsed = Math.floor((today.getTime() - lastFreeze.getTime()) / 86400000);
+    return { available: daysSinceUsed >= 7, daysSinceUsed };
+  },
+
   _groupByVerse(): Record<string, Attempt[]> {
     return this._attempts.reduce((acc, a) => {
       if (!acc[a.verseId]) acc[a.verseId] = [];

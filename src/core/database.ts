@@ -110,7 +110,8 @@ const VersesDB = {
 	},
 
 	getReference(v: BibleVerse): string {
-		return `${v.book} ${v.chapter}:${v.verse}`;
+		const base = `${v.book} ${v.chapter}:${v.verse}`;
+		return v.verseTo && v.verseTo > v.verse ? `${base}-${v.verseTo}` : base;
 	},
 
 	async addVerse(verseObj: BibleVerse): Promise<string> {

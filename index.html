@@ -37,7 +37,7 @@
 						<div class="game-ref" id="gameRef"></div>
 						<div class="game-translation" id="gameTransName"></div>
 					</div>
-					<button class="btn btn-sm" onclick="UI.showScreen('screenDashboard')">✕ Вийти</button>
+					<button class="btn-exit" onclick="UI.showScreen('screenDashboard')">✕</button>
 				</div>
 				<div class="game-instruction" id="gameInstruction"></div>
 				<div id="gameArea"></div>
@@ -130,8 +130,14 @@
 						</select>
 					</div>
 					<div class="form-group">
-						<label>Вірш</label>
+						<label>Від</label>
 						<select id="addVerse" onchange="Manage.onVerseChange()">
+							<option value="">--</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label>До</label>
+						<select id="addVerseTo" onchange="Manage.onVerseChange()">
 							<option value="">--</option>
 						</select>
 					</div>

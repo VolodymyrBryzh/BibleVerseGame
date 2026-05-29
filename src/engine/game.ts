@@ -137,11 +137,11 @@ const Game = {
 
   _checkWordOrder(): void {
     const chips = document.querySelectorAll('#answerZone .answer-chip');
-    const userWords = Array.from(chips).map(c => c.innerHTML || '');
+    const userWords = Array.from(chips).map(c => normalize(c.textContent || ''));
 
     if (userWords.length !== this._correctWords.length) return toast('Розмісти всі слова');
 
-    let correct = userWords.filter((w, i) => w === this._correctWords[i]).length;
+    let correct = userWords.filter((w, i) => w === normalize(this._correctWords[i])).length;
     const accuracy = correct / this._correctWords.length;
     const success = accuracy === 1;
 
@@ -304,7 +304,11 @@ const Game = {
     let xpEarned = 0;
 
     if (this.currentVerse && this.currentTranslation && this.currentMode) {
-      await Stats.record(this.currentVerse.id, this.currentMode, this.currentTranslation, success, accuracy, duration);
+      try {
+        await Stats.record(this.currentVerse.id, this.currentMode, this.currentTranslation, success, accuracy, duration);
+      } catch (e) {
+        console.error('Stats record failed:', e);
+      }
       if (success) {
         xpEarned = XP.award(this.currentMode);
       }

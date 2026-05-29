@@ -317,6 +317,32 @@ body {
 	transition: width 1s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+.progress-footer {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-top: 14px;
+	padding-top: 12px;
+	border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+.streak-info, .freeze-info {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	font-size: 0.82rem;
+	font-weight: 600;
+	color: rgba(255, 255, 255, 0.85);
+}
+.streak-icon, .freeze-icon {
+	font-size: 0.9rem;
+}
+.freeze-available {
+	opacity: 1;
+}
+.freeze-used {
+	opacity: 0.5;
+}
+
 /* ===== SCREEN MANAGEMENT ===== */
 .screen {
 	display: none !important;
@@ -780,6 +806,27 @@ select {
 
 .btn-block {
 	width: 100%;
+}
+
+.btn-exit {
+	width: 36px;
+	height: 36px;
+	border-radius: 50%;
+	border: 1px solid var(--border);
+	background: var(--bg-selected);
+	color: var(--text-muted);
+	font-size: 0.9rem;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: all 0.2s;
+	flex-shrink: 0;
+}
+.btn-exit:hover {
+	background: var(--danger-bg);
+	color: var(--danger);
+	border-color: var(--danger);
 }
 
 /* ===== GAME AREA — V5 editorial ===== */
@@ -1454,6 +1501,16 @@ select {
 	background: var(--primary);
 }
 
+[data-theme="acid"] .progress-footer {
+	border-top-color: rgba(255, 255, 255, 0.08);
+}
+[data-theme="acid"] .streak-info,
+[data-theme="acid"] .freeze-info {
+	font-family: var(--font-display);
+	font-weight: 700;
+	letter-spacing: -0.3px;
+}
+
 /* Acid: Cards */
 [data-theme="acid"] .card {
 	border: var(--border-w) solid var(--border);
@@ -1556,6 +1613,18 @@ select {
 }
 
 /* Acid: Game area */
+[data-theme="acid"] .btn-exit {
+	border: var(--border-w) solid var(--border);
+	background: var(--bg-card);
+	color: var(--text);
+	font-family: var(--font);
+	font-weight: 600;
+}
+[data-theme="acid"] .btn-exit:hover {
+	background: var(--coral);
+	border-color: var(--border);
+}
+
 [data-theme="acid"] .game-ref {
 	font-family: var(--font-display);
 	font-weight: 800;
@@ -1828,11 +1897,13 @@ select {
 	font-weight: 700;
 	color: var(--accent);
 	margin-top: 8px;
-	animation: xpPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+	animation: xpPopFade 2.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
-@keyframes xpPop {
-	0% { transform: scale(0); opacity: 0; }
-	100% { transform: scale(1); opacity: 1; }
+@keyframes xpPopFade {
+	0% { transform: scale(0) translateY(0); opacity: 0; }
+	15% { transform: scale(1) translateY(0); opacity: 1; }
+	70% { transform: scale(1) translateY(0); opacity: 1; }
+	100% { transform: scale(1) translateY(-10px); opacity: 0; }
 }
 
 /* ===== STATS SCREEN REDESIGN ===== */

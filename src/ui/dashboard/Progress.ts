@@ -17,6 +17,16 @@ const Progress = {
 				<div class="progress-bar-container">
 					<div id="monthlyProgressBar" class="progress-bar-fill" style="width: 0%;"></div>
 				</div>
+				<div class="progress-footer">
+					<div class="streak-info">
+						<span class="streak-icon">🔥</span>
+						<span id="streakDays">0</span> днів
+					</div>
+					<div class="freeze-info" id="freezeInfo">
+						<span class="freeze-icon">❄️</span>
+						<span id="freezeStatus">Доступно</span>
+					</div>
+				</div>
 			</div>
 		`;
 	},
@@ -31,6 +41,25 @@ const Progress = {
 
 		const barEl = $('monthlyProgressBar');
 		if (barEl) barEl.style.width = `${percent}%`;
+
+		const streakEl = $('streakDays');
+		if (streakEl) streakEl.textContent = o.streak.toString();
+
+		const freezeStatus = $('freezeStatus');
+		const freezeInfo = $('freezeInfo');
+		if (freezeStatus && freezeInfo) {
+			const freezeState = Stats.getFreezeState();
+			if (freezeState.available) {
+				freezeStatus.textContent = 'Доступно';
+				freezeInfo.classList.remove('freeze-used');
+				freezeInfo.classList.add('freeze-available');
+			} else {
+				const daysLeft = 7 - freezeState.daysSinceUsed;
+				freezeStatus.textContent = `через ${daysLeft} дн.`;
+				freezeInfo.classList.remove('freeze-available');
+				freezeInfo.classList.add('freeze-used');
+			}
+		}
 	}
 };
 

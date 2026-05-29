@@ -161,9 +161,11 @@ const Manage = {
 	onChapterChange(): void {
 		const chapter = $<HTMLSelectElement>('addChapter')?.value;
 		const vSelect = $<HTMLSelectElement>('addVerse');
+		const vToSelect = $<HTMLSelectElement>('addVerseTo');
 		if (!vSelect || !this.currentBookData) return;
 
 		vSelect.innerHTML = '<option value="">--</option>';
+		if (vToSelect) vToSelect.innerHTML = '<option value="">--</option>';
 		if (!chapter) return;
 
 		const chData = this.currentBookData.chapters.find((c: any) => c.chapter.toString() === chapter);
@@ -174,53 +176,69 @@ const Manage = {
 					opt.value = v.verse.toString();
 					opt.textContent = v.verse.toString();
 					vSelect.appendChild(opt);
+					if (vToSelect) vToSelect.appendChild(opt.cloneNode(true));
 				}
 			});
 		}
 	},
 
+	_extractTaggedText(vData: any): string {
+		const text = vData.text;
+		if (typeof text === 'string') return text.trim();
+		if (Array.isArray(text)) {
+			return text.map((part: any) => {
+				if (typeof part === 'string') return part;
+				if (part.red) return `<r>${part.red}</r>`;
+				if (part.italic || part.i) return `<i>${part.italic || part.i}</i>`;
+				if (part.text) return part.text;
+				return '';
+			}).join('');
+		}
+		return '';
+	},
+
 	async onVerseChange(): Promise<void> {
 		const book = $<HTMLSelectElement>('addBook')?.value;
 		const chapter = parseInt($<HTMLSelectElement>('addChapter')?.value || '0');
-		const verse = parseInt($<HTMLSelectElement>('addVerse')?.value || '0');
-		if (!book || !chapter || !verse) return;
+		const verseFrom = parseInt($<HTMLSelectElement>('addVerse')?.value || '0');
+		const verseTo = parseInt($<HTMLSelectElement>('addVerseTo')?.value || '0') || verseFrom;
+		if (!book || !chapter || !verseFrom) return;
 
 		toast('Завантажую текст...');
 
 		const code = this.bookNameMap[book];
 		const transKey = $<HTMLSelectElement>('addSearchTranslation')?.value || 'ubio';
 		this.currentVerseTranslations = {};
-		
+
 		try {
 			const data = await this._fetchJSON(`/bible/${transKey}/${code}.json`);
 			if (data) {
 				const chData = data.chapters?.find((c: any) => c.chapter === chapter);
-				const vData = chData?.verses?.find((v: any) => v.verse === verse);
-
 				const el = $('previewTransMain');
-				if (el && vData?.text) {
-					const text = vData.text;
-					let tagged = '';
-					if (typeof text === 'string') {
-						tagged = text.trim();
-					} else if (Array.isArray(text)) {
-						tagged = text.map((part: any) => {
-							if (typeof part === 'string') return part;
-							if (part.red) return `<r>${part.red}</r>`;
-							if (part.italic || part.i) return `<i>${part.italic || part.i}</i>`;
-							if (part.text) return part.text;
-							return '';
-						}).join('');
+				const start = Math.min(verseFrom, verseTo);
+				const end = Math.max(verseFrom, verseTo);
+
+				let allTagged = '';
+				for (let v = start; v <= end; v++) {
+					const vData = chData?.verses?.find((vr: any) => vr.verse === v);
+					if (vData?.text) {
+						const tagged = this._extractTaggedText(vData);
+						if (tagged) {
+							allTagged += (allTagged ? ' ' : '') + tagged;
+						}
 					}
-					
-					this.currentVerseTranslations[transKey] = tagged;
-					el.innerHTML = formatVerseText(tagged);
-					toast('Текст завантажено');
+				}
+
+				if (el && allTagged) {
+					this.currentVerseTranslations[transKey] = allTagged;
+					el.innerHTML = formatVerseText(allTagged);
+					const count = end - start + 1;
+					toast(count > 1 ? `Завантажено ${count} віршів` : 'Текст завантажено');
 				} else if (el) {
 					el.innerHTML = '<span style="color: var(--text-muted); font-style: italic;">Текст не знайдено</span>';
 				}
 			}
-		} catch (e) { 
+		} catch (e) {
 			toast('Помилка завантаження тексту');
 		}
 	},
@@ -241,7 +259,9 @@ const Manage = {
 	async saveVerse(): Promise<void> {
 		const book = $<HTMLSelectElement>('addBook')?.value;
 		const chapter = parseInt($<HTMLSelectElement>('addChapter')?.value || '0');
-		const verse = parseInt($<HTMLSelectElement>('addVerse')?.value || '0');
+		const verseFrom = parseInt($<HTMLSelectElement>('addVerse')?.value || '0');
+		const verseTo = parseInt($<HTMLSelectElement>('addVerseTo')?.value || '0') || verseFrom;
+		const verse = verseFrom;
 		const tags = $<HTMLInputElement>('addTags')?.value.split(',').map(s => s.trim()).filter(Boolean) || [];
 
 		if (!book || !chapter || !verse) return toast('Заповніть всі поля');
@@ -251,11 +271,13 @@ const Manage = {
 
 		if (!hasAny) return toast('Текст перекладів не завантажено');
 
+		const endVerse = Math.max(verseFrom, verseTo);
 		await VersesDB.addVerse({
 			id: Date.now().toString(),
 			book,
 			chapter,
 			verse,
+			verseTo: endVerse > verseFrom ? endVerse : undefined,
 			tags,
 			translations
 		} as BibleVerse);
@@ -270,11 +292,13 @@ const Manage = {
 		const book = $<HTMLSelectElement>('addBook');
 		const chapter = $<HTMLSelectElement>('addChapter');
 		const verse = $<HTMLSelectElement>('addVerse');
+		const verseTo = $<HTMLSelectElement>('addVerseTo');
 		const tags = $<HTMLInputElement>('addTags');
 
 		if (book) book.value = '';
 		if (chapter) chapter.innerHTML = '<option value="">--</option>';
 		if (verse) verse.innerHTML = '<option value="">--</option>';
+		if (verseTo) verseTo.innerHTML = '<option value="">--</option>';
 		if (tags) tags.value = '';
 
 		TRANSLATIONS_META.forEach(t => {
