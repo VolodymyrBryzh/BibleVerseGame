@@ -1,16 +1,22 @@
 import Header from './Header';
 import Progress from './Progress';
 import WeeklyVerse from './WeeklyVerse';
+import TodayQueue from './TodayQueue';
+import QuickStats from './QuickStats';
 
 const Dashboard = {
 	init(): void {
 		const html = `
-			<div class="dashboard-top">
+			<div class="dashboard-topbar">
 				${Header.render()}
 			</div>
-			${Progress.render()}
-			<div class="container">
-				${WeeklyVerse.render()}
+			<div class="dashboard-scroll">
+				<div class="dashboard-pad">
+					${WeeklyVerse.render()}
+					${TodayQueue.render()}
+					${QuickStats.render()}
+					${Progress.render()}
+				</div>
 			</div>
 		`;
 
@@ -35,8 +41,10 @@ const Dashboard = {
 
 	render(): void {
 		Header.update();
-		Progress.update();
 		WeeklyVerse.update();
+		TodayQueue.update();
+		QuickStats.update();
+		Progress.update();
 	}
 };
 
