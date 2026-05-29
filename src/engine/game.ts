@@ -8,7 +8,7 @@ import { toast, prepareFormattedText, formatVerseText, $ } from '../utils/helper
 import { startWordOrder, checkWordOrder } from './modes/word-order';
 import { startFillGaps, checkFillGaps } from './modes/fill-gaps';
 import { startContinue, checkContinue } from './modes/continue';
-import { createHintState, showHintBtn, removeHintBtn, HintState } from './hints';
+import { createHintState, showHintBtn, removeHintBtn } from './hints';
 
 const Game = {
   currentVerse: null as BibleVerse | null,

@@ -21,7 +21,7 @@ const Theme = {
 	init(): void {
 		const saved = localStorage.getItem(STORAGE_KEY) as ThemeId | null;
 		// Migrate old 'editorial' theme to 'sky'
-		const resolved = saved === 'editorial' ? 'sky' : saved;
+		const resolved = (saved as string) === 'editorial' ? 'sky' : saved;
 		this.current = resolved && THEMES[resolved as ThemeId] ? resolved as ThemeId : 'sky';
 		this._apply();
 	},
