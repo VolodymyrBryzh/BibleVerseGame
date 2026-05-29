@@ -1,4 +1,4 @@
-/* ===== BOTTOM NAV — V5 Editorial ===== */
+/* ===== BOTTOM NAV — Ясне небо ===== */
 .bottom-nav {
 	position: fixed;
 	bottom: 0;
@@ -6,10 +6,10 @@
 	transform: translateX(-50%);
 	width: 100%;
 	max-width: 500px;
-	background: var(--bg);
-	border-top: 1px solid var(--border);
+	background: var(--bg-card);
+	border-top: 1px solid var(--border-2, var(--border));
 	display: flex;
-	padding: 14px 24px 30px;
+	padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
 	z-index: 100;
 }
 
@@ -49,7 +49,7 @@
 }
 
 .nav-btn.active {
-	color: var(--accent);
+	color: var(--accent-ink, var(--accent));
 }
 
 .nav-btn.active::after {

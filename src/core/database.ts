@@ -122,13 +122,15 @@ const VersesDB = {
 			const { id, ...data } = verseObj;
 			const docRef = await addDoc(collection(fdb, `users/${uid}/verses`), data);
 			finalId = docRef.id;
+			// Add to in-memory cache immediately (no full re-sync needed)
+			this._cache.push({ ...data, id: finalId } as BibleVerse);
 		} else {
 			const id = await db.verses.add(verseObj);
 			finalId = id.toString();
+			await this.refreshCache();
+			saveGuestVerses(this._cache);
 		}
 
-		await this.refreshCache();
-		if (auth.currentUser) await this.init(); // Refresh from cloud to be sure
 		return finalId;
 	},
 
@@ -136,6 +138,8 @@ const VersesDB = {
 		if (auth.currentUser) {
 			const uid = auth.currentUser.uid;
 			await deleteDoc(doc(fdb, `users/${uid}/verses`, id));
+			// Remove from in-memory cache immediately
+			this._cache = this._cache.filter(v => v.id.toString() !== id.toString());
 		} else {
 			const numericId = parseInt(id);
 			if (!isNaN(numericId)) {
@@ -143,12 +147,9 @@ const VersesDB = {
 			} else {
 				await db.verses.where('id').equals(id).delete();
 			}
-			// Update localStorage after deletion
 			await this.refreshCache();
 			saveGuestVerses(this._cache);
 		}
-		await this.refreshCache();
-		if (auth.currentUser) await this.init();
 		if ((window as any).Dashboard) (window as any).Dashboard.render();
 	},
 

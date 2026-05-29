@@ -2,7 +2,7 @@ import './style.css';
 // ui
 import AuthUI from './ui/auth/index';
 import UI from './ui/ui';
-import Manage from './ui/manage';
+import Manage from './ui/manage/index';
 import Background from './ui/background';
 import Navbar from './ui/navbar';
 import Dashboard from './ui/dashboard/index';

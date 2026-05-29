@@ -1,31 +1,22 @@
-import VersesDB from '../core/database';
-import BibleLoader from '../core/loader';
-import UI from './ui';
-import { TRANSLATIONS_META, BibleVerse } from '../constants/bibleData';
-import { toast, $, formatVerseText } from '../utils/helpers';
+import { TRANSLATIONS_META, BibleVerse } from '../../constants/bibleData';
+import VersesDB from '../../core/database';
+import { toast, $, formatVerseText } from '../../utils/helpers';
 
-const Manage = {
-	editingId: null as string | null,
+const BOOK_CODES = [
+	'gen', 'exo', 'lev', 'num', 'deu', 'jos', 'jdg', 'rut', '1sa', '2sa',
+	'1ki', '2ki', '1ch', '2ch', 'ezr', 'neh', 'est', 'job', 'psa', 'pro',
+	'ecc', 'sng', 'isa', 'jer', 'lam', 'ezk', 'dan', 'hos', 'jol', 'amo',
+	'oba', 'jon', 'mic', 'nam', 'hab', 'zep', 'hag', 'zec', 'mal',
+	'mat', 'mrk', 'luk', 'jhn', 'act', 'rom', '1co', '2co', 'gal', 'eph',
+	'php', 'col', '1th', '2th', '1ti', '2ti', 'tit', 'phm', 'heb', 'jas',
+	'1pe', '2pe', '1jn', '2jn', '3jn', 'jud', 'rev'
+];
+
+const VerseForm = {
 	currentBookData: null as any,
 	currentVerseTranslations: {} as Record<string, string>,
-	_bookDropdownVersion: 0,
-	bookCodes: [
-		'gen', 'exo', 'lev', 'num', 'deu', 'jos', 'jdg', 'rut', '1sa', '2sa',
-		'1ki', '2ki', '1ch', '2ch', 'ezr', 'neh', 'est', 'job', 'psa', 'pro',
-		'ecc', 'sng', 'isa', 'jer', 'lam', 'ezk', 'dan', 'hos', 'jol', 'amo',
-		'oba', 'jon', 'mic', 'nam', 'hab', 'zep', 'hag', 'zec', 'mal',
-		'mat', 'mrk', 'luk', 'jhn', 'act', 'rom', '1co', '2co', 'gal', 'eph',
-		'php', 'col', '1th', '2th', '1ti', '2ti', 'tit', 'phm', 'heb', 'jas',
-		'1pe', '2pe', '1jn', '2jn', '3jn', 'jud', 'rev'
-	],
-	// Dynamic mapping: Book Name -> Code (populated during initBookDropdown)
 	bookNameMap: {} as Record<string, string>,
-
-	init(): void {
-		this.renderTranslationFields();
-		this.renderVerseList();
-		this.initTranslationDropdown();
-	},
+	_bookDropdownVersion: 0,
 
 	_hasText(v: any): boolean {
 		const t = v?.text;
@@ -48,6 +39,21 @@ const Manage = {
 		} catch { return null; }
 	},
 
+	_extractTaggedText(vData: any): string {
+		const text = vData.text;
+		if (typeof text === 'string') return text.trim();
+		if (Array.isArray(text)) {
+			return text.map((part: any) => {
+				if (typeof part === 'string') return part;
+				if (part.red) return `<r>${part.red}</r>`;
+				if (part.italic || part.i) return `<i>${part.italic || part.i}</i>`;
+				if (part.text) return part.text;
+				return '';
+			}).join('');
+		}
+		return '';
+	},
+
 	async initTranslationDropdown(): Promise<void> {
 		const select = $<HTMLSelectElement>('addSearchTranslation');
 		if (!select) return;
@@ -55,9 +61,7 @@ const Manage = {
 		select.innerHTML = '<option value="">Перевірка...</option>';
 
 		const validTranslations = await Promise.all(TRANSLATIONS_META.map(async (t) => {
-			const codes = this.bookCodes;
-			const testCodes = [codes[0], codes[18], codes[39]]; // gen, psa, mat
-
+			const testCodes = [BOOK_CODES[0], BOOK_CODES[18], BOOK_CODES[39]];
 			for (const code of testCodes) {
 				const data = await this._fetchJSON(`/bible/${t.key}/${code}.json`);
 				if (data?.chapters?.some((ch: any) => ch.verses?.some((v: any) => this._hasText(v)))) {
@@ -94,15 +98,13 @@ const Manage = {
 		select.innerHTML = '<option value="">Завантаження...</option>';
 		this.bookNameMap = {};
 
-		const checks = this.bookCodes.map(async (code) => {
+		const checks = BOOK_CODES.map(async (code) => {
 			const data = await this._fetchJSON(`/bible/${transKey}/${code}.json`);
 			if (!data) return null;
-
 			const bookName = data.metadata?.book || code;
 			const hasAnyContent = data.chapters?.some((ch: any) =>
 				ch.verses?.some((v: any) => this._hasText(v))
 			);
-
 			if (hasAnyContent) return { bookName, code };
 			return null;
 		});
@@ -133,6 +135,8 @@ const Manage = {
 
 		chSelect.innerHTML = '<option value="">--</option>';
 		vSelect.innerHTML = '<option value="">--</option>';
+		const vToSelect = $<HTMLSelectElement>('addVerseTo');
+		if (vToSelect) vToSelect.innerHTML = '<option value="">--</option>';
 		this.currentBookData = null;
 
 		if (!book) return;
@@ -144,7 +148,6 @@ const Manage = {
 			this.currentBookData = data;
 
 			this.currentBookData.chapters.forEach((ch: any) => {
-				// Only show chapter if it has at least one non-empty verse
 				const hasContent = ch.verses.some((v: any) => v.text && v.text.trim() !== '');
 				if (hasContent) {
 					const opt = document.createElement('option');
@@ -182,21 +185,6 @@ const Manage = {
 		}
 	},
 
-	_extractTaggedText(vData: any): string {
-		const text = vData.text;
-		if (typeof text === 'string') return text.trim();
-		if (Array.isArray(text)) {
-			return text.map((part: any) => {
-				if (typeof part === 'string') return part;
-				if (part.red) return `<r>${part.red}</r>`;
-				if (part.italic || part.i) return `<i>${part.italic || part.i}</i>`;
-				if (part.text) return part.text;
-				return '';
-			}).join('');
-		}
-		return '';
-	},
-
 	async onVerseChange(): Promise<void> {
 		const book = $<HTMLSelectElement>('addBook')?.value;
 		const chapter = parseInt($<HTMLSelectElement>('addChapter')?.value || '0');
@@ -223,9 +211,7 @@ const Manage = {
 					const vData = chData?.verses?.find((vr: any) => vr.verse === v);
 					if (vData?.text) {
 						const tagged = this._extractTaggedText(vData);
-						if (tagged) {
-							allTagged += (allTagged ? ' ' : '') + tagged;
-						}
+						if (tagged) allTagged += (allTagged ? ' ' : '') + tagged;
 					}
 				}
 
@@ -256,7 +242,7 @@ const Manage = {
 		`;
 	},
 
-	async saveVerse(): Promise<void> {
+	async saveVerse(onSaved: () => void): Promise<void> {
 		const book = $<HTMLSelectElement>('addBook')?.value;
 		const chapter = parseInt($<HTMLSelectElement>('addChapter')?.value || '0');
 		const verseFrom = parseInt($<HTMLSelectElement>('addVerse')?.value || '0');
@@ -271,24 +257,28 @@ const Manage = {
 
 		if (!hasAny) return toast('Текст перекладів не завантажено');
 
-		const endVerse = Math.max(verseFrom, verseTo);
-		await VersesDB.addVerse({
-			id: Date.now().toString(),
-			book,
-			chapter,
-			verse,
-			verseTo: endVerse > verseFrom ? endVerse : undefined,
-			tags,
-			translations
-		} as BibleVerse);
+		try {
+			const endVerse = Math.max(verseFrom, verseTo);
+			await VersesDB.addVerse({
+				id: Date.now().toString(),
+				book,
+				chapter,
+				verse,
+				verseTo: endVerse > verseFrom ? endVerse : undefined,
+				tags,
+				translations
+			} as BibleVerse);
 
-		toast('Вірш додано!');
-		this._clearForm();
-		this.renderVerseList();
-		UI.updateVerseFilter();
+			toast('Вірш додано!');
+			this.clearForm();
+			onSaved();
+		} catch (e) {
+			console.error('Failed to save verse:', e);
+			toast('Помилка збереження вірша');
+		}
 	},
 
-	_clearForm(): void {
+	clearForm(): void {
 		const book = $<HTMLSelectElement>('addBook');
 		const chapter = $<HTMLSelectElement>('addChapter');
 		const verse = $<HTMLSelectElement>('addVerse');
@@ -305,108 +295,7 @@ const Manage = {
 			const el = $<HTMLTextAreaElement>(`addTrans_${t.key}`);
 			if (el) el.value = '';
 		});
-	},
-
-	renderVerseList(verses?: BibleVerse[]): void {
-		const all = verses || VersesDB.getAll();
-		const countEl = $('verseCount');
-		if (countEl) countEl.textContent = all.length.toString();
-
-		const container = $('verseList');
-		if (!container) return;
-
-		if (!all.length) {
-			container.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;">Нічого не знайдено</p>';
-			return;
-		}
-
-		// Optimization: Build entire HTML string first
-		const html = all.map(v => {
-			const ref = VersesDB.getReference(v);
-			const transKeys = Object.keys(v.translations).length;
-			return `
-				<div class="verse-list-item">
-					<div>
-						<div class="verse-list-ref">${ref}</div>
-						<div class="verse-list-tags">${transKeys} переклад(ів) ${v.tags?.length ? '· ' + v.tags.join(', ') : ''}</div>
-					</div>
-					<div class="verse-list-actions">
-						<button class="btn btn-sm btn-danger" onclick="Manage.removeVerse('${v.id}')">✕</button>
-					</div>
-				</div>
-			`;
-		}).join('');
-
-		container.innerHTML = html;
-	},
-
-	handleSearch(): void {
-		const query = $<HTMLInputElement>('verseSearch')?.value || '';
-		const filtered = VersesDB.search(query);
-		this.renderVerseList(filtered);
-	},
-
-	async removeVerse(id: string): Promise<void> {
-		if (!confirm('Видалити цей вірш?')) return;
-		await VersesDB.removeVerse(id);
-		this.renderVerseList();
-		UI.updateVerseFilter();
-		toast('Вірш видалено');
-	},
-
-	exportData(): void {
-		const json = VersesDB.exportAll();
-		const blob = new Blob([json], { type: 'application/json' });
-		const url = URL.createObjectURL(blob);
-		const a = document.createElement('a');
-		a.href = url;
-		a.download = `bible-verses-${new Date().toISOString().slice(0, 10)}.json`;
-		a.click();
-		URL.revokeObjectURL(url);
-		toast('Експортовано!');
-	},
-
-	importData(event: Event): void {
-		const input = event.target as HTMLInputElement;
-		const file = input.files?.[0];
-		if (!file) return;
-
-		const reader = new FileReader();
-		reader.onload = async (e) => {
-			try {
-				const content = e.target?.result as string;
-				const count = await VersesDB.importVerses(content);
-				toast(`Імпортовано ${count} віршів`);
-				this.renderVerseList();
-				UI.updateVerseFilter();
-			} catch (err: any) {
-				toast('Помилка імпорту: ' + err.message);
-			}
-		};
-		reader.readAsText(file);
-		input.value = '';
-	},
-
-	async importBookJSON(event: Event): Promise<void> {
-		const input = event.target as HTMLInputElement;
-		const file = input.files?.[0];
-		if (!file) return;
-
-		const reader = new FileReader();
-		reader.onload = async (e) => {
-			try {
-				const content = JSON.parse(e.target?.result as string);
-				const count = await BibleLoader.loadBook(content);
-				toast(`Завантажено книгу: ${content.metadata.book} (${count} віршів)`);
-				this.renderVerseList();
-				UI.updateVerseFilter();
-			} catch (err: any) {
-				toast('Помилка завантаження книги: ' + err.message);
-			}
-		};
-		reader.readAsText(file);
-		input.value = '';
 	}
 };
 
-export default Manage;
+export default VerseForm;

@@ -1,12 +1,12 @@
 const STORAGE_KEY = 'bv-theme';
 
-type ThemeId = 'editorial' | 'acid';
+type ThemeId = 'sky' | 'acid';
 
 const THEMES: Record<ThemeId, { name: string; desc: string; preview: string }> = {
-	editorial: {
-		name: 'Editorial Soft',
-		desc: 'Мінімалізм, serif-акценти, градієнтні смуги',
-		preview: 'linear-gradient(105deg, #B07BD8, #FF5E8E, #FF8A5A, #FFC56B)',
+	sky: {
+		name: 'Ясне небо',
+		desc: 'М\'яка синьо-блакитна, мінімалізм, serif-акценти',
+		preview: 'linear-gradient(135deg, #5B8DEF 0%, #7FA8F4 55%, #9DBDF7 100%)',
 	},
 	acid: {
 		name: 'Acid Brutal',
@@ -16,11 +16,13 @@ const THEMES: Record<ThemeId, { name: string; desc: string; preview: string }> =
 };
 
 const Theme = {
-	current: 'editorial' as ThemeId,
+	current: 'sky' as ThemeId,
 
 	init(): void {
 		const saved = localStorage.getItem(STORAGE_KEY) as ThemeId | null;
-		this.current = saved && THEMES[saved] ? saved : 'editorial';
+		// Migrate old 'editorial' theme to 'sky'
+		const resolved = saved === 'editorial' ? 'sky' : saved;
+		this.current = resolved && THEMES[resolved as ThemeId] ? resolved as ThemeId : 'sky';
 		this._apply();
 	},
 
@@ -33,15 +35,11 @@ const Theme = {
 	},
 
 	toggle(): void {
-		this.set(this.current === 'editorial' ? 'acid' : 'editorial');
+		this.set(this.current === 'sky' ? 'acid' : 'sky');
 	},
 
 	_apply(): void {
-		if (this.current === 'acid') {
-			document.documentElement.setAttribute('data-theme', 'acid');
-		} else {
-			document.documentElement.removeAttribute('data-theme');
-		}
+		document.documentElement.setAttribute('data-theme', this.current);
 	},
 
 	renderSwitcher(): string {

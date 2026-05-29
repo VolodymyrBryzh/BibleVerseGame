@@ -1,6 +1,6 @@
 import Header from './Header';
 import Progress from './Progress';
-import DailyVerse from './DailyVerse';
+import WeeklyVerse from './WeeklyVerse';
 
 const Dashboard = {
 	init(): void {
@@ -10,9 +10,7 @@ const Dashboard = {
 			</div>
 			${Progress.render()}
 			<div class="container">
-				<div id="dailyVerseContainer">
-					${DailyVerse.render()}
-				</div>
+				${WeeklyVerse.render()}
 			</div>
 		`;
 
@@ -38,7 +36,7 @@ const Dashboard = {
 	render(): void {
 		Header.update();
 		Progress.update();
-		DailyVerse.update();
+		WeeklyVerse.update();
 	}
 };
 
