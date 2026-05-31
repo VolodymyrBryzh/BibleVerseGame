@@ -120,7 +120,9 @@ const VersesDB = {
 		if (auth.currentUser) {
 			const uid = auth.currentUser.uid;
 			const { id, ...data } = verseObj;
-			const docRef = await addDoc(collection(fdb, `users/${uid}/verses`), data);
+			// Firestore rejects undefined values — strip them
+			const cleanData = JSON.parse(JSON.stringify(data));
+			const docRef = await addDoc(collection(fdb, `users/${uid}/verses`), cleanData);
 			finalId = docRef.id;
 			// Add to in-memory cache immediately (no full re-sync needed)
 			this._cache.push({ ...data, id: finalId } as BibleVerse);
