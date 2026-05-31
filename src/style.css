@@ -616,20 +616,11 @@ body {
 }
 
 #screenDashboard {
-	padding-left: 0;
-	padding-right: 0;
+	padding: 0 !important;
 	display: flex;
 	flex-direction: column;
 	width: 100%;
-	min-height: calc(100dvh - 100px);
-}
-
-#screenDashboard .container {
-	padding: 0 24px;
-	display: flex;
-	flex-direction: column;
-	gap: 20px;
-	flex: 1;
+	min-height: calc(100dvh - 80px);
 }
 
 #weeklyVerseContainer {
