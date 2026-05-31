@@ -623,75 +623,7 @@ body {
 	min-height: calc(100dvh - 80px);
 }
 
-#weeklyVerseContainer {
-	flex: 1;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	min-height: 0;
-	margin-top: 20px;
-}
-.weekly-verse-block {
-	background: var(--bg-card);
-	border: 1px solid var(--border-2, var(--border));
-	border-radius: var(--radius);
-	box-shadow: var(--shadow);
-	padding: 22px 24px 26px;
-	overflow: hidden;
-}
-.weekly-verse-header {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	margin-bottom: 14px;
-	gap: 10px;
-}
-.weekly-verse-label {
-	display: flex;
-	align-items: center;
-	gap: 8px;
-}
-.weekly-verse-tag {
-	font-size: 0.75rem;
-	letter-spacing: 0.14em;
-	color: var(--text-muted);
-	font-weight: 500;
-	text-transform: uppercase;
-}
-.weekly-verse-manual {
-	font-size: 0.6rem;
-	background: var(--accent-bg);
-	color: var(--accent);
-	padding: 2px 8px;
-	border-radius: 99px;
-	font-weight: 600;
-	letter-spacing: 0.3px;
-}
-.weekly-verse-select {
-	font-size: 0.75rem;
-	padding: 4px 8px;
-	border: 1px solid var(--border);
-	border-radius: var(--radius-sm);
-	background: var(--bg);
-	color: var(--text);
-	max-width: 160px;
-	cursor: pointer;
-}
-.weekly-verse-text {
-	font-family: var(--font-serif);
-	font-style: italic;
-	font-size: 1.1rem;
-	line-height: 1.5;
-	color: var(--text-light);
-	margin-bottom: 16px;
-}
-.weekly-verse-ref {
-	font-family: var(--font-mono);
-	font-size: 0.68rem;
-	font-weight: 500;
-	color: var(--text-muted);
-	letter-spacing: 0.6px;
-}
+/* old weekly-verse styles removed — replaced by verse-hero-card */
 
 .screen.active {
 	display: block !important;
@@ -947,41 +879,7 @@ body {
 }
 
 /* Hero CTA outline pill */
-.btn-outline-pill {
-	all: unset;
-	cursor: pointer;
-	display: inline-flex;
-	align-items: center;
-	gap: 10px;
-	font-family: var(--font);
-	font-size: 0.85rem;
-	font-weight: 700;
-	letter-spacing: 0.04em;
-	text-transform: uppercase;
-	color: var(--on-accent);
-	padding: 16px 28px;
-	background: var(--accent);
-	border: none;
-	border-radius: 999px;
-	box-shadow: 0 8px 22px rgba(20, 30, 60, 0.14);
-	transition: all var(--transition);
-	margin-top: 20px;
-}
-
-.btn-outline-pill:hover {
-	transform: translateY(-1px);
-	filter: brightness(1.06);
-}
-
-.hero-cta { display: block; text-align: center; }
-[data-theme="acid"] .hero-cta { display: none; }
-
-.hero-cta-acid { display: none; }
-[data-theme="acid"] .hero-cta-acid {
-	display: block;
-	text-align: center;
-	margin-top: 24px;
-}
+/* old hero-cta styles removed — dashboard redesigned */
 
 .btn-acid-pill {
 	all: unset;
@@ -1846,29 +1744,56 @@ select {
 	letter-spacing: -0.3px;
 }
 
-/* Acid: Weekly verse */
-[data-theme="acid"] .weekly-verse-block {
-	border-left: 2px solid var(--primary);
-}
-[data-theme="acid"] .weekly-verse-tag {
-	font-family: var(--font-display);
-	font-weight: 700;
-	letter-spacing: -0.3px;
-}
-[data-theme="acid"] .weekly-verse-text {
-	font-family: var(--font);
-	font-style: normal;
-	font-weight: 600;
-}
-[data-theme="acid"] .weekly-verse-select {
-	border: var(--border-w) solid var(--border);
+/* Acid: Dashboard overrides */
+[data-theme="acid"] .topbar {
+	border-bottom: var(--border-w) solid var(--border);
 	background: var(--bg-card);
-	font-family: var(--font-mono);
-	font-weight: 600;
 }
-[data-theme="acid"] .weekly-verse-manual {
+[data-theme="acid"] .icon-btn {
+	border: var(--border-w) solid var(--border);
+}
+[data-theme="acid"] .xp-pill {
+	background: #16160F;
+	color: #C2F03E;
+	border: var(--border-w) solid var(--border);
+}
+[data-theme="acid"] .streak-chip {
 	background: var(--primary);
 	color: var(--primary-ink);
+	border: var(--border-w) solid var(--border);
+	font-family: var(--font-display);
+	font-weight: 700;
+}
+[data-theme="acid"] .verse-hero-gradient {
+	background: var(--primary-ink, #0A0A0A);
+	color: var(--primary, #D4FF3A);
+}
+[data-theme="acid"] .verse-hero-select {
+	border-color: var(--primary);
+	background: rgba(212,255,58,0.1);
+	color: var(--primary);
+}
+[data-theme="acid"] .verse-hero-text {
+	font-family: var(--font);
+	font-style: normal;
+	font-weight: 700;
+}
+[data-theme="acid"] .today-queue-title {
+	font-family: var(--font-display);
+	text-transform: uppercase;
+}
+[data-theme="acid"] .chip {
+	border: var(--border-w) solid var(--border);
+	background: var(--bg-card);
+}
+[data-theme="acid"] .chip.accent {
+	background: var(--primary);
+	color: var(--primary-ink);
+	border-color: var(--border);
+}
+[data-theme="acid"] .quick-action-title {
+	font-family: var(--font-display);
+	text-transform: uppercase;
 }
 
 /* Acid: Cards */
