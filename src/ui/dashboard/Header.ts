@@ -43,7 +43,6 @@ const Header = {
 			<!-- Acid theme hero -->
 			<div class="acid-hero acid-only">
 				<h1 class="acid-hero-title">СЛОВО<br><span class="acid-highlight">живе.</span></h1>
-				<p class="acid-hero-desc">Вивчай Святе Письмо. По одному віршу за раз — і Слово залишиться в тобі.</p>
 				<div class="acid-hero-cta">
 					<button id="btnHeroStartAcid" class="btn-acid-pill">
 						ПОЧАТИ

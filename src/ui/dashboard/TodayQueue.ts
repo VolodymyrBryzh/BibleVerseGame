@@ -5,7 +5,7 @@ import { $ } from '../../utils/helpers';
 
 const TodayQueue = {
 	render(): string {
-		return `<div id="todayQueueContainer"></div>`;
+		return '<div id="todayQueueContainer"></div>';
 	},
 
 	update(): void {
@@ -31,54 +31,48 @@ const TodayQueue = {
 			return { id: v.id.toString(), ref, snippet, pct, isNew, transKey };
 		});
 
+		const c = 2 * Math.PI * 17.5;
+		const items = queue.map((v, i) => {
+			const offset = c * (1 - v.pct / 100);
+			const border = i ? ' style="border-top:1px solid var(--border-2, var(--border));"' : '';
+			const chipClass = v.isNew ? 'chip accent' : 'chip';
+			return `<button class="today-queue-item" data-verse-id="${v.id}" data-trans="${v.transKey}"${border}>
+				<span class="today-ring-wrap">
+					<svg width="42" height="42" viewBox="0 0 42 42" style="transform:rotate(-90deg)">
+						<circle cx="21" cy="21" r="17.5" fill="none" stroke="var(--border)" stroke-width="3.5"/>
+						<circle cx="21" cy="21" r="17.5" fill="none" stroke="var(--accent)" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${offset}"/>
+					</svg>
+					<span class="today-ring-num">${v.pct}</span>
+				</span>
+				<span class="today-queue-info">
+					<span class="today-queue-ref">${v.ref}</span>
+					<span class="today-queue-snippet serif">${v.snippet}</span>
+				</span>
+				<span class="${chipClass}" style="font-size:11px; padding:4px 10px;">${v.isNew ? 'нове' : 'повторення'}</span>
+			</button>`;
+		}).join('');
+
 		container.innerHTML = `
 			<div class="card today-queue-card">
 				<div class="today-queue-header">
 					<h3 class="today-queue-title">Мої вірші</h3>
 					<span class="muted" style="font-size:13px; font-weight:600;">${queue.length} віршів</span>
 				</div>
-				${queue.map((v, i) => `
-					<button class="today-queue-item" data-verse-id="${v.id}" data-trans="${v.transKey}" ${i ? 'style="border-top:1px solid var(--border-2, var(--border));"' : ''}>
-						<span class="today-ring-wrap">
-							<svg width="42" height="42" viewBox="0 0 42 42" style="transform:rotate(-90deg)">
-								<circle cx="21" cy="21" r="17.5" fill="none" stroke="var(--border)" stroke-width="3.5"/>
-								<circle cx="21" cy="21" r="17.5" fill="none" stroke="var(--accent)" stroke-width="3.5"
-									stroke-linecap="round"
-									stroke-dasharray="${2 * Math.PI * 17.5}"
-									stroke-dashoffset="${2 * Math.PI * 17.5 * (1 - v.pct / 100)}"/>
-							</svg>
-							<span class="today-ring-num">${v.pct}</span>
-						</span>
-						<span class="today-queue-info">
-							<span class="today-queue-ref">${v.ref}</span>
-							<span class="today-queue-snippet serif">${v.snippet}</span>
-						</span>
-						<span class="chip ${v.isNew ? 'accent' : ''}" style="font-size:11px; padding:4px 10px;">
-							${v.isNew ? 'нове' : 'повторення'}
-						</span>
-					</button>
-				`).join('')}
-			</div>
-		`;
+				<div class="today-queue-list">${items}</div>
+			</div>`;
 
-		// Clicking a verse → navigate to game with that verse pre-selected
 		container.querySelectorAll('[data-verse-id]').forEach(btn => {
 			btn.addEventListener('click', () => {
 				const el = btn as HTMLElement;
 				const verseId = el.dataset.verseId || '';
 				const transKey = el.dataset.trans || '';
-
-				// Pre-select the verse and translation in game setup
-				const filterVerse = document.getElementById('filterVerse') as HTMLSelectElement;
 				const filterTrans = document.getElementById('filterTranslation') as HTMLSelectElement;
 				if (filterTrans && transKey) filterTrans.value = transKey;
 				UI.updateVerseFilter();
+				const filterVerse = document.getElementById('filterVerse') as HTMLSelectElement;
 				if (filterVerse && verseId) {
-					setTimeout(() => {
-						filterVerse.value = verseId;
-					}, 50);
+					setTimeout(() => { filterVerse.value = verseId; }, 50);
 				}
-
 				UI.navigate('screenGame');
 			});
 		});

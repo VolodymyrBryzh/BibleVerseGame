@@ -1,4 +1,4 @@
-/* V5 Editorial Soft — clean background, no blobs */
+/* Dot grid background — subtle, slightly 3D */
 .modern-background {
   position: fixed;
   top: 0;
@@ -7,6 +7,9 @@
   height: 100vh;
   z-index: -1;
   background-color: var(--bg);
+  background-image:
+    radial-gradient(circle, rgba(180, 190, 210, 0.25) 1px, transparent 1px);
+  background-size: 24px 24px;
   overflow: hidden;
   transition: background-color var(--transition);
 }
@@ -14,4 +17,12 @@
 .blob,
 .glass-overlay {
   display: none;
+}
+
+/* Acid theme — bolder dots */
+[data-theme="acid"] .modern-background {
+  background-color: var(--bg-card);
+  background-image:
+    radial-gradient(circle, rgba(20, 20, 15, 0.12) 1.2px, transparent 1.2px);
+  background-size: 22px 22px;
 }
