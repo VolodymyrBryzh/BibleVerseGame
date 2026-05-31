@@ -117,21 +117,14 @@ const VersesDB = {
 	async addVerse(verseObj: BibleVerse): Promise<string> {
 		let finalId: string;
 
-		console.log('VersesDB.addVerse: auth.currentUser =', !!auth.currentUser);
-
 		if (auth.currentUser) {
 			const uid = auth.currentUser.uid;
 			const { id, ...data } = verseObj;
-			// Firestore rejects undefined values — strip them
 			const cleanData = JSON.parse(JSON.stringify(data));
-			console.log('VersesDB.addVerse: writing to Firestore path =', `users/${uid}/verses`, 'data keys =', Object.keys(cleanData));
 			const docRef = await addDoc(collection(fdb, `users/${uid}/verses`), cleanData);
 			finalId = docRef.id;
-			console.log('VersesDB.addVerse: success, id =', finalId);
-			// Add to in-memory cache immediately (no full re-sync needed)
 			this._cache.push({ ...cleanData, id: finalId } as BibleVerse);
 		} else {
-			console.log('VersesDB.addVerse: guest mode, adding to IndexedDB');
 			const id = await db.verses.add(verseObj);
 			finalId = id.toString();
 			await this.refreshCache();
@@ -145,7 +138,6 @@ const VersesDB = {
 		if (auth.currentUser) {
 			const uid = auth.currentUser.uid;
 			await deleteDoc(doc(fdb, `users/${uid}/verses`, id));
-			// Remove from in-memory cache immediately
 			this._cache = this._cache.filter(v => v.id.toString() !== id.toString());
 		} else {
 			const numericId = parseInt(id);

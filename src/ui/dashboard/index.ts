@@ -1,4 +1,5 @@
 import Header from './Header';
+import Progress from './Progress';
 import WeeklyVerse from './WeeklyVerse';
 import TodayQueue from './TodayQueue';
 import QuickStats from './QuickStats';
@@ -11,9 +12,21 @@ const Dashboard = {
 			</div>
 			<div class="dashboard-scroll">
 				<div class="dashboard-pad">
-					${WeeklyVerse.render()}
-					${TodayQueue.render()}
-					${QuickStats.render()}
+					<!-- Sky theme blocks -->
+					<div class="sky-only-block sky-only">
+						${WeeklyVerse.render()}
+					</div>
+					<div class="sky-only-block sky-only">
+						${TodayQueue.render()}
+					</div>
+					<div class="sky-only-block sky-only">
+						${QuickStats.render()}
+					</div>
+
+					<!-- Acid theme blocks -->
+					<div class="acid-only">
+						${Progress.render()}
+					</div>
 				</div>
 			</div>
 		`;
@@ -42,6 +55,7 @@ const Dashboard = {
 		WeeklyVerse.update();
 		TodayQueue.update();
 		QuickStats.update();
+		Progress.update();
 	}
 };
 
