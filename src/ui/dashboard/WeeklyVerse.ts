@@ -49,14 +49,14 @@ const WeeklyVerse = {
 						<span class="verse-hero-label">ВІРШ ДНЯ</span>
 						<select id="weeklyVerseSelect" class="verse-hero-select">${options}</select>
 					</div>
-					<p class="verse-hero-text serif">«${formatVerseText(trans)}»</p>
+					<p class="verse-hero-text serif"><span class="verse-quote-open">«</span>${formatVerseText(trans)}<span class="verse-quote-close">»</span></p>
 					<div class="verse-hero-bottom">
 						<span class="verse-hero-ref">${reference}</span>
 						<span class="verse-hero-trans">${transName}</span>
 					</div>
 				</div>
 				<div class="verse-hero-action">
-					<button id="btnVerseHeroStart" class="btn-primary">Вивчати зараз</button>
+					<button id="btnVerseHeroStart" class="btn-primary">Вивчати зараз <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px;vertical-align:middle;"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
 				</div>
 			</div>
 		`;

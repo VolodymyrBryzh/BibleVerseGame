@@ -43,12 +43,6 @@ const Header = {
 			<!-- Acid theme hero -->
 			<div class="acid-hero acid-only">
 				<h1 class="acid-hero-title">СЛОВО<br><span class="acid-highlight">живе.</span></h1>
-				<div class="acid-hero-cta">
-					<button id="btnHeroStartAcid" class="btn-acid-pill">
-						ПОЧАТИ
-						<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-					</button>
-				</div>
 			</div>
 		`;
 	},
@@ -90,11 +84,6 @@ const Header = {
 			themeBtn.addEventListener('click', () => Theme.toggle());
 		}
 
-		const heroStartAcid = $('btnHeroStartAcid');
-		if (heroStartAcid && !heroStartAcid.dataset.bound) {
-			heroStartAcid.dataset.bound = '1';
-			heroStartAcid.addEventListener('click', () => UI.navigate('screenGame'));
-		}
 	}
 };
 

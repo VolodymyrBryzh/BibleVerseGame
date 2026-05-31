@@ -439,6 +439,19 @@ body {
 	max-height: 260px;
 	overflow-y: auto;
 	-webkit-overflow-scrolling: touch;
+	scrollbar-width: thin;
+	scrollbar-color: var(--border) transparent;
+}
+.today-queue-card .today-queue-list::-webkit-scrollbar {
+	display: block !important;
+	width: 4px;
+}
+.today-queue-card .today-queue-list::-webkit-scrollbar-track {
+	background: transparent;
+}
+.today-queue-card .today-queue-list::-webkit-scrollbar-thumb {
+	background: var(--faint, var(--border));
+	border-radius: 4px;
 }
 .today-queue-header {
 	display: flex;
@@ -1888,6 +1901,10 @@ select {
 [data-theme="acid"] .verse-hero-ref {
 	color: var(--primary);
 }
+[data-theme="acid"] .verse-quote-open { font-size: 0; }
+[data-theme="acid"] .verse-quote-open::before { content: '\201C'; font-size: 18px; }
+[data-theme="acid"] .verse-quote-close { font-size: 0; }
+[data-theme="acid"] .verse-quote-close::before { content: '\201D'; font-size: 18px; }
 [data-theme="acid"] .verse-hero-action {
 	background: var(--bg-card);
 }
