@@ -35,7 +35,7 @@ const QuickStats = {
 					</div>
 				</div>
 				<div class="quick-stats-freeze">
-					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M19.07 4.93L4.93 19.07"/></svg>
+					<span style="font-size:16px;">🧊</span>
 					<span>${freezeState.available ? 'Замороження доступне' : 'Замороження через ' + (7 - freezeState.daysSinceUsed) + ' дн.'}</span>
 				</div>
 			</div>

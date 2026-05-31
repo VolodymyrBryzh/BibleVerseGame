@@ -190,6 +190,7 @@ body {
 	padding: 14px 22px;
 	background: var(--bg-card);
 	border-bottom: 1px solid var(--border-2, var(--border));
+	overflow: visible;
 }
 .topbar-date {
 	font-size: 12.5px;
@@ -205,8 +206,8 @@ body {
 	gap: 10px;
 }
 .icon-btn {
-	width: 40px;
-	height: 40px;
+	width: 38px;
+	height: 38px;
 	border-radius: 50%;
 	flex: none;
 	display: grid;
@@ -279,10 +280,8 @@ body {
 
 /* Theme-specific visibility */
 .sky-only { display: flex; }
-.sky-only-block { display: block; }
 .acid-only { display: none; }
-[data-theme="acid"] .sky-only,
-[data-theme="acid"] .sky-only-block { display: none !important; }
+[data-theme="acid"] .sky-only { display: none !important; }
 [data-theme="acid"] .acid-only { display: block !important; }
 
 /* Acid hero */
@@ -425,8 +424,11 @@ body {
 	padding: 16px;
 }
 .verse-hero-action .btn-primary {
-	font-size: 14.5px;
-	padding: 16px;
+	font-size: 15px;
+	padding: 18px 32px;
+	border-radius: 999px;
+	box-shadow: 0 6px 20px rgba(59, 111, 229, 0.35);
+	width: auto;
 }
 
 /* Today queue */
@@ -1849,36 +1851,105 @@ select {
 	font-family: var(--font-display);
 	font-weight: 700;
 }
+
+/* Acid: Verse hero card — dark block + lime accents */
+[data-theme="acid"] .verse-hero-card {
+	border: var(--border-w) solid var(--border);
+	box-shadow: var(--shadow);
+}
 [data-theme="acid"] .verse-hero-gradient {
 	background: var(--primary-ink, #0A0A0A);
 	color: var(--primary, #D4FF3A);
 }
+[data-theme="acid"] .verse-hero-label {
+	font-family: var(--font-display);
+	letter-spacing: 0.08em;
+}
 [data-theme="acid"] .verse-hero-select {
-	border-color: var(--primary);
-	background: rgba(212,255,58,0.1);
+	border: var(--border-w) solid var(--primary);
+	background: rgba(212,255,58,0.08);
 	color: var(--primary);
+	font-family: var(--font-mono);
+	font-weight: 600;
 }
 [data-theme="acid"] .verse-hero-text {
-	font-family: var(--font);
+	font-family: var(--font-display);
 	font-style: normal;
-	font-weight: 700;
+	font-weight: 800;
+	font-size: 20px;
+	letter-spacing: -0.02em;
+	text-transform: uppercase;
+}
+[data-theme="acid"] .verse-hero-ref {
+	color: var(--primary);
+}
+[data-theme="acid"] .verse-hero-action {
+	background: var(--bg-card);
+}
+[data-theme="acid"] .verse-hero-action .btn-primary {
+	background: var(--primary);
+	color: var(--primary-ink);
+	border: var(--border-w) solid var(--border);
+	box-shadow: 4px 4px 0 var(--border);
+	border-radius: var(--radius);
+}
+[data-theme="acid"] .verse-hero-action .btn-primary:active {
+	box-shadow: 1px 1px 0 var(--border);
+	transform: translate(2px, 2px);
+}
+
+/* Acid: My verses queue */
+[data-theme="acid"] .today-queue-card {
+	border: var(--border-w) solid var(--border);
+	box-shadow: var(--shadow);
 }
 [data-theme="acid"] .today-queue-title {
 	font-family: var(--font-display);
 	text-transform: uppercase;
+	letter-spacing: -0.02em;
+}
+[data-theme="acid"] .today-queue-ref {
+	font-family: var(--font-display);
+	letter-spacing: -0.01em;
+}
+[data-theme="acid"] .today-ring-num {
+	color: var(--primary-ink);
+	font-family: var(--font-display);
+}
+[data-theme="acid"] .today-queue-item:hover {
+	background: rgba(212,255,58,0.08);
 }
 [data-theme="acid"] .chip {
 	border: var(--border-w) solid var(--border);
 	background: var(--bg-card);
+	font-family: var(--font-mono);
+	font-weight: 600;
+	letter-spacing: 0.04em;
 }
 [data-theme="acid"] .chip.accent {
 	background: var(--primary);
 	color: var(--primary-ink);
 	border-color: var(--border);
 }
-[data-theme="acid"] .quick-action-title {
+
+/* Acid: Quick stats */
+[data-theme="acid"] .quick-stats-card {
+	border: var(--border-w) solid var(--border);
+	box-shadow: var(--shadow);
+}
+[data-theme="acid"] .quick-stat-num {
 	font-family: var(--font-display);
+}
+[data-theme="acid"] .quick-stat-label {
+	font-family: var(--font-mono);
 	text-transform: uppercase;
+	letter-spacing: 0.06em;
+}
+[data-theme="acid"] .quick-stats-freeze {
+	font-family: var(--font-mono);
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	font-size: 12px;
 }
 
 /* Acid: Cards */
