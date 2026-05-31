@@ -32,6 +32,9 @@ const Stats = {
     this._lastActiveDate = localStorage.getItem('bvg_last_active_date') || '';
     this._lastFreezeDate = localStorage.getItem('bvg_last_freeze_date') || '';
 
+    // Check if streak should be reset (user missed too many days)
+    this._checkStreakExpiry();
+
     await this.refreshCache();
     console.log('Stats: Local Ready.');
 
@@ -84,6 +87,30 @@ const Stats = {
 
   async refreshCache(): Promise<void> {
     this._attempts = await db.stats.orderBy('ts').toArray();
+  },
+
+  _checkStreakExpiry(): void {
+    if (!this._lastActiveDate || this._streak === 0) return;
+    const today = new Date().toISOString().slice(0, 10);
+    if (this._lastActiveDate === today) return;
+
+    const daysBetween = Math.floor(
+      (new Date(today).getTime() - new Date(this._lastActiveDate).getTime()) / 86400000
+    );
+
+    // Yesterday — streak is still alive, no action needed
+    if (daysBetween <= 1) return;
+
+    // Missed 1 day — check if freeze is available
+    if (daysBetween === 2) {
+      const freezeUsable = !this._lastFreezeDate ||
+        (new Date(today).getTime() - new Date(this._lastFreezeDate).getTime()) >= 7 * 86400000;
+      if (freezeUsable) return; // freeze will save it when they play
+    }
+
+    // Missed 2+ days or no freeze — reset streak
+    this._streak = 0;
+    localStorage.setItem('bvg_streak', '0');
   },
 
   _updateDailyStreak(): void {

@@ -1,4 +1,4 @@
-import { TRANSLATIONS_META, BibleVerse } from '../../constants/bibleData';
+import { TRANSLATIONS_META } from '../../constants/bibleData';
 import VersesDB from '../../core/database';
 import { toast, $, formatVerseText } from '../../utils/helpers';
 
@@ -259,22 +259,25 @@ const VerseForm = {
 
 		try {
 			const endVerse = Math.max(verseFrom, verseTo);
-			await VersesDB.addVerse({
+			const verseData: any = {
 				id: Date.now().toString(),
 				book,
 				chapter,
 				verse,
-				verseTo: endVerse > verseFrom ? endVerse : undefined,
 				tags,
 				translations
-			} as BibleVerse);
+			};
+			if (endVerse > verseFrom) verseData.verseTo = endVerse;
+
+			console.log('Saving verse:', JSON.stringify(verseData));
+			await VersesDB.addVerse(verseData);
 
 			toast('Вірш додано!');
 			this.clearForm();
 			onSaved();
-		} catch (e) {
-			console.error('Failed to save verse:', e);
-			toast('Помилка збереження вірша');
+		} catch (e: any) {
+			console.error('Failed to save verse:', e?.message || e, e);
+			toast('Помилка: ' + (e?.message || 'невідома'));
 		}
 	},
 

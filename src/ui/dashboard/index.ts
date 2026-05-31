@@ -1,5 +1,4 @@
 import Header from './Header';
-import Progress from './Progress';
 import WeeklyVerse from './WeeklyVerse';
 import TodayQueue from './TodayQueue';
 import QuickStats from './QuickStats';
@@ -15,7 +14,6 @@ const Dashboard = {
 					${WeeklyVerse.render()}
 					${TodayQueue.render()}
 					${QuickStats.render()}
-					${Progress.render()}
 				</div>
 			</div>
 		`;
@@ -44,7 +42,6 @@ const Dashboard = {
 		WeeklyVerse.update();
 		TodayQueue.update();
 		QuickStats.update();
-		Progress.update();
 	}
 };
 

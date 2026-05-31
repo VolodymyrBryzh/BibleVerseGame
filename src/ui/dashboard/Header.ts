@@ -31,10 +31,7 @@ const Header = {
 				</div>
 			</div>
 			<div class="dash-greeting">
-				<div>
-					<div class="eyebrow" id="greetingTime"></div>
-					<h1 class="screen-title" id="greetingName"></h1>
-				</div>
+				<h1 class="screen-title" id="greetingName"></h1>
 				<div class="streak-chip" id="streakChip">
 					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c0 4-4 6-4 10a4 4 0 0 0 8 0c0-4-4-6-4-10z"/></svg>
 					<span id="streakDays">0</span> дн.
@@ -51,15 +48,6 @@ const Header = {
 			const months = ['СІЧНЯ', 'ЛЮТОГО', 'БЕРЕЗНЯ', 'КВІТНЯ', 'ТРАВНЯ', 'ЧЕРВНЯ', 'ЛИПНЯ', 'СЕРПНЯ', 'ВЕРЕСНЯ', 'ЖОВТНЯ', 'ЛИСТОПАДА', 'ГРУДНЯ'];
 			dateEl.textContent = `${days[now.getDay()]} · ${now.getDate()} ${months[now.getMonth()]}`;
 		}
-
-		const hour = new Date().getHours();
-		let greeting = 'Доброго дня';
-		if (hour < 5) greeting = 'Доброї ночі';
-		else if (hour < 12) greeting = 'Доброго ранку';
-		else if (hour >= 17) greeting = 'Доброго вечора';
-
-		const greetingTime = $('greetingTime');
-		if (greetingTime) greetingTime.textContent = greeting;
 
 		const greetingName = $('greetingName');
 		if (greetingName) {
