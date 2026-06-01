@@ -160,28 +160,30 @@ const Stats = {
       duration: duration || 0,
     };
 
+    // Always save locally first — this must never fail
+    await db.stats.add(attempt);
+    if (success) this._updateDailyStreak();
+    localStorage.setItem('bvg_streak', this._streak.toString());
+    localStorage.setItem('bvg_best_streak', this._bestStreak.toString());
+    await this.refreshCache();
+
+    // Then try to sync to Firestore (non-critical)
     if (auth.currentUser) {
       const uid = auth.currentUser.uid;
-      await addDoc(collection(fdb, `users/${uid}/stats`), attempt);
-
-      if (success) this._updateDailyStreak();
-
-      await setDoc(doc(fdb, `users/${uid}/metadata`, 'stats'), {
-        streak: this._streak,
-        bestStreak: this._bestStreak,
-        lastActiveDate: this._lastActiveDate,
-        lastFreezeDate: this._lastFreezeDate,
-        xp: XP.getTotal(),
-        lastUpdated: Date.now()
-      });
-    } else {
-      await db.stats.add(attempt);
-      if (success) this._updateDailyStreak();
-      localStorage.setItem('bvg_streak', this._streak.toString());
-      localStorage.setItem('bvg_best_streak', this._bestStreak.toString());
+      try {
+        await addDoc(collection(fdb, `users/${uid}/stats`), attempt);
+        await setDoc(doc(fdb, `users/${uid}/metadata`, 'stats'), {
+          streak: this._streak,
+          bestStreak: this._bestStreak,
+          lastActiveDate: this._lastActiveDate,
+          lastFreezeDate: this._lastFreezeDate,
+          xp: XP.getTotal(),
+          lastUpdated: Date.now()
+        });
+      } catch (e: any) {
+        console.warn('Firestore stats sync failed (permissions?):', e?.message);
+      }
     }
-
-    await this.refreshCache();
   },
 
   getOverview(): StatsOverview {
