@@ -1,6 +1,8 @@
 const STORAGE_KEY = 'bv-theme';
+const STORAGE_MODE_KEY = 'bv-theme-mode';
 
 type ThemeId = 'sky' | 'acid';
+type ThemeMode = 'light' | 'dark';
 
 const THEMES: Record<ThemeId, { name: string; desc: string; preview: string }> = {
 	sky: {
@@ -17,12 +19,17 @@ const THEMES: Record<ThemeId, { name: string; desc: string; preview: string }> =
 
 const Theme = {
 	current: 'sky' as ThemeId,
+	currentMode: 'light' as ThemeMode,
 
 	init(): void {
 		const saved = localStorage.getItem(STORAGE_KEY) as ThemeId | null;
 		// Migrate old 'editorial' theme to 'sky'
 		const resolved = (saved as string) === 'editorial' ? 'sky' : saved;
 		this.current = resolved && THEMES[resolved as ThemeId] ? resolved as ThemeId : 'sky';
+
+		const savedMode = localStorage.getItem(STORAGE_MODE_KEY) as ThemeMode | null;
+		this.currentMode = savedMode === 'dark' ? 'dark' : 'light';
+
 		this._apply();
 	},
 
@@ -35,11 +42,18 @@ const Theme = {
 	},
 
 	toggle(): void {
-		this.set(this.current === 'sky' ? 'acid' : 'sky');
+		this.setMode(this.currentMode === 'light' ? 'dark' : 'light');
+	},
+
+	setMode(mode: ThemeMode): void {
+		this.currentMode = mode;
+		localStorage.setItem(STORAGE_MODE_KEY, mode);
+		this._apply();
 	},
 
 	_apply(): void {
 		document.documentElement.setAttribute('data-theme', this.current);
+		document.documentElement.setAttribute('data-theme-mode', this.currentMode);
 	},
 
 	renderSwitcher(): string {
@@ -61,3 +75,4 @@ const Theme = {
 };
 
 export default Theme;
+

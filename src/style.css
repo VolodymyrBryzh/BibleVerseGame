@@ -42,6 +42,68 @@
 	--transition: 0.24s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* ===== DARK MODE — Clear Sky ===== */
+[data-theme-mode="dark"] {
+	--bg: #0B0F19;
+	--app-bg: #0B0F19;
+	--bg-grad: linear-gradient(180deg, #0B0F19 0%, #111827 100%);
+	--bg-card: #151D30;
+	--bg-selected: #1E2942;
+	--bg-hover: #1E2942;
+	--text: #F3F4F6;
+	--text-light: #E5E7EB;
+	--text-muted: #9CA3AF;
+	--accent: #60A5FA;
+	--accent-light: #93C5FD;
+	--accent-bg: #1E3A8A;
+	--accent-ink: #60A5FA;
+	--on-accent: #0F172A;
+	--danger: #ef4444;
+	--danger-bg: #450a0a;
+	--warning: #f59e0b;
+	--warning-bg: #451a03;
+	--success: #10b981;
+	--success-bg: #064e3b;
+	--border: #242F4B;
+	--border-strong: #374151;
+	--border-2: #1E293B;
+	--faint: #4B5563;
+	--ring: #2563EB;
+	--shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+	--shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 6px 18px rgba(0, 0, 0, 0.4);
+	--shadow-lg: 0 2px 6px rgba(0, 0, 0, 0.5), 0 18px 40px rgba(0, 0, 0, 0.3);
+	--hero-grad: linear-gradient(135deg, #1E3A8A 0%, #2563EB 55%, #3B82F6 100%);
+	--hero-ink: #FFFFFF;
+}
+
+/* ===== DARK MODE — Acid Brutal ===== */
+[data-theme="acid"][data-theme-mode="dark"] {
+	--bg: #0D0D0C;
+	--app-bg: #0D0D0C;
+	--bg-card: #141412;
+	--bg-selected: #1F1F1C;
+	--bg-hover: #1F1F1C;
+	--text: #F2F2EB;
+	--text-light: #D5D5CD;
+	--text-muted: #8E8E82;
+	--accent: #F2F2EB;
+	--accent-light: #D5D5CD;
+	--accent-bg: #1F1F1C;
+	--primary: #D4FF3A;
+	--primary-ink: #0A0A0A;
+	--coral: #FF5E3A;
+	--pop: #3A6BFF;
+	--border: #F2F2EB;
+	--border-strong: #F2F2EB;
+	--shadow-sm: 2px 2px 0 #F2F2EB;
+	--shadow: 4px 4px 0 #F2F2EB;
+	--shadow-lg: 6px 6px 0 #F2F2EB;
+}
+
+[data-theme="acid"][data-theme-mode="dark"] .modern-background::after {
+	background-image: radial-gradient(#F2F2EB 0.8px, transparent 0.8px);
+}
+
 /* ===== RESET & BASE ===== */
 *,
 *::before,
@@ -138,10 +200,10 @@ body {
 	color: var(--text);
 }
 
-.theme-icon--moon { display: none; }
-.theme-icon--sun { display: block; }
-[data-theme="acid"] .theme-icon--sun { display: none; }
-[data-theme="acid"] .theme-icon--moon { display: block; }
+.theme-icon--sun { display: none; }
+.theme-icon--moon { display: block; }
+[data-theme-mode="dark"] .theme-icon--sun { display: block; }
+[data-theme-mode="dark"] .theme-icon--moon { display: none; }
 
 /* XP label */
 .xp-label {
