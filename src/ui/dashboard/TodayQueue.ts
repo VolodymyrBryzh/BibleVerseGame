@@ -1,7 +1,7 @@
 import VersesDB from '../../core/database';
 import Stats from '../../core/stats';
 import UI from '../ui';
-import { $ } from '../../utils/helpers';
+import { $, cleanSnippet } from '../../utils/helpers';
 
 const TodayQueue = {
 	render(): string {
@@ -26,7 +26,8 @@ const TodayQueue = {
 			const transKeys = Object.keys(v.translations);
 			const transKey = transKeys[0] || '';
 			const text = v.translations[transKey] || '';
-			const snippet = text.replace(/<[^>]+>/g, '').substring(0, 40) + (text.length > 40 ? '...' : '');
+			const cleanText = cleanSnippet(text);
+			const snippet = cleanText.substring(0, 40) + (cleanText.length > 40 ? '...' : '');
 			const isNew = !stat || stat.total === 0;
 			return { id: v.id.toString(), ref, snippet, pct, isNew, transKey };
 		});

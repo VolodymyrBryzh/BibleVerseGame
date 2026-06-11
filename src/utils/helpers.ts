@@ -27,6 +27,12 @@ export function stripTags(s: string): string {
   return noSup.replace(/<\/?[^>]+(>|$)/g, '');
 }
 
+/** Strips circled characters and HTML tags, suitable for short text snippets */
+export function cleanSnippet(text: string): string {
+  const noCircled = text.replace(/[Ⓐ-⓿①-⑳❶-➓@]/g, '');
+  return stripTags(noCircled);
+}
+
 /** Normalize a string for comparison (lowercase, strip punctuation and formatting tags) */
 export function normalize(s: string): string {
   const stripped = stripTags(s);
