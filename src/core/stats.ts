@@ -17,6 +17,13 @@ export interface StatsOverview {
   xp: number;
 }
 
+export function getLocalDateString(date: Date = new Date()): string {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
 const Stats = {
   _attempts: [] as Attempt[],
   _streak: 0,
@@ -91,7 +98,7 @@ const Stats = {
 
   _checkStreakExpiry(): void {
     if (!this._lastActiveDate || this._streak === 0) return;
-    const today = new Date().toISOString().slice(0, 10);
+    const today = getLocalDateString();
     if (this._lastActiveDate === today) return;
 
     const daysBetween = Math.floor(
@@ -114,10 +121,12 @@ const Stats = {
   },
 
   _updateDailyStreak(): void {
-    const today = new Date().toISOString().slice(0, 10);
+    const today = getLocalDateString();
     if (this._lastActiveDate === today) return;
 
-    const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+    const yesterdayDate = new Date();
+    yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+    const yesterday = getLocalDateString(yesterdayDate);
 
     if (this._lastActiveDate === yesterday) {
       this._streak++;
@@ -192,10 +201,9 @@ const Stats = {
     const accuracy = total ? Math.round(correct / total * 100) : 0;
     const learned = this._getLearnedCount();
 
-    const today = new Date().setHours(0, 0, 0, 0);
+    const todayStr = getLocalDateString();
     const todayDone = this._attempts.filter(x => {
-      const d = new Date(x.ts).setHours(0, 0, 0, 0);
-      return d === today && x.success;
+      return getLocalDateString(new Date(x.ts)) === todayStr && x.success;
     }).length;
 
     const monthDone = this._getMonthlyLearnedCount();
@@ -219,10 +227,12 @@ const Stats = {
     for (let i = days - 1; i >= 0; i--) {
       const d = new Date(now);
       d.setDate(d.getDate() - i);
-      const dateStr = d.toISOString().slice(0, 10);
-      const dayStart = new Date(dateStr).getTime();
-      const dayEnd = dayStart + 86400000;
-      const count = this._attempts.filter(a => a.ts >= dayStart && a.ts < dayEnd).length;
+      const dateStr = getLocalDateString(d);
+      
+      const count = this._attempts.filter(a => {
+        return getLocalDateString(new Date(a.ts)) === dateStr;
+      }).length;
+      
       result.push({ date: dateStr, count });
     }
     return result;
