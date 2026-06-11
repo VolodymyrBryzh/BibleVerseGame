@@ -21,9 +21,15 @@ export function tokenize(text: string): string[] {
   return text.split(/\s+/).filter(w => w.length > 0);
 }
 
+/** Strip HTML tags: completely removes <sup>...</sup> (tag and content) and strips other tags keeping their content */
+export function stripTags(s: string): string {
+  const noSup = s.replace(/<sup\b[^>]*>.*?<\/sup>/gi, '');
+  return noSup.replace(/<\/?[^>]+(>|$)/g, '');
+}
+
 /** Normalize a string for comparison (lowercase, strip punctuation and formatting tags) */
 export function normalize(s: string): string {
-  const stripped = s.replace(/<\/?[ri]>/g, ''); // Strip <r> or <i> tags
+  const stripped = stripTags(s);
   return stripped.toLowerCase().replace(/[.,;:!?«»""\"''ʼ'()—–\-]/g, '').trim();
 }
 

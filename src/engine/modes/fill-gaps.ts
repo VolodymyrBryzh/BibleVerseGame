@@ -1,4 +1,4 @@
-import { tokenize, normalize, formatVerseText, $ } from '../../utils/helpers';
+import { tokenize, normalize, formatVerseText, stripTags, $ } from '../../utils/helpers';
 
 export function startFillGaps(text: string, area: HTMLElement): string[] {
 	const words = tokenize(text);
@@ -36,7 +36,7 @@ export function checkFillGaps(gapData: string[]): { accuracy: number; success: b
 		const isCorrect = normalize(inp.value) === normalize(expected);
 		inp.classList.toggle('correct', isCorrect);
 		inp.classList.toggle('wrong', !isCorrect);
-		if (!isCorrect) inp.value = expected;
+		if (!isCorrect) inp.value = stripTags(expected);
 		if (isCorrect) correct++;
 	});
 
