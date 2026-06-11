@@ -36,3 +36,8 @@ self.addEventListener('notificationclick', (event) => {
     })
   );
 });
+
+// Add a fetch event listener to satisfy PWA installability requirements
+self.addEventListener('fetch', (event) => {
+  // This can be expanded later for custom offline caching if needed
+});

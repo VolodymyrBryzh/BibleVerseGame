@@ -43,4 +43,10 @@ document.addEventListener('DOMContentLoaded', () => {
 			notifyToggle.checked = Notifications.isEnabled();
 		});
 	}
+
+	// Register service worker for PWA support
+	if ('serviceWorker' in navigator) {
+		navigator.serviceWorker.register('/firebase-messaging-sw.js')
+			.catch(err => console.error('PWA ServiceWorker registration failed', err));
+	}
 });
