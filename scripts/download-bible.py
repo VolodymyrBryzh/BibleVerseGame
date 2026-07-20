@@ -5,9 +5,10 @@ import json, os, time, subprocess, sys
 API = "https://bolls.life"
 
 TRANSLATIONS = {
-    "UBIO": "ubio",
-    "CUV23": "cuv",
-    "UKRK": "ukrk",
+    # "UBIO": "ubio",
+    # "CUV23": "cuv",
+    # "UKRK": "ukrk",
+    "UMT": "umt",
 }
 
 BOOK_CODES = [
