@@ -8,7 +8,9 @@ import { toast, prepareFormattedText, formatVerseText, $ } from '../utils/helper
 import { startWordOrder, checkWordOrder } from './modes/word-order';
 import { startFillGaps, checkFillGaps } from './modes/fill-gaps';
 import { startContinue, checkContinue } from './modes/continue';
-import { createHintState, showHintBtn, removeHintBtn } from './hints';
+import { createHintState, showHintBtn, removeHintBtn, HintState } from './hints';
+
+let boundKeyHandler: ((e: KeyboardEvent) => void) | null = null;
 
 const Game = {
   currentVerse: null as BibleVerse | null,
@@ -18,7 +20,7 @@ const Game = {
   _gapData: [] as string[],
   _fullText: '',
   _startTime: 0,
-  _hintState: createHintState(),
+  _hintState: createHintState() as HintState,
 
   elements: {
     get area() { return $('gameArea'); },
@@ -30,14 +32,14 @@ const Game = {
   },
 
   start(): void {
-    const modeCard = document.querySelector('.mode-card.selected') as HTMLElement;
+    const modeCard = document.querySelector('.mode-card.selected') as HTMLElement | null;
     const mode = modeCard?.dataset.mode;
     if (!mode) return toast('Обери режим');
 
     const transKey = ($<HTMLSelectElement>('filterTranslation'))?.value || '';
     const verseFilter = ($<HTMLSelectElement>('filterVerse'))?.value || '';
 
-    let verses = VersesDB.getAll().filter(v => v.translations[transKey]);
+    const verses = VersesDB.getAll().filter(v => Boolean(v.translations[transKey]));
     if (!verses.length) return toast('Немає віршів для цього перекладу');
 
     const verse = verseFilter === 'all'
@@ -91,16 +93,19 @@ const Game = {
   },
 
   _setupKeys(): void {
-    const handler = (e: KeyboardEvent) => {
+    if (boundKeyHandler) {
+      document.removeEventListener('keydown', boundKeyHandler);
+    }
+
+    boundKeyHandler = (e: KeyboardEvent) => {
       if (e.key === 'Enter' && !e.shiftKey) {
-        const isFinished = !!this.elements.result?.innerHTML;
+        const isFinished = Boolean(this.elements.result?.innerHTML);
         if (isFinished) this.start();
         else this.check();
       }
     };
-    document.removeEventListener('keydown', (window as any)._gameKeyHandler);
-    (window as any)._gameKeyHandler = handler;
-    document.addEventListener('keydown', handler);
+
+    document.addEventListener('keydown', boundKeyHandler);
   },
 
   _showCheckBtn(): void {
@@ -145,11 +150,19 @@ const Game = {
 
   _showResult(success: boolean, accuracy: number, correctText?: string, xpEarned?: number): void {
     const pct = Math.round(accuracy * 100);
-    let cls = 'error', msg = `${pct}% — спробуй ще раз`;
+    let cls = 'error';
+    let msg = `${pct}% — спробуй ще раз`;
 
-    if (success && accuracy === 1) { cls = 'success'; msg = `Чудово! 100% правильно!`; }
-    else if (success) { cls = 'success'; msg = `Добре! ${pct}% правильно`; }
-    else if (accuracy >= 0.5) { cls = 'partial'; msg = `Майже! ${pct}% правильно`; }
+    if (success && accuracy === 1) {
+      cls = 'success';
+      msg = `Чудово! 100% правильно!`;
+    } else if (success) {
+      cls = 'success';
+      msg = `Добре! ${pct}% правильно`;
+    } else if (accuracy >= 0.5) {
+      cls = 'partial';
+      msg = `Майже! ${pct}% правильно`;
+    }
 
     let resultHTML = `<div class="result-banner ${cls}">${msg}</div>`;
     if (xpEarned && xpEarned > 0) {

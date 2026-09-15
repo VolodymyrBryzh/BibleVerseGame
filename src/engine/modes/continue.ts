@@ -1,4 +1,5 @@
 import { tokenize, normalize, formatVerseText, $ } from '../../utils/helpers';
+import { GAME_CONFIG } from '../../constants/config';
 
 export function startContinue(text: string, area: HTMLElement): { correctWords: string[]; fullText: string } {
 	const words = tokenize(text);
@@ -13,7 +14,7 @@ export function startContinue(text: string, area: HTMLElement): { correctWords: 
 			placeholder="Продовж вірш..."></textarea>
 	`;
 
-	setTimeout(() => ($('continueInput') as HTMLTextAreaElement)?.focus(), 100);
+	setTimeout(() => ($<HTMLTextAreaElement>('continueInput'))?.focus(), 100);
 
 	return { correctWords: expected, fullText: text };
 }
@@ -22,14 +23,16 @@ export function checkContinue(correctWords: string[]): { accuracy: number; succe
 	const input = $<HTMLTextAreaElement>('continueInput');
 	const userText = input?.value.trim() || '';
 
-	if (!userText) return { accuracy: -1, success: false }; // -1 means empty
+	if (!userText) return { accuracy: -1, success: false };
 
 	const userWords = tokenize(userText);
 	let correct = 0;
 	for (let i = 0; i < correctWords.length; i++) {
-		if (userWords[i] && normalize(userWords[i]) === normalize(correctWords[i])) correct++;
+		if (userWords[i] && normalize(userWords[i]) === normalize(correctWords[i])) {
+			correct++;
+		}
 	}
 
 	const accuracy = correctWords.length > 0 ? correct / correctWords.length : 0;
-	return { accuracy, success: accuracy >= 0.8 };
+	return { accuracy, success: accuracy >= GAME_CONFIG.PASSING_ACCURACY };
 }

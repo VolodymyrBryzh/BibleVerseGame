@@ -1,19 +1,12 @@
 import { auth, db as firestore } from './firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
-
-const XP_REWARDS: Record<string, number> = {
-  'word-order': 30,
-  'fill-gaps': 45,
-  'continue': 60,
-};
-
-const HINT_COST = 5;
+import { GAME_CONFIG } from '../constants/config';
 
 const XP = {
   _total: 0,
 
   init(): void {
-    this._total = parseInt(localStorage.getItem('bvg_xp') || '0', 10);
+    this._total = parseInt(localStorage.getItem(GAME_CONFIG.STORAGE_KEYS.XP) || '0', 10);
   },
 
   getTotal(): number {
@@ -21,25 +14,25 @@ const XP = {
   },
 
   getReward(mode: string): number {
-    return XP_REWARDS[mode] || 30;
+    return GAME_CONFIG.XP_REWARDS[mode] || GAME_CONFIG.DEFAULT_XP_REWARD;
   },
 
   award(mode: string): number {
-    const amount = XP_REWARDS[mode] || 30;
+    const amount = this.getReward(mode);
     this._total += amount;
     this._persist();
     return amount;
   },
 
   deductHint(): boolean {
-    if (this._total < HINT_COST) return false;
-    this._total -= HINT_COST;
+    if (this._total < GAME_CONFIG.HINT_COST) return false;
+    this._total -= GAME_CONFIG.HINT_COST;
     this._persist();
     return true;
   },
 
   _persist(): void {
-    localStorage.setItem('bvg_xp', this._total.toString());
+    localStorage.setItem(GAME_CONFIG.STORAGE_KEYS.XP, this._total.toString());
     const user = auth.currentUser;
     if (user) {
       const ref = doc(firestore, 'users', user.uid, 'metadata', 'stats');
@@ -59,7 +52,7 @@ const XP = {
       const cloudXP = snap.data().xp || 0;
       if (cloudXP > this._total) {
         this._total = cloudXP;
-        localStorage.setItem('bvg_xp', this._total.toString());
+        localStorage.setItem(GAME_CONFIG.STORAGE_KEYS.XP, this._total.toString());
       }
     }
   }

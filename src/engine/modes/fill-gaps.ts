@@ -1,11 +1,14 @@
 import { tokenize, normalize, formatVerseText, stripTags, $ } from '../../utils/helpers';
+import { GAME_CONFIG } from '../../constants/config';
 
 export function startFillGaps(text: string, area: HTMLElement): string[] {
 	const words = tokenize(text);
-	const gapCount = Math.max(2, Math.floor(words.length * 0.3));
+	const gapCount = Math.max(GAME_CONFIG.MIN_GAPS, Math.floor(words.length * GAME_CONFIG.FILL_GAPS_RATIO));
 
 	const indices = new Set<number>();
-	while (indices.size < gapCount) indices.add(Math.floor(Math.random() * words.length));
+	while (indices.size < gapCount && indices.size < words.length) {
+		indices.add(Math.floor(Math.random() * words.length));
+	}
 
 	const gapData: string[] = [];
 	let html = '<div class="gap-text">';
@@ -22,7 +25,7 @@ export function startFillGaps(text: string, area: HTMLElement): string[] {
 	html += '</div>';
 
 	area.innerHTML = html;
-	setTimeout(() => ($('.gap-input') as HTMLInputElement)?.focus(), 100);
+	setTimeout(() => ($<HTMLInputElement>('.gap-input'))?.focus(), 100);
 
 	return gapData;
 }
@@ -40,6 +43,6 @@ export function checkFillGaps(gapData: string[]): { accuracy: number; success: b
 		if (isCorrect) correct++;
 	});
 
-	const accuracy = correct / gapData.length;
-	return { accuracy, success: accuracy >= 0.8 };
+	const accuracy = gapData.length > 0 ? correct / gapData.length : 0;
+	return { accuracy, success: accuracy >= GAME_CONFIG.PASSING_ACCURACY };
 }
