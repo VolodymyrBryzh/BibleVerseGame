@@ -1,7 +1,7 @@
 import VersesDB from '../../core/database';
 import UI from '../ui';
 import { BibleVerse } from '../../constants/bibleData';
-import { toast, $ } from '../../utils/helpers';
+import { toast, $, escapeHtml } from '../../utils/helpers';
 
 const VerseList = {
 	render(verses?: BibleVerse[]): void {
@@ -18,22 +18,31 @@ const VerseList = {
 		}
 
 		const html = all.map(v => {
-			const ref = VersesDB.getReference(v);
+			const ref = escapeHtml(VersesDB.getReference(v));
+			const tagsStr = v.tags?.length ? '· ' + v.tags.map(t => escapeHtml(t)).join(', ') : '';
 			const transKeys = Object.keys(v.translations).length;
+			const safeId = escapeHtml(v.id.toString());
 			return `
 				<div class="verse-list-item">
 					<div>
 						<div class="verse-list-ref">${ref}</div>
-						<div class="verse-list-tags">${transKeys} переклад(ів) ${v.tags?.length ? '· ' + v.tags.join(', ') : ''}</div>
+						<div class="verse-list-tags">${transKeys} переклад(ів) ${tagsStr}</div>
 					</div>
 					<div class="verse-list-actions">
-						<button class="btn btn-sm btn-danger" onclick="Manage.removeVerse('${v.id}')">✕</button>
+						<button class="btn btn-sm btn-danger btn-remove-verse" data-verse-id="${safeId}">✕</button>
 					</div>
 				</div>
 			`;
 		}).join('');
 
 		container.innerHTML = html;
+
+		container.querySelectorAll('.btn-remove-verse').forEach(btn => {
+			btn.addEventListener('click', (e) => {
+				const id = (e.currentTarget as HTMLElement).dataset.verseId;
+				if (id) this.removeVerse(id);
+			});
+		});
 	},
 
 	handleSearch(): void {

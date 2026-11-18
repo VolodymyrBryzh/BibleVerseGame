@@ -11,8 +11,10 @@ const ImportExport = {
 		const a = document.createElement('a');
 		a.href = url;
 		a.download = `bible-verses-${new Date().toISOString().slice(0, 10)}.json`;
+		document.body.appendChild(a);
 		a.click();
-		URL.revokeObjectURL(url);
+		a.remove();
+		setTimeout(() => URL.revokeObjectURL(url), 1000);
 		toast('Експортовано!');
 	},
 

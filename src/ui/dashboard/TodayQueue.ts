@@ -69,11 +69,7 @@ const TodayQueue = {
 				const transKey = el.dataset.trans || '';
 				const filterTrans = document.getElementById('filterTranslation') as HTMLSelectElement;
 				if (filterTrans && transKey) filterTrans.value = transKey;
-				UI.updateVerseFilter();
-				const filterVerse = document.getElementById('filterVerse') as HTMLSelectElement;
-				if (filterVerse && verseId) {
-					setTimeout(() => { filterVerse.value = verseId; }, 50);
-				}
+				UI.updateVerseFilter(verseId);
 				UI.navigate('screenGame');
 			});
 		});

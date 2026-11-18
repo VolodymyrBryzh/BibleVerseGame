@@ -1,8 +1,9 @@
 import VersesDB from './database';
 import { auth, db as fdb } from './firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { GAME_CONFIG } from '../constants/config';
 
-const STORAGE_KEY = 'bvg_verse_of_week';
+const STORAGE_KEY = GAME_CONFIG.STORAGE_KEYS.VERSE_OF_WEEK;
 
 interface VerseOfWeekData {
 	verseId: string;

@@ -61,13 +61,13 @@ const UI = {
 		).join('');
 	},
 
-	updateVerseFilter(): void {
+	updateVerseFilter(selectedVerseId?: string): void {
 		const transSel = $<HTMLSelectElement>('filterTranslation');
 		const sel = $<HTMLSelectElement>('filterVerse');
 		if (!transSel || !sel) return;
 
 		const transKey = transSel.value;
-		const prev = sel.value;
+		const targetId = selectedVerseId || sel.value;
 
 		let html = '<option value="all">Всі вірші (випадковий)</option>';
 		VersesDB.getAll()
@@ -77,7 +77,9 @@ const UI = {
 			});
 
 		sel.innerHTML = html;
-		if (sel.querySelector(`option[value="${prev}"]`)) sel.value = prev;
+		if (targetId && sel.querySelector(`option[value="${targetId}"]`)) {
+			sel.value = targetId;
+		}
 	},
 
 	renderStats(): void {

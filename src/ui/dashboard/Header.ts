@@ -31,18 +31,12 @@ const Header = {
 				</div>
 			</div>
 
-			<!-- Sky theme greeting -->
-			<div class="dash-greeting sky-only">
+			<div class="dash-greeting">
 				<h1 class="screen-title" id="greetingName"></h1>
 				<div class="streak-chip" id="streakChip">
 					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c0 4-4 6-4 10a4 4 0 0 0 8 0c0-4-4-6-4-10z"/></svg>
 					<span id="streakDays">0</span> дн.
 				</div>
-			</div>
-
-			<!-- Acid theme hero -->
-			<div class="acid-hero acid-only">
-				<h1 class="acid-hero-title">СЛОВО<br><span class="acid-highlight">живе.</span></h1>
 			</div>
 		`;
 	},

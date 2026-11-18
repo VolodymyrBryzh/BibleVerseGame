@@ -16,7 +16,7 @@
 
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=IBM+Plex+Mono:wght@400;500;600&family=Unbounded:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
 </head>
 
@@ -96,7 +96,7 @@
 
 				<!-- Milestones -->
 				<div class="stats-milestones">
-					<div class="stats-milestones-title">ВІХИ · MILESTONES</div>
+					<div class="stats-milestones-title">ВІХИ</div>
 					<div id="milestonesList"></div>
 				</div>
 
@@ -164,10 +164,16 @@
 			<div class="card">
 				<div class="card-title">Імпорт / Експорт</div>
 				<div style="display:flex;gap:8px;flex-wrap:wrap;">
-					<button class="btn btn-sm" onclick="Manage.exportData()">📤 Експорт</button>
-					<button class="btn btn-sm" onclick="$('importFile').click()">📥 Імпорт</button>
+					<button class="btn btn-sm" onclick="Manage.exportData()">
+						<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Експорт
+					</button>
+					<button class="btn btn-sm" onclick="$('importFile').click()">
+						<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Імпорт
+					</button>
 					<button class="btn btn-sm" onclick="$('importBookFile').click()"
-						style="background:var(--accent-bg); color:var(--accent)">📖 Завантажити книгу</button>
+						style="background:var(--accent-bg); color:var(--accent)">
+						<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>Завантажити книгу
+					</button>
 
 					<input type="file" id="importFile" accept=".json" style="display:none" onchange="Manage.importData(event)">
 					<input type="file" id="importBookFile" accept=".json" style="display:none"
@@ -179,7 +185,11 @@
 		<!-- ===== SCREEN: PROFILE ===== -->
 		<div class="screen" id="screenProfile">
 			<div class="card" style="text-align:center; padding: 40px 20px;">
-				<div id="userAvatar" style="font-size: 4rem; margin-bottom: 16px;">👤</div>
+				<div id="userAvatar" class="user-avatar-wrap" style="margin-bottom: 16px;">
+					<div class="user-avatar-placeholder">
+						<svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+					</div>
+				</div>
 				<h2 id="userName" style="margin-bottom: 4px;">Гість</h2>
 				<p id="userEmail" style="color:var(--text-muted); margin-bottom: 24px;">Анонімний вхід</p>
 

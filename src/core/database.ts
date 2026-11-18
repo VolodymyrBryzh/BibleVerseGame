@@ -1,16 +1,17 @@
 import Dexie, { Table } from 'dexie';
 import { BibleVerse } from '../constants/bibleData';
-const GUEST_STORAGE_KEY = 'guestVerses';
+import { GAME_CONFIG } from '../constants/config';
+import { db as fdb, auth } from './firebase';
+import { collection, getDocs, addDoc, deleteDoc, doc } from 'firebase/firestore';
+
 function loadGuestVerses(): BibleVerse[] {
-	const json = localStorage.getItem(GUEST_STORAGE_KEY);
+	const json = localStorage.getItem(GAME_CONFIG.STORAGE_KEYS.GUEST_VERSES);
 	if (!json) return [];
 	try { return JSON.parse(json) as BibleVerse[]; } catch { return []; }
 }
 function saveGuestVerses(verses: BibleVerse[]): void {
-	localStorage.setItem(GUEST_STORAGE_KEY, JSON.stringify(verses));
+	localStorage.setItem(GAME_CONFIG.STORAGE_KEYS.GUEST_VERSES, JSON.stringify(verses));
 }
-import { db as fdb, auth } from './firebase';
-import { collection, getDocs, addDoc, deleteDoc, doc } from 'firebase/firestore';
 
 export class BibleDatabase extends Dexie {
 	verses!: Table<BibleVerse>;
@@ -123,7 +124,9 @@ const VersesDB = {
 			const cleanData = JSON.parse(JSON.stringify(data));
 			const docRef = await addDoc(collection(fdb, `users/${uid}/verses`), cleanData);
 			finalId = docRef.id;
-			this._cache.push({ ...cleanData, id: finalId } as BibleVerse);
+			const newVerse = { ...cleanData, id: finalId } as BibleVerse;
+			await db.verses.put(newVerse);
+			this._cache.push(newVerse);
 		} else {
 			const id = await db.verses.add(verseObj);
 			finalId = id.toString();
@@ -138,9 +141,15 @@ const VersesDB = {
 		if (auth.currentUser) {
 			const uid = auth.currentUser.uid;
 			await deleteDoc(doc(fdb, `users/${uid}/verses`, id));
+			const numericId = parseInt(id, 10);
+			if (!isNaN(numericId)) {
+				await db.verses.delete(numericId);
+			} else {
+				await db.verses.where('id').equals(id).delete();
+			}
 			this._cache = this._cache.filter(v => v.id.toString() !== id.toString());
 		} else {
-			const numericId = parseInt(id);
+			const numericId = parseInt(id, 10);
 			if (!isNaN(numericId)) {
 				await db.verses.delete(numericId);
 			} else {

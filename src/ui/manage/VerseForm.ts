@@ -282,17 +282,22 @@ const VerseForm = {
 	},
 
 	clearForm(): void {
+		this.currentVerseTranslations = {};
 		const book = $<HTMLSelectElement>('addBook');
 		const chapter = $<HTMLSelectElement>('addChapter');
 		const verse = $<HTMLSelectElement>('addVerse');
 		const verseTo = $<HTMLSelectElement>('addVerseTo');
 		const tags = $<HTMLInputElement>('addTags');
+		const preview = $('previewTransMain');
 
 		if (book) book.value = '';
 		if (chapter) chapter.innerHTML = '<option value="">--</option>';
 		if (verse) verse.innerHTML = '<option value="">--</option>';
 		if (verseTo) verseTo.innerHTML = '<option value="">--</option>';
 		if (tags) tags.value = '';
+		if (preview) {
+			preview.innerHTML = '<span style="color: var(--text-muted); font-style: italic; font-size: 0.95rem;">Оберіть книгу та вірш...</span>';
+		}
 
 		TRANSLATIONS_META.forEach(t => {
 			const el = $<HTMLTextAreaElement>(`addTrans_${t.key}`);

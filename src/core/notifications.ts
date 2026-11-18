@@ -3,9 +3,10 @@ import { getApp } from 'firebase/app';
 import { doc, setDoc, deleteDoc } from 'firebase/firestore';
 import { db, auth } from './firebase';
 import { toast } from '../utils/helpers';
+import { GAME_CONFIG } from '../constants/config';
 
-const VAPID_KEY_STORAGE = 'bvg_fcm_token';
-const NOTIFY_ENABLED_KEY = 'bvg_notifications_enabled';
+const VAPID_KEY_STORAGE = GAME_CONFIG.STORAGE_KEYS.FCM_TOKEN;
+const NOTIFY_ENABLED_KEY = GAME_CONFIG.STORAGE_KEYS.NOTIFY_ENABLED;
 
 let messaging: ReturnType<typeof getMessaging> | null = null;
 

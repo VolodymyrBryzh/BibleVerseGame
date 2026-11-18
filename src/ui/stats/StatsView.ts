@@ -76,19 +76,19 @@ const StatsView = {
 
 		const milestones = [
 			{
-				icon: '🔥',
+				icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c0 4-4 6-4 10a4 4 0 0 0 8 0c0-4-4-6-4-10z"/></svg>`,
 				title: 'Тиждень підряд',
 				completed: o.bestStreak >= 7,
 				progress: `${Math.min(o.streak, 7)} з 7 днів`,
 			},
 			{
-				icon: '⭐',
+				icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
 				title: 'Перші 50 віршів',
 				completed: o.learned >= 50,
 				progress: `${o.learned} з 50 завершено`,
 			},
 			{
-				icon: '✦',
+				icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>`,
 				title: 'Псалмоспівець',
 				completed: psalmCount >= 100,
 				progress: `${psalmCount} зі 100 псалмів`,

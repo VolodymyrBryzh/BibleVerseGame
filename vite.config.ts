@@ -6,6 +6,14 @@ export default defineConfig({
 	build: {
 		outDir: 'dist',
 		emptyOutDir: true,
+		rollupOptions: {
+			output: {
+				manualChunks: {
+					firebase: ['firebase/app', 'firebase/auth', 'firebase/firestore', 'firebase/messaging'],
+					dexie: ['dexie']
+				}
+			}
+		}
 	},
 	server: {
 		port: 5005,

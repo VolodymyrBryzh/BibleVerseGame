@@ -176,7 +176,7 @@ const Game = {
 
     removeHintBtn();
 
-    const xpEl = $('streakCount');
+    const xpEl = $('xpCount');
     if (xpEl) xpEl.textContent = XP.getTotal().toString();
 
     if (this.elements.actions) {

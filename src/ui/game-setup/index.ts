@@ -7,14 +7,8 @@ const GameSetup = {
 			<div class="container">
 				<div class="dash-section">
 					<div class="section-head">
-						<span class="section-head-small section-head-step">
-							<span class="section-step-editorial">КРОК 01</span>
-							<span class="section-step-acid"><span class="section-step-num">01</span></span>
-						</span>
-						<div class="section-head-title">
-							<span class="section-title-editorial">Обери режим</span>
-							<span class="section-title-acid">ОБЕРИ РЕЖИМ</span>
-						</div>
+						<span class="section-head-step">01</span>
+						<div class="section-head-title">Обери режим</div>
 					</div>
 					<div class="mode-grid" id="gameModeGrid">
 						<div class="mode-card selected" data-mode="word-order">
@@ -49,14 +43,8 @@ const GameSetup = {
 
 				<div class="dash-section">
 					<div class="section-head">
-						<span class="section-head-small section-head-step">
-							<span class="section-step-editorial">КРОК 02</span>
-							<span class="section-step-acid"><span class="section-step-num">02</span></span>
-						</span>
-						<div class="section-head-title">
-							<span class="section-title-editorial">Налаштування</span>
-							<span class="section-title-acid">НАЛАШТУЙ</span>
-						</div>
+						<span class="section-head-step">02</span>
+						<div class="section-head-title">Налаштування</div>
 					</div>
 					<div class="filter-row">
 						<div class="filter-label">Переклад</div>
@@ -72,8 +60,8 @@ const GameSetup = {
 
 				<div class="dash-cta">
 					<button class="btn btn-primary btn-block" id="btnGameStart">
-						<span class="cta-text-editorial">ПОЧАТИ ГРУ</span>
-						<span class="cta-text-acid">ПОЇХАЛИ ⚡</span>
+						<span>Почати гру</span>
+						<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:6px;vertical-align:-3px;"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
 					</button>
 				</div>
 			</div>
